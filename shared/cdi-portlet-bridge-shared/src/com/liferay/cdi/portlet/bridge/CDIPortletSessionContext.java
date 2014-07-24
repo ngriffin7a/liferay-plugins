@@ -41,7 +41,9 @@ public class CDIPortletSessionContext implements Context, Serializable {
         CDIPortletSessionBean<T> beanEntry = (CDIPortletSessionBean<T>) portletSession.getAttribute(attributeName);
         if(beanEntry == null) {
             T instance = contextual.create(creationalContext);
-            portletSession.setAttribute(attributeName, new CDIPortletSessionBean<T>(contextual, creationalContext, instance));
+            
+            beanEntry = new CDIPortletSessionBean<T>(contextual, creationalContext, instance);
+            portletSession.setAttribute(attributeName, beanEntry);
         }
 
         return beanEntry.instance;
