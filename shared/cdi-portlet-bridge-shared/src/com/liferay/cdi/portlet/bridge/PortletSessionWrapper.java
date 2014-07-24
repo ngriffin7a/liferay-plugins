@@ -90,6 +90,7 @@ public class PortletSessionWrapper implements PortletSession {
 
 	@Override
 	public void invalidate() {
+	    CDIPortletSessionContext.destroyPortletSessionBeans(_portletSession);
 		_portletSession.invalidate();
 	}
 

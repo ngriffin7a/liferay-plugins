@@ -2,6 +2,7 @@ package com.liferay.cdi.portlet.bridge;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.util.Map.Entry;
 
 import javax.enterprise.context.spi.Context;
 import javax.enterprise.context.spi.Contextual;
@@ -37,13 +38,13 @@ public class CDIPortletSessionContext implements Context, Serializable {
 
         final PortletSession portletSession = PortletRequestContainer.getCurrentPortletRequest().getPortletSession(true);
 
-        T result = (T) portletSession.getAttribute(attributeName);
-        if(result == null) {
-            result = contextual.create(creationalContext);
-            portletSession.setAttribute(attributeName, result);
+        CDIPortletSessionBean<T> beanEntry = (CDIPortletSessionBean<T>) portletSession.getAttribute(attributeName);
+        if(beanEntry == null) {
+            T instance = contextual.create(creationalContext);
+            portletSession.setAttribute(attributeName, new CDIPortletSessionBean<T>(contextual, creationalContext, instance));
         }
 
-        return result;
+        return beanEntry.instance;
     }
 
     @SuppressWarnings("unchecked")
@@ -54,12 +55,29 @@ public class CDIPortletSessionContext implements Context, Serializable {
         }
 
         final PortletSession portletSession = PortletRequestContainer.getCurrentPortletRequest().getPortletSession();
-        return portletSession != null ? (T) portletSession.getAttribute(getAttributeName(contextual)) : null;
+        if(portletSession == null) {
+            return null;
+        }
+        
+        CDIPortletSessionBean<T> beanEntry = (CDIPortletSessionBean<T>)portletSession.getAttribute(getAttributeName(contextual));
+        
+        return beanEntry != null ? beanEntry.instance : null;
     }
 
     @Override
     public boolean isActive() {
         return PortletRequestContainer.getCurrentPortletRequest() != null;
+    }
+    
+    static void destroyPortletSessionBeans(PortletSession portletSession) {
+        for(Entry<String, Object> entry : portletSession.getAttributeMap().entrySet()) {
+            String attributeName = entry.getKey();
+            if(attributeName != null && attributeName.startsWith(ATTRIBUTE_PREFIX + "$")) {
+                CDIPortletSessionBean<?> beanEntry = (CDIPortletSessionBean<?>) entry.getValue();
+                
+                beanEntry.destroyBean();
+            }
+        }
     }
 
     private static <T> String getAttributeName(final Contextual<T> contextual) {
@@ -67,5 +85,21 @@ public class CDIPortletSessionContext implements Context, Serializable {
         final String beanClassName = bean.getBeanClass().getName();
 
         return ATTRIBUTE_PREFIX + "$" + beanClassName;
+    }
+    
+    private static class CDIPortletSessionBean<T> {
+        public final Contextual<T> bean;
+        public final CreationalContext<T> creationalContext;
+        public final T instance;
+        
+        private CDIPortletSessionBean(Contextual<T> bean, CreationalContext<T> creationalContext, T instance) {
+            this.bean = bean;
+            this.creationalContext = creationalContext;
+            this.instance = instance;
+        }
+        
+        public void destroyBean() {
+            bean.destroy(instance, creationalContext);
+        }
     }
 }
