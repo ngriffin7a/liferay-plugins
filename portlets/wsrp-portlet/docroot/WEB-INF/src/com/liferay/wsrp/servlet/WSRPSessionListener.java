@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -88,7 +88,9 @@ public class WSRPSessionListener implements HttpSessionListener {
 			markupService.releaseSessions(releaseSessions);
 		}
 		catch (Exception e) {
-			_log.warn(e.getMessage());
+			if (_log.isWarnEnabled()) {
+				_log.warn(e.getMessage());
+			}
 		}
 	}
 

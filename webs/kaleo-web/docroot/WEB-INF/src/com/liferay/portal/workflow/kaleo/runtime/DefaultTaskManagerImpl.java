@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,7 +15,6 @@
 package com.liferay.portal.workflow.kaleo.runtime;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -248,7 +247,7 @@ public class DefaultTaskManagerImpl
 	protected Map<String, Serializable> updateWorkflowContext(
 			Map<String, Serializable> workflowContext,
 			KaleoTaskInstanceToken kaleoTaskInstanceToken)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		KaleoInstance kaleoInstance =
 			kaleoInstanceLocalService.getKaleoInstance(

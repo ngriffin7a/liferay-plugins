@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -19,7 +19,6 @@ import aQute.bnd.annotation.component.Reference;
 
 import com.liferay.gogo.commands.user.internal.AbstractCommand;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalService;
 
@@ -41,7 +40,7 @@ public class UserCommand extends AbstractCommand {
 	}
 
 	public void user(long companyId, String emailAddress)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		User user = userLocalService.fetchUserByEmailAddress(
 			companyId, emailAddress);

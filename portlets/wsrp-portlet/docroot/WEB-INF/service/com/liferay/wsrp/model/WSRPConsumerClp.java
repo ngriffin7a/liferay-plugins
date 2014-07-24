@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,8 +15,8 @@
 package com.liferay.wsrp.model;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.StagedModelType;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.model.BaseModel;
@@ -91,6 +91,9 @@ public class WSRPConsumerClp extends BaseModelImpl<WSRPConsumer>
 		attributes.put("forwardCookies", getForwardCookies());
 		attributes.put("forwardHeaders", getForwardHeaders());
 		attributes.put("markupCharacterSets", getMarkupCharacterSets());
+
+		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
+		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -177,6 +180,9 @@ public class WSRPConsumerClp extends BaseModelImpl<WSRPConsumer>
 		if (markupCharacterSets != null) {
 			setMarkupCharacterSets(markupCharacterSets);
 		}
+
+		_entityCacheEnabled = GetterUtil.getBoolean("entityCacheEnabled");
+		_finderCacheEnabled = GetterUtil.getBoolean("finderCacheEnabled");
 	}
 
 	@Override
@@ -618,7 +624,7 @@ public class WSRPConsumerClp extends BaseModelImpl<WSRPConsumer>
 	}
 
 	@Override
-	public void persist() throws SystemException {
+	public void persist() {
 		if (this.isNew()) {
 			WSRPConsumerLocalServiceUtil.addWSRPConsumer(this);
 		}
@@ -689,9 +695,23 @@ public class WSRPConsumerClp extends BaseModelImpl<WSRPConsumer>
 		}
 	}
 
+	public Class<?> getClpSerializerClass() {
+		return _clpSerializerClass;
+	}
+
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	@Override
+	public boolean isEntityCacheEnabled() {
+		return _entityCacheEnabled;
+	}
+
+	@Override
+	public boolean isFinderCacheEnabled() {
+		return _finderCacheEnabled;
 	}
 
 	@Override
@@ -809,4 +829,7 @@ public class WSRPConsumerClp extends BaseModelImpl<WSRPConsumer>
 	private String _forwardHeaders;
 	private String _markupCharacterSets;
 	private BaseModel<?> _wsrpConsumerRemoteModel;
+	private Class<?> _clpSerializerClass = com.liferay.wsrp.service.ClpSerializer.class;
+	private boolean _entityCacheEnabled;
+	private boolean _finderCacheEnabled;
 }

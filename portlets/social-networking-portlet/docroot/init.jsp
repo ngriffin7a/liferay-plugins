@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -27,7 +27,6 @@
 <%@ page import="com.liferay.ipgeocoder.model.IPInfo" %><%@
 page import="com.liferay.ipgeocoder.util.IPGeocoderUtil" %><%@
 page import="com.liferay.portal.NoSuchUserException" %><%@
-page import="com.liferay.portal.kernel.dao.search.ResultRow" %><%@
 page import="com.liferay.portal.kernel.dao.search.SearchContainer" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
 page import="com.liferay.portal.kernel.messaging.DestinationNames" %><%@
@@ -37,8 +36,6 @@ page import="com.liferay.portal.kernel.util.Constants" %><%@
 page import="com.liferay.portal.kernel.util.FastDateFormatFactoryUtil" %><%@
 page import="com.liferay.portal.kernel.util.GetterUtil" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
-page import="com.liferay.portal.kernel.util.OrderByComparator" %><%@
-page import="com.liferay.portal.kernel.util.OrderByComparatorFactoryUtil" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
 page import="com.liferay.portal.kernel.util.StringPool" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
@@ -80,6 +77,7 @@ page import="com.liferay.socialnetworking.service.MeetupsRegistrationLocalServic
 page import="com.liferay.socialnetworking.service.WallEntryLocalServiceUtil" %><%@
 page import="com.liferay.socialnetworking.util.PortletKeys" %><%@
 page import="com.liferay.socialnetworking.util.WallUtil" %><%@
+page import="com.liferay.taglib.search.ResultRow" %><%@
 page import="com.liferay.util.RSSUtil" %><%@
 page import="com.liferay.util.portlet.PortletProps" %>
 
@@ -93,7 +91,6 @@ page import="java.util.List" %>
 
 <%@ page import="javax.portlet.ActionRequest" %><%@
 page import="javax.portlet.PortletURL" %><%@
-page import="javax.portlet.ResourceURL" %><%@
 page import="javax.portlet.WindowState" %>
 
 <portlet:defineObjects />

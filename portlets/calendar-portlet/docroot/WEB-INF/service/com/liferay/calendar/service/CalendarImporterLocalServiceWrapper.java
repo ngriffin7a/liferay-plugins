@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -41,14 +41,17 @@ public class CalendarImporterLocalServiceWrapper
 		return _calendarImporterLocalService.getBeanIdentifier();
 	}
 
-	/**
-	* Sets the Spring bean ID for this bean.
-	*
-	* @param beanIdentifier the Spring bean ID for this bean
-	*/
 	@Override
-	public void setBeanIdentifier(java.lang.String beanIdentifier) {
-		_calendarImporterLocalService.setBeanIdentifier(beanIdentifier);
+	public void importCalEvent(
+		com.liferay.portlet.calendar.model.CalEvent calEvent)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		_calendarImporterLocalService.importCalEvent(calEvent);
+	}
+
+	@Override
+	public void importCalEvents()
+		throws com.liferay.portal.kernel.exception.PortalException {
+		_calendarImporterLocalService.importCalEvents();
 	}
 
 	@Override
@@ -59,24 +62,20 @@ public class CalendarImporterLocalServiceWrapper
 			arguments);
 	}
 
+	/**
+	* Sets the Spring bean ID for this bean.
+	*
+	* @param beanIdentifier the Spring bean ID for this bean
+	*/
 	@Override
-	public void importCalEvent(
-		com.liferay.portlet.calendar.model.CalEvent calEvent)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		_calendarImporterLocalService.importCalEvent(calEvent);
-	}
-
-	@Override
-	public void importCalEvents()
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		_calendarImporterLocalService.importCalEvents();
+	public void setBeanIdentifier(java.lang.String beanIdentifier) {
+		_calendarImporterLocalService.setBeanIdentifier(beanIdentifier);
 	}
 
 	/**
 	 * @deprecated As of 6.1.0, replaced by {@link #getWrappedService}
 	 */
+	@Deprecated
 	public CalendarImporterLocalService getWrappedCalendarImporterLocalService() {
 		return _calendarImporterLocalService;
 	}
@@ -84,6 +83,7 @@ public class CalendarImporterLocalServiceWrapper
 	/**
 	 * @deprecated As of 6.1.0, replaced by {@link #setWrappedService}
 	 */
+	@Deprecated
 	public void setWrappedCalendarImporterLocalService(
 		CalendarImporterLocalService calendarImporterLocalService) {
 		_calendarImporterLocalService = calendarImporterLocalService;

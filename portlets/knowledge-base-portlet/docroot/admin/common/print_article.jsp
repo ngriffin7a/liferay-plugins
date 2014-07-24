@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -27,9 +27,9 @@ KBArticle kbArticle = (KBArticle)request.getAttribute(WebKeys.KNOWLEDGE_BASE_KB_
 
 	<div class="kb-tools">
 		<liferay-ui:icon
-			image="print"
+			iconCssClass="icon-print"
 			label="<%= true %>"
-			method="get"
+			message="print"
 			url="javascript:print();"
 		/>
 	</div>

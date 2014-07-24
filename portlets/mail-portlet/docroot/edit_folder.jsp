@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -22,7 +22,7 @@ long folderId = ParamUtil.getLong(request, "folderId");
 Folder folder = FolderLocalServiceUtil.getFolder(folderId);
 %>
 
-<aui:layout cssClass="mail-status" />
+<div class="mail-status"></div>
 
 <aui:form name="dialogFm" onSubmit="event.preventDefault();">
 	<aui:input name="folderId" type="hidden" value="<%= folderId %>" />
@@ -34,7 +34,7 @@ Folder folder = FolderLocalServiceUtil.getFolder(folderId);
 	</aui:button-row>
 </aui:form>
 
-<aui:script use="aui-io">
+<aui:script use="aui-io-deprecated">
 	var A = AUI();
 
 	var form = A.one('#<portlet:namespace />dialogFm');
@@ -49,9 +49,9 @@ Folder folder = FolderLocalServiceUtil.getFolder(folderId);
 			A.io.request(
 				themeDisplay.getLayoutURL() + '/-/mail/rename_folder',
 				{
-					dataType: 'json',
+					dataType: 'JSON',
 					form: {
-						id: form.getDOM()
+						id: form.getDOMNode()
 					},
 					on: {
 						failure: function(event, id, obj) {
@@ -64,8 +64,6 @@ Folder folder = FolderLocalServiceUtil.getFolder(folderId);
 
 							if (responseData.status == 'success') {
 								Liferay.Mail.loadFolders(Liferay.Mail.accountId);
-
-								A.DialogManager.closeByChild(form);
 							}
 						}
 					}

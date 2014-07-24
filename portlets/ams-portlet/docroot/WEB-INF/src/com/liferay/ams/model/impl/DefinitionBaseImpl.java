@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -16,8 +16,6 @@ package com.liferay.ams.model.impl;
 
 import com.liferay.ams.model.Definition;
 import com.liferay.ams.service.DefinitionLocalServiceUtil;
-
-import com.liferay.portal.kernel.exception.SystemException;
 
 /**
  * The extended model base implementation for the Definition service. Represents a row in the &quot;AMS_Definition&quot; database table, with each column mapped to a property of this class.
@@ -39,7 +37,7 @@ public abstract class DefinitionBaseImpl extends DefinitionModelImpl
 	 * Never modify or reference this class directly. All methods that expect a definition model instance should use the {@link Definition} interface instead.
 	 */
 	@Override
-	public void persist() throws SystemException {
+	public void persist() {
 		if (this.isNew()) {
 			DefinitionLocalServiceUtil.addDefinition(this);
 		}

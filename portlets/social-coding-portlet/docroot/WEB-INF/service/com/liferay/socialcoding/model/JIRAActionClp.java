@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,8 +15,8 @@
 package com.liferay.socialcoding.model;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.DateUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.model.BaseModel;
@@ -84,6 +84,9 @@ public class JIRAActionClp extends BaseModelImpl<JIRAAction>
 		attributes.put("body", getBody());
 		attributes.put("jiraGroupName", getJiraGroupName());
 
+		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
+		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
+
 		return attributes;
 	}
 
@@ -136,6 +139,9 @@ public class JIRAActionClp extends BaseModelImpl<JIRAAction>
 		if (jiraGroupName != null) {
 			setJiraGroupName(jiraGroupName);
 		}
+
+		_entityCacheEnabled = GetterUtil.getBoolean("entityCacheEnabled");
+		_finderCacheEnabled = GetterUtil.getBoolean("finderCacheEnabled");
 	}
 
 	@Override
@@ -372,7 +378,7 @@ public class JIRAActionClp extends BaseModelImpl<JIRAAction>
 	}
 
 	@Override
-	public void persist() throws SystemException {
+	public void persist() {
 		if (this.isNew()) {
 			JIRAActionLocalServiceUtil.addJIRAAction(this);
 		}
@@ -441,9 +447,23 @@ public class JIRAActionClp extends BaseModelImpl<JIRAAction>
 		}
 	}
 
+	public Class<?> getClpSerializerClass() {
+		return _clpSerializerClass;
+	}
+
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	@Override
+	public boolean isEntityCacheEnabled() {
+		return _entityCacheEnabled;
+	}
+
+	@Override
+	public boolean isFinderCacheEnabled() {
+		return _finderCacheEnabled;
 	}
 
 	@Override
@@ -526,4 +546,7 @@ public class JIRAActionClp extends BaseModelImpl<JIRAAction>
 	private String _body;
 	private String _jiraGroupName;
 	private BaseModel<?> _jiraActionRemoteModel;
+	private Class<?> _clpSerializerClass = com.liferay.socialcoding.service.ClpSerializer.class;
+	private boolean _entityCacheEnabled;
+	private boolean _finderCacheEnabled;
 }

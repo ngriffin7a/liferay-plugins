@@ -8,19 +8,13 @@
 		<configuration-action-class>com.liferay.knowledgebase.admin.action.ConfigurationActionImpl</configuration-action-class>
 		<indexer-class>com.liferay.knowledgebase.admin.util.AdminIndexer</indexer-class>
 		<open-search-class>com.liferay.knowledgebase.admin.util.AdminOpenSearchImpl</open-search-class>
-		<scheduler-entry>
-			<scheduler-event-listener-class>com.liferay.knowledgebase.admin.messaging.CheckAttachmentsMessageListener</scheduler-event-listener-class>
-			<trigger>
-				<simple>
-					<simple-trigger-value>1</simple-trigger-value>
-					<time-unit>day</time-unit>
-				</simple>
-			</trigger>
-		</scheduler-entry>
 		<friendly-url-mapper-class>com.liferay.portal.kernel.portlet.DefaultFriendlyURLMapper</friendly-url-mapper-class>
 		<friendly-url-mapping>knowledge_base_admin</friendly-url-mapping>
 		<friendly-url-routes>com/liferay/knowledgebase/admin/portlet/admin-friendly-url-routes.xml</friendly-url-routes>
 		<portlet-data-handler-class>com.liferay.knowledgebase.admin.lar.AdminPortletDataHandler</portlet-data-handler-class>
+		<staged-model-data-handler-class>com.liferay.knowledgebase.admin.lar.KBArticleStagedModelDataHandler</staged-model-data-handler-class>
+		<staged-model-data-handler-class>com.liferay.knowledgebase.admin.lar.KBCommentStagedModelDataHandler</staged-model-data-handler-class>
+		<staged-model-data-handler-class>com.liferay.knowledgebase.admin.lar.KBTemplateStagedModelDataHandler</staged-model-data-handler-class>
 		<social-activity-interpreter-class>com.liferay.knowledgebase.admin.social.AdminActivityInterpreter</social-activity-interpreter-class>
 		<control-panel-entry-category>site_administration.content</control-panel-entry-category>
 		<control-panel-entry-weight>17.5</control-panel-entry-weight>
@@ -28,6 +22,7 @@
 		<workflow-handler>com.liferay.knowledgebase.admin.workflow.KBArticleWorkflowHandler</workflow-handler>
 		<preferences-unique-per-layout>false</preferences-unique-per-layout>
 		<show-portlet-access-denied>false</show-portlet-access-denied>
+		<scopeable>true</scopeable>
 		<header-portlet-css>/admin/css/common.css</header-portlet-css>
 		<header-portlet-css>/admin/css/main.css</header-portlet-css>
 		<css-class-wrapper>knowledge-base-portlet knowledge-base-portlet-admin</css-class-wrapper>
@@ -40,6 +35,7 @@
 		<friendly-url-mapper-class>com.liferay.portal.kernel.portlet.DefaultFriendlyURLMapper</friendly-url-mapper-class>
 		<friendly-url-mapping>knowledge_base</friendly-url-mapping>
 		<friendly-url-routes>com/liferay/knowledgebase/display/portlet/display-friendly-url-routes.xml</friendly-url-routes>
+		<scopeable>true</scopeable>
 		<header-portlet-css>/admin/css/common.css</header-portlet-css>
 		<header-portlet-css>/display/css/main.css</header-portlet-css>
 		<css-class-wrapper>knowledge-base-portlet knowledge-base-portlet-display</css-class-wrapper>
@@ -52,6 +48,7 @@
 		<friendly-url-mapping>knowledge_base_article</friendly-url-mapping>
 		<friendly-url-routes>com/liferay/knowledgebase/article/portlet/article-friendly-url-routes.xml</friendly-url-routes>
 		<instanceable>true</instanceable>
+		<scopeable>true</scopeable>
 		<header-portlet-css>/admin/css/common.css</header-portlet-css>
 		<header-portlet-css>/article/css/main.css</header-portlet-css>
 		<css-class-wrapper>knowledge-base-portlet knowledge-base-portlet-article</css-class-wrapper>
@@ -65,6 +62,7 @@
 		<friendly-url-mapping>knowledge_base_section</friendly-url-mapping>
 		<friendly-url-routes>com/liferay/knowledgebase/section/portlet/section-friendly-url-routes.xml</friendly-url-routes>
 		<instanceable>true</instanceable>
+		<scopeable>true</scopeable>
 		<header-portlet-css>/admin/css/common.css</header-portlet-css>
 		<header-portlet-css>/section/css/main.css</header-portlet-css>
 		<css-class-wrapper>knowledge-base-portlet knowledge-base-portlet-section</css-class-wrapper>
@@ -76,8 +74,8 @@
 		<friendly-url-mapper-class>com.liferay.portal.kernel.portlet.DefaultFriendlyURLMapper</friendly-url-mapper-class>
 		<friendly-url-mapping>knowledge_base_search</friendly-url-mapping>
 		<friendly-url-routes>com/liferay/knowledgebase/search/portlet/search-friendly-url-routes.xml</friendly-url-routes>
+		<scopeable>true</scopeable>
 		<header-portlet-css>/admin/css/common.css</header-portlet-css>
-		<header-portlet-css>/search/css/main.css</header-portlet-css>
 		<css-class-wrapper>knowledge-base-portlet knowledge-base-portlet-search</css-class-wrapper>
 	</portlet>
 	<role-mapper>

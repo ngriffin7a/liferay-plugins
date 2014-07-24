@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -84,55 +84,74 @@ public class CalendarNotificationTemplateLocalServiceClpInvoker {
 
 		_methodParameterTypes10 = new String[] { "long" };
 
-		_methodName11 = "fetchCalendarNotificationTemplateByUuidAndCompanyId";
+		_methodName11 = "fetchCalendarNotificationTemplateByUuidAndGroupId";
 
 		_methodParameterTypes11 = new String[] { "java.lang.String", "long" };
 
-		_methodName12 = "fetchCalendarNotificationTemplateByUuidAndGroupId";
+		_methodName12 = "getCalendarNotificationTemplate";
 
-		_methodParameterTypes12 = new String[] { "java.lang.String", "long" };
+		_methodParameterTypes12 = new String[] { "long" };
 
-		_methodName13 = "getCalendarNotificationTemplate";
+		_methodName13 = "getActionableDynamicQuery";
 
-		_methodParameterTypes13 = new String[] { "long" };
+		_methodParameterTypes13 = new String[] {  };
 
-		_methodName14 = "getPersistedModel";
+		_methodName15 = "getExportActionableDynamicQuery";
 
-		_methodParameterTypes14 = new String[] { "java.io.Serializable" };
+		_methodParameterTypes15 = new String[] {
+				"com.liferay.portal.kernel.lar.PortletDataContext"
+			};
 
-		_methodName15 = "getCalendarNotificationTemplateByUuidAndCompanyId";
+		_methodName16 = "deletePersistedModel";
 
-		_methodParameterTypes15 = new String[] { "java.lang.String", "long" };
+		_methodParameterTypes16 = new String[] {
+				"com.liferay.portal.model.PersistedModel"
+			};
 
-		_methodName16 = "getCalendarNotificationTemplateByUuidAndGroupId";
+		_methodName17 = "getPersistedModel";
 
-		_methodParameterTypes16 = new String[] { "java.lang.String", "long" };
+		_methodParameterTypes17 = new String[] { "java.io.Serializable" };
 
-		_methodName17 = "getCalendarNotificationTemplates";
+		_methodName18 = "getCalendarNotificationTemplatesByUuidAndCompanyId";
 
-		_methodParameterTypes17 = new String[] { "int", "int" };
+		_methodParameterTypes18 = new String[] { "java.lang.String", "long" };
 
-		_methodName18 = "getCalendarNotificationTemplatesCount";
-
-		_methodParameterTypes18 = new String[] {  };
-
-		_methodName19 = "updateCalendarNotificationTemplate";
+		_methodName19 = "getCalendarNotificationTemplatesByUuidAndCompanyId";
 
 		_methodParameterTypes19 = new String[] {
+				"java.lang.String", "long", "int", "int",
+				"com.liferay.portal.kernel.util.OrderByComparator"
+			};
+
+		_methodName20 = "getCalendarNotificationTemplateByUuidAndGroupId";
+
+		_methodParameterTypes20 = new String[] { "java.lang.String", "long" };
+
+		_methodName21 = "getCalendarNotificationTemplates";
+
+		_methodParameterTypes21 = new String[] { "int", "int" };
+
+		_methodName22 = "getCalendarNotificationTemplatesCount";
+
+		_methodParameterTypes22 = new String[] {  };
+
+		_methodName23 = "updateCalendarNotificationTemplate";
+
+		_methodParameterTypes23 = new String[] {
 				"com.liferay.calendar.model.CalendarNotificationTemplate"
 			};
 
-		_methodName64 = "getBeanIdentifier";
+		_methodName74 = "getBeanIdentifier";
 
-		_methodParameterTypes64 = new String[] {  };
+		_methodParameterTypes74 = new String[] {  };
 
-		_methodName65 = "setBeanIdentifier";
+		_methodName75 = "setBeanIdentifier";
 
-		_methodParameterTypes65 = new String[] { "java.lang.String" };
+		_methodParameterTypes75 = new String[] { "java.lang.String" };
 
-		_methodName70 = "addCalendarNotificationTemplate";
+		_methodName80 = "addCalendarNotificationTemplate";
 
-		_methodParameterTypes70 = new String[] {
+		_methodParameterTypes80 = new String[] {
 				"long", "long",
 				"com.liferay.calendar.notification.NotificationType",
 				"java.lang.String",
@@ -141,20 +160,26 @@ public class CalendarNotificationTemplateLocalServiceClpInvoker {
 				"com.liferay.portal.service.ServiceContext"
 			};
 
-		_methodName71 = "deleteCalendarNotificationTemplates";
+		_methodName81 = "deleteCalendarNotificationTemplate";
 
-		_methodParameterTypes71 = new String[] { "long" };
+		_methodParameterTypes81 = new String[] {
+				"com.liferay.calendar.model.CalendarNotificationTemplate"
+			};
 
-		_methodName72 = "fetchCalendarNotificationTemplate";
+		_methodName82 = "deleteCalendarNotificationTemplates";
 
-		_methodParameterTypes72 = new String[] {
+		_methodParameterTypes82 = new String[] { "long" };
+
+		_methodName83 = "fetchCalendarNotificationTemplate";
+
+		_methodParameterTypes83 = new String[] {
 				"long", "com.liferay.calendar.notification.NotificationType",
 				"com.liferay.calendar.notification.NotificationTemplateType"
 			};
 
-		_methodName73 = "updateCalendarNotificationTemplate";
+		_methodName84 = "updateCalendarNotificationTemplate";
 
-		_methodParameterTypes73 = new String[] {
+		_methodParameterTypes84 = new String[] {
 				"long", "java.lang.String", "java.lang.String",
 				"java.lang.String", "com.liferay.portal.service.ServiceContext"
 			};
@@ -204,7 +229,7 @@ public class CalendarNotificationTemplateLocalServiceClpInvoker {
 			return CalendarNotificationTemplateLocalServiceUtil.dynamicQuery((com.liferay.portal.kernel.dao.orm.DynamicQuery)arguments[0],
 				((Integer)arguments[1]).intValue(),
 				((Integer)arguments[2]).intValue(),
-				(com.liferay.portal.kernel.util.OrderByComparator)arguments[3]);
+				(com.liferay.portal.kernel.util.OrderByComparator<?>)arguments[3]);
 		}
 
 		if (_methodName8.equals(name) &&
@@ -225,68 +250,86 @@ public class CalendarNotificationTemplateLocalServiceClpInvoker {
 
 		if (_methodName11.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes11, parameterTypes)) {
-			return CalendarNotificationTemplateLocalServiceUtil.fetchCalendarNotificationTemplateByUuidAndCompanyId((java.lang.String)arguments[0],
+			return CalendarNotificationTemplateLocalServiceUtil.fetchCalendarNotificationTemplateByUuidAndGroupId((java.lang.String)arguments[0],
 				((Long)arguments[1]).longValue());
 		}
 
 		if (_methodName12.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes12, parameterTypes)) {
-			return CalendarNotificationTemplateLocalServiceUtil.fetchCalendarNotificationTemplateByUuidAndGroupId((java.lang.String)arguments[0],
-				((Long)arguments[1]).longValue());
+			return CalendarNotificationTemplateLocalServiceUtil.getCalendarNotificationTemplate(((Long)arguments[0]).longValue());
 		}
 
 		if (_methodName13.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes13, parameterTypes)) {
-			return CalendarNotificationTemplateLocalServiceUtil.getCalendarNotificationTemplate(((Long)arguments[0]).longValue());
-		}
-
-		if (_methodName14.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes14, parameterTypes)) {
-			return CalendarNotificationTemplateLocalServiceUtil.getPersistedModel((java.io.Serializable)arguments[0]);
+			return CalendarNotificationTemplateLocalServiceUtil.getActionableDynamicQuery();
 		}
 
 		if (_methodName15.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes15, parameterTypes)) {
-			return CalendarNotificationTemplateLocalServiceUtil.getCalendarNotificationTemplateByUuidAndCompanyId((java.lang.String)arguments[0],
-				((Long)arguments[1]).longValue());
+			return CalendarNotificationTemplateLocalServiceUtil.getExportActionableDynamicQuery((com.liferay.portal.kernel.lar.PortletDataContext)arguments[0]);
 		}
 
 		if (_methodName16.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes16, parameterTypes)) {
-			return CalendarNotificationTemplateLocalServiceUtil.getCalendarNotificationTemplateByUuidAndGroupId((java.lang.String)arguments[0],
-				((Long)arguments[1]).longValue());
+			return CalendarNotificationTemplateLocalServiceUtil.deletePersistedModel((com.liferay.portal.model.PersistedModel)arguments[0]);
 		}
 
 		if (_methodName17.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes17, parameterTypes)) {
-			return CalendarNotificationTemplateLocalServiceUtil.getCalendarNotificationTemplates(((Integer)arguments[0]).intValue(),
-				((Integer)arguments[1]).intValue());
+			return CalendarNotificationTemplateLocalServiceUtil.getPersistedModel((java.io.Serializable)arguments[0]);
 		}
 
 		if (_methodName18.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes18, parameterTypes)) {
-			return CalendarNotificationTemplateLocalServiceUtil.getCalendarNotificationTemplatesCount();
+			return CalendarNotificationTemplateLocalServiceUtil.getCalendarNotificationTemplatesByUuidAndCompanyId((java.lang.String)arguments[0],
+				((Long)arguments[1]).longValue());
 		}
 
 		if (_methodName19.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes19, parameterTypes)) {
+			return CalendarNotificationTemplateLocalServiceUtil.getCalendarNotificationTemplatesByUuidAndCompanyId((java.lang.String)arguments[0],
+				((Long)arguments[1]).longValue(),
+				((Integer)arguments[2]).intValue(),
+				((Integer)arguments[3]).intValue(),
+				(com.liferay.portal.kernel.util.OrderByComparator<com.liferay.calendar.model.CalendarNotificationTemplate>)arguments[4]);
+		}
+
+		if (_methodName20.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes20, parameterTypes)) {
+			return CalendarNotificationTemplateLocalServiceUtil.getCalendarNotificationTemplateByUuidAndGroupId((java.lang.String)arguments[0],
+				((Long)arguments[1]).longValue());
+		}
+
+		if (_methodName21.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes21, parameterTypes)) {
+			return CalendarNotificationTemplateLocalServiceUtil.getCalendarNotificationTemplates(((Integer)arguments[0]).intValue(),
+				((Integer)arguments[1]).intValue());
+		}
+
+		if (_methodName22.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes22, parameterTypes)) {
+			return CalendarNotificationTemplateLocalServiceUtil.getCalendarNotificationTemplatesCount();
+		}
+
+		if (_methodName23.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes23, parameterTypes)) {
 			return CalendarNotificationTemplateLocalServiceUtil.updateCalendarNotificationTemplate((com.liferay.calendar.model.CalendarNotificationTemplate)arguments[0]);
 		}
 
-		if (_methodName64.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes64, parameterTypes)) {
+		if (_methodName74.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes74, parameterTypes)) {
 			return CalendarNotificationTemplateLocalServiceUtil.getBeanIdentifier();
 		}
 
-		if (_methodName65.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes65, parameterTypes)) {
+		if (_methodName75.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes75, parameterTypes)) {
 			CalendarNotificationTemplateLocalServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
 
 			return null;
 		}
 
-		if (_methodName70.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes70, parameterTypes)) {
+		if (_methodName80.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes80, parameterTypes)) {
 			return CalendarNotificationTemplateLocalServiceUtil.addCalendarNotificationTemplate(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue(),
 				(com.liferay.calendar.notification.NotificationType)arguments[2],
@@ -296,22 +339,27 @@ public class CalendarNotificationTemplateLocalServiceClpInvoker {
 				(com.liferay.portal.service.ServiceContext)arguments[7]);
 		}
 
-		if (_methodName71.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes71, parameterTypes)) {
+		if (_methodName81.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes81, parameterTypes)) {
+			return CalendarNotificationTemplateLocalServiceUtil.deleteCalendarNotificationTemplate((com.liferay.calendar.model.CalendarNotificationTemplate)arguments[0]);
+		}
+
+		if (_methodName82.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes82, parameterTypes)) {
 			CalendarNotificationTemplateLocalServiceUtil.deleteCalendarNotificationTemplates(((Long)arguments[0]).longValue());
 
 			return null;
 		}
 
-		if (_methodName72.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes72, parameterTypes)) {
+		if (_methodName83.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes83, parameterTypes)) {
 			return CalendarNotificationTemplateLocalServiceUtil.fetchCalendarNotificationTemplate(((Long)arguments[0]).longValue(),
 				(com.liferay.calendar.notification.NotificationType)arguments[1],
 				(com.liferay.calendar.notification.NotificationTemplateType)arguments[2]);
 		}
 
-		if (_methodName73.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes73, parameterTypes)) {
+		if (_methodName84.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes84, parameterTypes)) {
 			return CalendarNotificationTemplateLocalServiceUtil.updateCalendarNotificationTemplate(((Long)arguments[0]).longValue(),
 				(java.lang.String)arguments[1], (java.lang.String)arguments[2],
 				(java.lang.String)arguments[3],
@@ -349,8 +397,6 @@ public class CalendarNotificationTemplateLocalServiceClpInvoker {
 	private String[] _methodParameterTypes12;
 	private String _methodName13;
 	private String[] _methodParameterTypes13;
-	private String _methodName14;
-	private String[] _methodParameterTypes14;
 	private String _methodName15;
 	private String[] _methodParameterTypes15;
 	private String _methodName16;
@@ -361,16 +407,26 @@ public class CalendarNotificationTemplateLocalServiceClpInvoker {
 	private String[] _methodParameterTypes18;
 	private String _methodName19;
 	private String[] _methodParameterTypes19;
-	private String _methodName64;
-	private String[] _methodParameterTypes64;
-	private String _methodName65;
-	private String[] _methodParameterTypes65;
-	private String _methodName70;
-	private String[] _methodParameterTypes70;
-	private String _methodName71;
-	private String[] _methodParameterTypes71;
-	private String _methodName72;
-	private String[] _methodParameterTypes72;
-	private String _methodName73;
-	private String[] _methodParameterTypes73;
+	private String _methodName20;
+	private String[] _methodParameterTypes20;
+	private String _methodName21;
+	private String[] _methodParameterTypes21;
+	private String _methodName22;
+	private String[] _methodParameterTypes22;
+	private String _methodName23;
+	private String[] _methodParameterTypes23;
+	private String _methodName74;
+	private String[] _methodParameterTypes74;
+	private String _methodName75;
+	private String[] _methodParameterTypes75;
+	private String _methodName80;
+	private String[] _methodParameterTypes80;
+	private String _methodName81;
+	private String[] _methodParameterTypes81;
+	private String _methodName82;
+	private String[] _methodParameterTypes82;
+	private String _methodName83;
+	private String[] _methodParameterTypes83;
+	private String _methodName84;
+	private String[] _methodParameterTypes84;
 }

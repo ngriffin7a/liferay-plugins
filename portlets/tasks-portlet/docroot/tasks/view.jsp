@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -35,7 +35,21 @@ portletURL.setParameter("tabs2", tabs2);
 
 <div class="control-wrapper">
 	<c:if test="<%= TasksPermission.contains(permissionChecker, themeDisplay.getScopeGroupId(), ActionKeys.ADD_ENTRY) %>">
-		<a class="add-task" href="javascript:;" onClick="Liferay.Tasks.displayPopup('<portlet:renderURL windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>"><portlet:param name="mvcPath" value="/tasks/edit_task.jsp" /></portlet:renderURL>', '<liferay-ui:message key="add-task" />');"><liferay-ui:message key="add-task" /></a>
+		<portlet:renderURL var="addkURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+			<portlet:param name="mvcPath" value="/tasks/edit_task.jsp" />
+		</portlet:renderURL>
+
+		<%
+		String taglibOnClick = "Liferay.Tasks.displayPopup('" + addkURL.toString() + "', '" + LanguageUtil.get(request, "add-task") + "');";
+		%>
+
+		<liferay-ui:icon
+			iconCssClass="icon-plus"
+			label="<%= true %>"
+			message="add-task"
+			onClick="<%= taglibOnClick %>"
+			url="javascript:;"
+		/>
 	</c:if>
 
 	<c:if test="<%= TasksPermission.contains(permissionChecker, themeDisplay.getScopeGroupId(), ActionKeys.PERMISSIONS) %>">
@@ -44,17 +58,32 @@ portletURL.setParameter("tabs2", tabs2);
 			modelResourceDescription="<%= HtmlUtil.escape(themeDisplay.getScopeGroupName()) %>"
 			resourcePrimKey="<%= String.valueOf(scopeGroupId) %>"
 			var="permissionsURL"
+			windowState="<%= LiferayWindowState.POP_UP.toString() %>"
 		/>
 
-		<a class="permission-tasks" href="<%= permissionsURL %>"><liferay-ui:message key="permissions" /></a>
+		<liferay-ui:icon
+			iconCssClass="icon-lock"
+			label="<%= true %>"
+			message="permissions"
+			method="get"
+			url="<%= permissionsURL %>"
+			useDialog="<%= true %>"
+		/>
 	</c:if>
 
-	<a class="filter-tasks" href="javascript:;" onClick="Liferay.Tasks.toggleTasksFilter();"><liferay-ui:message key="filter" /></a>
+	<liferay-ui:icon
+		cssClass="filter-tasks"
+		iconCssClass="icon-tag"
+		label="<%= true %>"
+		message="filter"
+		onClick="Liferay.Tasks.toggleTasksFilter()"
+		url="javascript:;"
+	/>
 
 	<div style="clear: both;"><!-- --></div>
 </div>
 
-<div class="filter-wrapper aui-helper-hidden">
+<div class="filter-wrapper hide">
 	<%@ include file="/tasks/view_tasks_filter.jspf" %>
 </div>
 
@@ -81,6 +110,7 @@ portletURL.setParameter("tabs2", tabs2);
 			Liferay.Tasks.init(
 				{
 					currentTab: '<%= HtmlUtil.escape(tabs1) %>',
+					namespace: '<portlet:namespace />',
 					taskListURL: '<portlet:renderURL windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>"><portlet:param name="mvcPath" value="/tasks/view_tasks.jsp" /></portlet:renderURL>'
 				}
 			);

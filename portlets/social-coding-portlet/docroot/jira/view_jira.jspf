@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -53,8 +53,9 @@ String jiraUserId = ExpandoValueLocalServiceUtil.getData(company.getCompanyId(),
 					<portlet:renderURL var="editURL" windowState="<%= WindowState.MAXIMIZED.toString() %>" />
 
 					<liferay-ui:icon
-						image="edit"
+						iconCssClass="icon-edit"
 						label="<%= true %>"
+						message="edit"
 						url="<%= editURL %>"
 					/>
 				</c:if>
@@ -65,37 +66,51 @@ String jiraUserId = ExpandoValueLocalServiceUtil.getData(company.getCompanyId(),
 						<a href="<liferay-portlet:renderURL windowState="<%= WindowState.MAXIMIZED.toString() %>" />">Set your JIRA login.</a>
 					</c:when>
 					<c:otherwise>
-						<%= LanguageUtil.format(pageContext, (user2.isMale() ? "x-has-not-configured-his-jira-login" : "x-has-not-configured-her-jira-login"), HtmlUtil.escape(user2.getFullName())) %>
+						<%= LanguageUtil.format(request, (user2.isMale() ? "x-has-not-configured-his-jira-login" : "x-has-not-configured-her-jira-login"), HtmlUtil.escape(user2.getFullName()), false) %>
 					</c:otherwise>
 				</c:choose>
 			</c:otherwise>
 		</c:choose>
 	</c:when>
 	<c:otherwise>
-		<form action="<portlet:actionURL name="updateJira" />" method="post" name="<portlet:namespace />fm">
-		<input name="<portlet:namespace />redirect" type="hidden" value="<%= currentURL %>" />
+		<liferay-portlet:actionURL name="updateJira" var="updateJiraURL" />
 
-		<div class="portlet-msg-info">
-			<%= LanguageUtil.format(pageContext, "set-your-login-for-x-to-track-your-jira-activity", "http://support.liferay.com") %>
-		</div>
+		<aui:form action="<%= updateJiraURL %>" method="post" name="<portlet:namespace />fm">
+			<input name="<portlet:namespace />redirect" type="hidden" value="<%= currentURL %>" />
 
-		<table class="lfr-table">
-		<tr>
-			<td>
-				<liferay-ui:message key="jira-login" />
-			</td>
-			<td>
-				<input class="lfr-input-text" name="<portlet:namespace />jiraUserId" style="width: 150px;" type="text" value="<%= jiraUserId %>" />
-			</td>
-		</tr>
-		</table>
+			<div class="alert alert-info">
+				<%= LanguageUtil.format(request, "set-your-login-for-x-to-track-your-jira-activity", PortletPropsValues.JIRA_URL, false) %>
+			</div>
 
-		<br />
+			<table class="lfr-table">
+			<tr>
+				<td>
+					<liferay-ui:message key="jira-login" />
+				</td>
+				<td>
+					<input class="lfr-input-text" name="<portlet:namespace />jiraUserId" style="width: 150px;" type="text" value="<%= jiraUserId %>" />
+				</td>
+			</tr>
+			</table>
 
-		<input type="submit" value="<liferay-ui:message key="save" />" />
+			<br />
 
-		<input onClick="location.href = '<portlet:renderURL windowState="<%= WindowState.NORMAL.toString() %>" />';" type="button" value="<liferay-ui:message key="cancel" />" />
+			<aui:button-row>
+				<aui:button cssClass="btn-primary" type="setup" value="save" />
 
-		</form>
+				<aui:button id="cancelJiraSetup" name="cancelJiraSetup" value="cancel" />
+			</aui:button-row>
+
+			<aui:script use="aui-base">
+				A.one('#<portlet:namespace />cancelJiraSetup').on(
+					'click',
+					function(event) {
+						event.preventDefault();
+
+						A.config.win.location = '<portlet:renderURL windowState="<%= WindowState.NORMAL.toString() %>" />';
+					}
+				);
+			</aui:script>
+		</aui:form>
 	</c:otherwise>
 </c:choose>

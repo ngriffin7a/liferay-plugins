@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -23,10 +23,10 @@
 		headerNames="subject,preview,posted-by"
 		iteratorURL="<%= portletURL %>"
 		rowChecker="<%= new RowChecker(renderResponse) %>"
+		total="<%= MBMessageLocalServiceUtil.getCategoryMessagesCount(scopeGroupId, MBCategoryConstants.DISCUSSION_CATEGORY_ID, WorkflowConstants.STATUS_DENIED) %>"
 	>
 		<liferay-ui:search-container-results
 			results="<%= MBMessageLocalServiceUtil.getCategoryMessages(scopeGroupId, MBCategoryConstants.DISCUSSION_CATEGORY_ID, WorkflowConstants.STATUS_DENIED, searchContainer.getStart(), searchContainer.getEnd()) %>"
-			total="<%= MBMessageLocalServiceUtil.getCategoryMessagesCount(scopeGroupId, MBCategoryConstants.DISCUSSION_CATEGORY_ID, WorkflowConstants.STATUS_DENIED) %>"
 		/>
 
 		<c:if test="<%= !results.isEmpty() %>">
@@ -80,7 +80,7 @@
 				name="posted-by"
 			>
 				<div>
-					<%= message.isAnonymous() ? LanguageUtil.get(pageContext, "anonymous") : HtmlUtil.escape(PortalUtil.getUserName(message.getUserId(), message.getUserName())) %>
+					<%= message.isAnonymous() ? LanguageUtil.get(request, "anonymous") : HtmlUtil.escape(PortalUtil.getUserName(message.getUserId(), message.getUserName())) %>
 				</div>
 
 				<div>
@@ -90,6 +90,7 @@
 
 			<liferay-ui:search-container-column-jsp
 				align="right"
+				cssClass="entry-action"
 				path="/moderation/discussions_action.jsp"
 			/>
 		</liferay-ui:search-container-row>

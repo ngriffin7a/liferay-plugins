@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -24,48 +24,48 @@ import java.util.Arrays;
  */
 public class CalendarImporterLocalServiceClpInvoker {
 	public CalendarImporterLocalServiceClpInvoker() {
-		_methodName126 = "getBeanIdentifier";
+		_methodName134 = "getBeanIdentifier";
 
-		_methodParameterTypes126 = new String[] {  };
+		_methodParameterTypes134 = new String[] {  };
 
-		_methodName127 = "setBeanIdentifier";
+		_methodName135 = "setBeanIdentifier";
 
-		_methodParameterTypes127 = new String[] { "java.lang.String" };
+		_methodParameterTypes135 = new String[] { "java.lang.String" };
 
-		_methodName130 = "importCalEvent";
+		_methodName138 = "importCalEvent";
 
-		_methodParameterTypes130 = new String[] {
+		_methodParameterTypes138 = new String[] {
 				"com.liferay.portlet.calendar.model.CalEvent"
 			};
 
-		_methodName131 = "importCalEvents";
+		_methodName139 = "importCalEvents";
 
-		_methodParameterTypes131 = new String[] {  };
+		_methodParameterTypes139 = new String[] {  };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
 		Object[] arguments) throws Throwable {
-		if (_methodName126.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes126, parameterTypes)) {
+		if (_methodName134.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes134, parameterTypes)) {
 			return CalendarImporterLocalServiceUtil.getBeanIdentifier();
 		}
 
-		if (_methodName127.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes127, parameterTypes)) {
+		if (_methodName135.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes135, parameterTypes)) {
 			CalendarImporterLocalServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
 
 			return null;
 		}
 
-		if (_methodName130.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes130, parameterTypes)) {
+		if (_methodName138.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes138, parameterTypes)) {
 			CalendarImporterLocalServiceUtil.importCalEvent((com.liferay.portlet.calendar.model.CalEvent)arguments[0]);
 
 			return null;
 		}
 
-		if (_methodName131.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes131, parameterTypes)) {
+		if (_methodName139.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes139, parameterTypes)) {
 			CalendarImporterLocalServiceUtil.importCalEvents();
 
 			return null;
@@ -74,12 +74,12 @@ public class CalendarImporterLocalServiceClpInvoker {
 		throw new UnsupportedOperationException();
 	}
 
-	private String _methodName126;
-	private String[] _methodParameterTypes126;
-	private String _methodName127;
-	private String[] _methodParameterTypes127;
-	private String _methodName130;
-	private String[] _methodParameterTypes130;
-	private String _methodName131;
-	private String[] _methodParameterTypes131;
+	private String _methodName134;
+	private String[] _methodParameterTypes134;
+	private String _methodName135;
+	private String[] _methodParameterTypes135;
+	private String _methodName138;
+	private String[] _methodParameterTypes138;
+	private String _methodName139;
+	private String[] _methodParameterTypes139;
 }

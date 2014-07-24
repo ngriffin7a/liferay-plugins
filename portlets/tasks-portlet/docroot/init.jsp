@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -28,13 +28,13 @@
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 <%@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
-<%@ page import="com.liferay.portal.NoSuchGroupException" %><%@
-page import="com.liferay.portal.kernel.bean.BeanParamUtil" %><%@
+<%@ page import="com.liferay.portal.kernel.bean.BeanParamUtil" %><%@
 page import="com.liferay.portal.kernel.dao.orm.QueryUtil" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
+page import="com.liferay.portal.kernel.language.UnicodeLanguageUtil" %><%@
+page import="com.liferay.portal.kernel.portlet.LiferayPortletURL" %><%@
 page import="com.liferay.portal.kernel.portlet.LiferayWindowState" %><%@
 page import="com.liferay.portal.kernel.util.CalendarFactoryUtil" %><%@
-page import="com.liferay.portal.kernel.util.Constants" %><%@
 page import="com.liferay.portal.kernel.util.DateUtil" %><%@
 page import="com.liferay.portal.kernel.util.FastDateFormatFactoryUtil" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
@@ -52,17 +52,10 @@ page import="com.liferay.portal.service.UserLocalServiceUtil" %><%@
 page import="com.liferay.portal.util.PortalUtil" %><%@
 page import="com.liferay.portal.util.comparator.UserFirstNameComparator" %><%@
 page import="com.liferay.portlet.PortletURLFactoryUtil" %><%@
-page import="com.liferay.portlet.asset.NoSuchTagException" %><%@
 page import="com.liferay.portlet.asset.model.AssetTag" %><%@
 page import="com.liferay.portlet.asset.model.AssetTagStats" %><%@
 page import="com.liferay.portlet.asset.service.AssetTagLocalServiceUtil" %><%@
 page import="com.liferay.portlet.asset.service.AssetTagStatsLocalServiceUtil" %><%@
-page import="com.liferay.portlet.messageboards.model.MBMessage" %><%@
-page import="com.liferay.portlet.messageboards.model.MBMessageDisplay" %><%@
-page import="com.liferay.portlet.messageboards.model.MBThread" %><%@
-page import="com.liferay.portlet.messageboards.model.MBTreeWalker" %><%@
-page import="com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil" %><%@
-page import="com.liferay.portlet.messageboards.util.comparator.MessageCreateDateComparator" %><%@
 page import="com.liferay.portlet.social.model.SocialRelationConstants" %><%@
 page import="com.liferay.tasks.model.TasksEntry" %><%@
 page import="com.liferay.tasks.model.TasksEntryConstants" %><%@
@@ -77,7 +70,6 @@ page import="com.liferay.tasks.util.WebKeys" %>
 <%@ page import="java.util.ArrayList" %><%@
 page import="java.util.Calendar" %><%@
 page import="java.util.Date" %><%@
-page import="java.util.Iterator" %><%@
 page import="java.util.LinkedHashMap" %><%@
 page import="java.util.List" %>
 

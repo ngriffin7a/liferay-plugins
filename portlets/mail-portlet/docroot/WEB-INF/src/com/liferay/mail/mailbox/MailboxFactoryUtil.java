@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -17,7 +17,6 @@ package com.liferay.mail.mailbox;
 import com.liferay.mail.model.Account;
 import com.liferay.mail.service.AccountLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
 
@@ -33,7 +32,7 @@ public class MailboxFactoryUtil {
 
 	public static Mailbox getMailbox(
 			long userId, long accountId, String password)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		User user = UserLocalServiceUtil.getUser(userId);
 		Account account = AccountLocalServiceUtil.getAccount(accountId);
@@ -50,7 +49,7 @@ public class MailboxFactoryUtil {
 	}
 
 	public static Mailbox getMailbox(long userId, String protocol)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		User user = UserLocalServiceUtil.getUser(userId);
 

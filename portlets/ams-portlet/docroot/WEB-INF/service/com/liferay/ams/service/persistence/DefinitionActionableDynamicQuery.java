@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -18,15 +18,16 @@ import com.liferay.ams.model.Definition;
 import com.liferay.ams.service.DefinitionLocalServiceUtil;
 
 import com.liferay.portal.kernel.dao.orm.BaseActionableDynamicQuery;
-import com.liferay.portal.kernel.exception.SystemException;
 
 /**
  * @author Brian Wing Shun Chan
+ * @deprecated As of 7.0.0, replaced by {@link DefinitionLocalServiceUtil#getActionableDynamicQuery()}
  * @generated
  */
+@Deprecated
 public abstract class DefinitionActionableDynamicQuery
 	extends BaseActionableDynamicQuery {
-	public DefinitionActionableDynamicQuery() throws SystemException {
+	public DefinitionActionableDynamicQuery() {
 		setBaseLocalService(DefinitionLocalServiceUtil.getService());
 		setClass(Definition.class);
 

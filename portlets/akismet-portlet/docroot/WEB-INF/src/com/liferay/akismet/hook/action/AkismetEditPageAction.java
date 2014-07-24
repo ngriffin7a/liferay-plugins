@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -17,7 +17,6 @@ package com.liferay.akismet.hook.action;
 import com.liferay.akismet.util.AkismetConstants;
 import com.liferay.akismet.util.AkismetUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
@@ -119,7 +118,7 @@ public class AkismetEditPageAction extends BaseStrutsPortletAction {
 
 	protected void updateSummary(
 			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
@@ -163,30 +162,22 @@ public class AkismetEditPageAction extends BaseStrutsPortletAction {
 		if (spam) {
 			pattern = "version-x-was-marked-as-spam";
 
-			// Latest version
-
-			if (wikiPage.getVersion() >= latestVersion) {
-				if (previousVersionWikiPage != null) {
-					WikiPageLocalServiceUtil.revertPage(
-						themeDisplay.getUserId(), wikiPage.getNodeId(),
-						wikiPage.getTitle(), previousVersion, serviceContext);
-				}
-				else {
-					WikiPageLocalServiceUtil.updatePage(
-						themeDisplay.getUserId(), wikiPage.getNodeId(),
-						wikiPage.getTitle(), latestVersion, null,
-						StringPool.BLANK, true, wikiPage.getFormat(),
-						wikiPage.getParentTitle(), wikiPage.getRedirectTitle(),
-						serviceContext);
-				}
-			}
-
 			// Selected version
 
 			wikiPage.setStatus(WorkflowConstants.STATUS_APPROVED);
 			wikiPage.setSummary(AkismetConstants.WIKI_PAGE_PENDING_APPROVAL);
 
 			wikiPage = WikiPageLocalServiceUtil.updateWikiPage(wikiPage);
+
+			// Latest version
+
+			if ((wikiPage.getVersion() >= latestVersion) &&
+				(previousVersionWikiPage != null)) {
+
+				WikiPageLocalServiceUtil.revertPage(
+					themeDisplay.getUserId(), wikiPage.getNodeId(),
+					wikiPage.getTitle(), previousVersion, serviceContext);
+			}
 
 			// Akismet
 
@@ -196,6 +187,13 @@ public class AkismetEditPageAction extends BaseStrutsPortletAction {
 		}
 		else {
 			pattern = "version-x-was-marked-as-not-spam";
+
+			// Selected version
+
+			wikiPage.setStatus(WorkflowConstants.STATUS_APPROVED);
+			wikiPage.setSummary(StringPool.BLANK);
+
+			wikiPage = WikiPageLocalServiceUtil.updateWikiPage(wikiPage);
 
 			// Latest version
 
@@ -210,13 +208,6 @@ public class AkismetEditPageAction extends BaseStrutsPortletAction {
 				SessionMessages.add(actionRequest, "anotherUserHasMadeChanges");
 			}
 
-			// Selected version
-
-			wikiPage.setStatus(WorkflowConstants.STATUS_APPROVED);
-			wikiPage.setSummary(StringPool.BLANK);
-
-			wikiPage = WikiPageLocalServiceUtil.updateWikiPage(wikiPage);
-
 			// Akismet
 
 			if (AkismetUtil.isWikiEnabled(themeDisplay.getCompanyId())) {
@@ -225,7 +216,8 @@ public class AkismetEditPageAction extends BaseStrutsPortletAction {
 		}
 
 		String value = LanguageUtil.format(
-			themeDisplay.getLocale(), pattern, wikiPage.getVersion());
+			themeDisplay.getLocale(), pattern,
+			String.valueOf(wikiPage.getVersion()), false);
 
 		SessionMessages.add(actionRequest, "requestProcessed", value);
 	}

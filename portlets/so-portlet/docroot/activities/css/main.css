@@ -1,24 +1,46 @@
 @import "compass";
+@import "mixins";
+
+$default-border-color: #E7E7E7;
 
 .so-portlet-activities {
 	display: block;
 	width: 100%;
 
 	.activity-item {
-		border-bottom: 1px solid #E7E7E7;
+		border-bottom: 1px solid $default-border-color;
 		min-height: 45px;
 		padding: 1em;
+		position: relative;
+
+		.control-group {
+			margin-bottom: 0;
+			margin-left: 35px;
+			padding: 0 5px;
+
+			input {
+				display: block;
+				margin-bottom: 0;
+				padding-left: 0;
+				padding-right: 0;
+				text-indent: 0.5em;
+				width: 100%;
+			}
+		}
 	}
 
 	.user-portrait {
 		float: left;
-		height: 45px;
-		position: relative;
+		left: 1em;
+		margin-bottom: .4em;
+		max-height: 45px;
+		position: absolute;
+		top: 1em;
 		width: 45px;
 
 		.avatar {
 			display: block;
-			height: 45px;
+			max-height: 45px;
 			overflow: hidden;
 
 			img {
@@ -27,35 +49,45 @@
 		}
 	}
 
-	.activity-data {
+	.activity-action, .activity-block, .activity-header {
 		margin-left: 55px;
-		overflow: hidden;
+		word-wrap: break-word;
 	}
 
 	.activity-header {
-		margin-bottom: .4em;
+		margin-bottom: 0.4em;
 
 		a {
 			font-weight: bold;
 		}
 	}
 
+	.activity-user-name {
+		float: left;
+	}
+
 	.activity-time {
 		color: #999;
 		float: right;
-		font-size: .9em;
-		line-height: .9em;
+		font-size: 0.9em;
+		line-height: 0.9em;
 		margin-left: 1em;
 	}
 
 	.activity-action {
+		clear: both;
 		color: #333333;
-		margin-bottom: .8em;
+		margin-bottom: 0.8em;
+	}
+
+	.activity-block {
+		overflow: hidden;
 	}
 
 	.activity-body, .grouped-activity-body-container {
-		border: 1px solid #E7E7E7;
-		margin: .8em 0 0;
+		border: 1px solid $default-border-color;
+
+		@include hyphenation;
 
 		span {
 			line-height: 1em;
@@ -73,7 +105,7 @@
 			display: block;
 			font-weight: bold;
 			overflow: hidden;
-			padding-bottom: .4em;
+			padding-bottom: 0.4em;
 
 			.event-title {
 				float: left;
@@ -89,7 +121,7 @@
 	}
 
 	.activity-body {
-		padding: .6em .9em;
+		padding: 0.6em 0.9em;
 
 		&.document {
 			min-height: 75px;
@@ -97,18 +129,22 @@
 			position: relative;
 
 			.document-thumbnail {
+				left: 0;
 				overflow: hidden;
 				padding-right: 0;
 				position: absolute;
 				width: 75px;
 
 				img {
+					display: block;
 					height: 75px;
+					margin: auto;
+					max-width: none;
 				}
 			}
 
 			.document-container {
-				margin: .6em .9em .6em 85px;
+				margin: 0.6em 0.9em 0.6em 85px;
 			}
 
 			.title {
@@ -127,14 +163,14 @@
 	}
 
 	.grouped-activity-body-container {
-		max-height: 93px;
+		max-height: 107px;
 		overflow: hidden;
 
 		.activity-subentry {
-			border-bottom: 1px solid #E7E7E7;
+			border-bottom: 1px solid $default-border-color;
 			height: 2.5em;
 			overflow: hidden;
-			padding: 0 .9em;
+			padding: 0 0.9em;
 
 			&:last-child {
 				border-bottom-width: 0;
@@ -170,7 +206,7 @@
 			.microblog-content {
 				display: block;
 				line-height: 1.5em;
-				padding: .75em .75em .75em 45px;
+				padding: 0.75em 0.75em 0.75em 45px;
 			}
 		}
 	}
@@ -182,7 +218,7 @@
 			}
 
 			&.low {
-				border-left: 6px solid #E7E7E7;
+				border-left: 6px solid $default-border-color;
 			}
 
 			&.normal {
@@ -191,7 +227,7 @@
 
 			.activity-body {
 				border-left-width: 0;
-				padding: .3em .9em;
+				padding: 0.3em 0.9em;
 			}
 		}
 
@@ -201,14 +237,17 @@
 	}
 
 	.activity-footer-toolbar {
-		background: #EAEAEA;
-		padding: .5em 1em;
+		background: #EAEAEA;;
+		padding: 0 1em;
 
 		.action {
 			border-left: 1px solid #2571AD;
 			display: inline-block;
 			height: 16px;
-			padding: 0 .5em 0 .6em;
+			line-height: 16px;
+			margin: .5em 0;
+			padding: 0 .6em 0 .8em;
+			vertical-align: middle;
 
 			&:first-child {
 				border-left-width: 0;
@@ -217,13 +256,16 @@
 		}
 
 		a {
-			font-size: .9em;
+			font-size: 0.9em;
 		}
 	}
 
 	.comments-container, .microblogs-portlet-activity .activity-body {
 		.user-portrait {
 			height: 32px;
+			left: 0;
+			position: relative;
+			top: 0;
 			width: 32px;
 
 			.avatar {
@@ -236,11 +278,30 @@
 		}
 	}
 
-	.comment-entry, .comments-container .aui-form {
+	.comments-container {
+		.user-portrait {
+			left: 2px;
+			position: absolute;
+			top: 2px;
+		}
+
+		.control-group {
+			margin: 0 2px 0 34px;
+			padding: 0;
+
+			.comment-form {
+				padding: 5px 0;
+			}
+		}
+	}
+
+	.comment-entry, .comments-container .form {
 		background: #EAEAEA;
 		border-top: 1px solid #FFF;
+		margin-bottom: 0;
 		overflow: hidden;
 		padding: 2px;
+		position: relative;
 	}
 
 	.comment-entry {
@@ -249,7 +310,7 @@
 			margin-left: 36px;
 
 			span {
-				margin-right: .5em;
+				margin-right: 0.5em;
 			}
 		}
 
@@ -267,12 +328,16 @@
 	}
 
 	.comment-form {
-		.aui-field-content {
+		.field-content {
 			overflow: hidden;
 		}
 
-		.aui-field-element {
+		.field-element {
 			border: 1px solid #C7D0DA;
+
+			@include border-radius(5px);
+			@include box-shadow(0 1px 3px #C9C9C9 inset);
+
 			display: block;
 			margin: 2px;
 
@@ -285,32 +350,28 @@
 			}
 		}
 
-		.aui-field-input-text {
+		.field-input-text {
 			border-width: 0;
+
+			@include box-shadow(none);
+
 			padding: 5px 0;
 			text-indent: 5px;
 			width: 100%;
-
-			&:hover {
-				border-color: transparent;
-			}
-
-			&:focus {
-				outline-color: transparent;
-			}
 		}
 	}
 
 	.toggler-content-collapsed .activity-footer-toolbar {
 		border-top: 1px solid #EFEFEF;
+
+		@include box-shadow(0 -1px 15px -5px rgba(0, 0, 0, 0.8));
+
 		margin-top: -2px;
 	}
 
 	.loading-bar {
 		display: block;
-		background-image: url(@theme_image_path@/aui/loading_indicator.gif);
-		background-position: 45% center;
-		background-repeat: no-repeat;
+		background: transparent url(@theme_image_path@/aui/loading_indicator.gif) 45% center no-repeat;
 		font-style: italic;
 		height: 100px;
 		margin-left: 25px;
@@ -318,20 +379,20 @@
 	}
 
 	.loading-bar.loaded {
-		visibility: hidden;
+		display: none;
 	}
 
-	.no-activities {
-		padding: 5px;
+	.manual-loader, .no-activities {
+		padding: 10px;
 		text-align: center;
 	}
 }
 
-/* ---------- Internet Explorer ---------- */
+/* ---------- Internet explorer ---------- */
 
 .ie7 {
 	.so-portlet-activities .grouped-activity-body-container {
-		height: 93px;
+		height: 107px;
 		max-height: none;
 
 		.activity-subentry-title {
@@ -345,21 +406,33 @@
 	}
 }
 
-/* ---------- Extras ---------- */
+/* ---------- Responsive ---------- */
 
-.so-portlet-activities {
-	.toggler-content-collapsed .activity-footer-toolbar {
-		@include box-shadow(0 -1px 15px -5px rgba(0, 0, 0, .8));
-	}
-
-	.comment-form {
-		.aui-field-element {
-			@include border-radius(5px);
-			@include box-shadow(0 1px 3px #C9C9C9 inset);
+@include respond-to(phone) {
+	.so-portlet-activities {
+		.user-portrait {
+			left: 0;
+			position: relative;
+			top: 0;
 		}
 
-		.aui-field-input-text {
-			@include box-shadow(none);
+		.activity-user-name {
+			float: none;
+		}
+
+		.activity-time {
+			float: none;
+			margin: .4em 0 0;
+		}
+
+		.activity-block, .activity-action {
+			float: left;
+			margin-left: 0;
+			width: 100%;
+		}
+
+		.activity-action {
+			margin-bottom: .4em;
 		}
 	}
 }

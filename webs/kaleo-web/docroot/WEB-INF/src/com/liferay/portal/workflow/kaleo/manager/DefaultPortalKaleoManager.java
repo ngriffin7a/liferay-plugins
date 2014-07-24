@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -16,9 +16,9 @@ package com.liferay.portal.workflow.kaleo.manager;
 
 import com.liferay.portal.NoSuchRoleException;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.workflow.WorkflowDefinition;
 import com.liferay.portal.kernel.workflow.WorkflowDefinitionManager;
@@ -164,7 +164,7 @@ public class DefaultPortalKaleoManager
 
 			_workflowDefinitionManager.deployWorkflowDefinition(
 				serviceContext.getCompanyId(), defaultUser.getUserId(),
-				definitionName, inputStream);
+				definitionName, FileUtil.getBytes(inputStream));
 		}
 	}
 
@@ -240,7 +240,7 @@ public class DefaultPortalKaleoManager
 	protected void deployDefaultDefinitionLink(
 			User defaultUser, Company company, Group companyGroup,
 			String assetClassName, String workflowDefinitionName)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		WorkflowDefinitionLink workflowDefinitionLink =
 			WorkflowDefinitionLinkLocalServiceUtil.

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -23,8 +23,12 @@ import com.liferay.mail.service.persistence.MessagePersistence;
 
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.bean.IdentifiableBean;
+import com.liferay.portal.kernel.dao.db.DB;
+import com.liferay.portal.kernel.dao.db.DBFactoryUtil;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdate;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DefaultActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.Projection;
@@ -36,7 +40,9 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.model.PersistedModel;
 import com.liferay.portal.service.BaseLocalServiceImpl;
 import com.liferay.portal.service.PersistedModelLocalServiceRegistryUtil;
+import com.liferay.portal.service.persistence.ClassNamePersistence;
 import com.liferay.portal.service.persistence.UserPersistence;
+import com.liferay.portal.util.PortalUtil;
 
 import java.io.Serializable;
 
@@ -70,12 +76,10 @@ public abstract class AttachmentLocalServiceBaseImpl
 	 *
 	 * @param attachment the attachment
 	 * @return the attachment that was added
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
-	public Attachment addAttachment(Attachment attachment)
-		throws SystemException {
+	public Attachment addAttachment(Attachment attachment) {
 		attachment.setNew(true);
 
 		return attachmentPersistence.update(attachment);
@@ -98,12 +102,11 @@ public abstract class AttachmentLocalServiceBaseImpl
 	 * @param attachmentId the primary key of the attachment
 	 * @return the attachment that was removed
 	 * @throws PortalException if a attachment with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public Attachment deleteAttachment(long attachmentId)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return attachmentPersistence.remove(attachmentId);
 	}
 
@@ -112,12 +115,10 @@ public abstract class AttachmentLocalServiceBaseImpl
 	 *
 	 * @param attachment the attachment
 	 * @return the attachment that was removed
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public Attachment deleteAttachment(Attachment attachment)
-		throws SystemException {
+	public Attachment deleteAttachment(Attachment attachment) {
 		return attachmentPersistence.remove(attachment);
 	}
 
@@ -134,12 +135,9 @@ public abstract class AttachmentLocalServiceBaseImpl
 	 *
 	 * @param dynamicQuery the dynamic query
 	 * @return the matching rows
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public List dynamicQuery(DynamicQuery dynamicQuery)
-		throws SystemException {
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery) {
 		return attachmentPersistence.findWithDynamicQuery(dynamicQuery);
 	}
 
@@ -154,12 +152,10 @@ public abstract class AttachmentLocalServiceBaseImpl
 	 * @param start the lower bound of the range of model instances
 	 * @param end the upper bound of the range of model instances (not inclusive)
 	 * @return the range of matching rows
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public List dynamicQuery(DynamicQuery dynamicQuery, int start, int end)
-		throws SystemException {
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery, int start,
+		int end) {
 		return attachmentPersistence.findWithDynamicQuery(dynamicQuery, start,
 			end);
 	}
@@ -176,12 +172,10 @@ public abstract class AttachmentLocalServiceBaseImpl
 	 * @param end the upper bound of the range of model instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching rows
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public List dynamicQuery(DynamicQuery dynamicQuery, int start, int end,
-		OrderByComparator orderByComparator) throws SystemException {
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery, int start,
+		int end, OrderByComparator<T> orderByComparator) {
 		return attachmentPersistence.findWithDynamicQuery(dynamicQuery, start,
 			end, orderByComparator);
 	}
@@ -191,11 +185,9 @@ public abstract class AttachmentLocalServiceBaseImpl
 	 *
 	 * @param dynamicQuery the dynamic query
 	 * @return the number of rows that match the dynamic query
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public long dynamicQueryCount(DynamicQuery dynamicQuery)
-		throws SystemException {
+	public long dynamicQueryCount(DynamicQuery dynamicQuery) {
 		return attachmentPersistence.countWithDynamicQuery(dynamicQuery);
 	}
 
@@ -205,18 +197,16 @@ public abstract class AttachmentLocalServiceBaseImpl
 	 * @param dynamicQuery the dynamic query
 	 * @param projection the projection to apply to the query
 	 * @return the number of rows that match the dynamic query
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public long dynamicQueryCount(DynamicQuery dynamicQuery,
-		Projection projection) throws SystemException {
+		Projection projection) {
 		return attachmentPersistence.countWithDynamicQuery(dynamicQuery,
 			projection);
 	}
 
 	@Override
-	public Attachment fetchAttachment(long attachmentId)
-		throws SystemException {
+	public Attachment fetchAttachment(long attachmentId) {
 		return attachmentPersistence.fetchByPrimaryKey(attachmentId);
 	}
 
@@ -226,17 +216,47 @@ public abstract class AttachmentLocalServiceBaseImpl
 	 * @param attachmentId the primary key of the attachment
 	 * @return the attachment
 	 * @throws PortalException if a attachment with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public Attachment getAttachment(long attachmentId)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return attachmentPersistence.findByPrimaryKey(attachmentId);
 	}
 
 	@Override
+	public ActionableDynamicQuery getActionableDynamicQuery() {
+		ActionableDynamicQuery actionableDynamicQuery = new DefaultActionableDynamicQuery();
+
+		actionableDynamicQuery.setBaseLocalService(com.liferay.mail.service.AttachmentLocalServiceUtil.getService());
+		actionableDynamicQuery.setClass(Attachment.class);
+		actionableDynamicQuery.setClassLoader(getClassLoader());
+
+		actionableDynamicQuery.setPrimaryKeyPropertyName("attachmentId");
+
+		return actionableDynamicQuery;
+	}
+
+	protected void initActionableDynamicQuery(
+		ActionableDynamicQuery actionableDynamicQuery) {
+		actionableDynamicQuery.setBaseLocalService(com.liferay.mail.service.AttachmentLocalServiceUtil.getService());
+		actionableDynamicQuery.setClass(Attachment.class);
+		actionableDynamicQuery.setClassLoader(getClassLoader());
+
+		actionableDynamicQuery.setPrimaryKeyPropertyName("attachmentId");
+	}
+
+	/**
+	 * @throws PortalException
+	 */
+	@Override
+	public PersistedModel deletePersistedModel(PersistedModel persistedModel)
+		throws PortalException {
+		return attachmentLocalService.deleteAttachment((Attachment)persistedModel);
+	}
+
+	@Override
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return attachmentPersistence.findByPrimaryKey(primaryKeyObj);
 	}
 
@@ -250,11 +270,9 @@ public abstract class AttachmentLocalServiceBaseImpl
 	 * @param start the lower bound of the range of attachments
 	 * @param end the upper bound of the range of attachments (not inclusive)
 	 * @return the range of attachments
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public List<Attachment> getAttachments(int start, int end)
-		throws SystemException {
+	public List<Attachment> getAttachments(int start, int end) {
 		return attachmentPersistence.findAll(start, end);
 	}
 
@@ -262,10 +280,9 @@ public abstract class AttachmentLocalServiceBaseImpl
 	 * Returns the number of attachments.
 	 *
 	 * @return the number of attachments
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public int getAttachmentsCount() throws SystemException {
+	public int getAttachmentsCount() {
 		return attachmentPersistence.countAll();
 	}
 
@@ -274,12 +291,10 @@ public abstract class AttachmentLocalServiceBaseImpl
 	 *
 	 * @param attachment the attachment
 	 * @return the attachment that was updated
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
-	public Attachment updateAttachment(Attachment attachment)
-		throws SystemException {
+	public Attachment updateAttachment(Attachment attachment) {
 		return attachmentPersistence.update(attachment);
 	}
 
@@ -452,6 +467,63 @@ public abstract class AttachmentLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the class name local service.
+	 *
+	 * @return the class name local service
+	 */
+	public com.liferay.portal.service.ClassNameLocalService getClassNameLocalService() {
+		return classNameLocalService;
+	}
+
+	/**
+	 * Sets the class name local service.
+	 *
+	 * @param classNameLocalService the class name local service
+	 */
+	public void setClassNameLocalService(
+		com.liferay.portal.service.ClassNameLocalService classNameLocalService) {
+		this.classNameLocalService = classNameLocalService;
+	}
+
+	/**
+	 * Returns the class name remote service.
+	 *
+	 * @return the class name remote service
+	 */
+	public com.liferay.portal.service.ClassNameService getClassNameService() {
+		return classNameService;
+	}
+
+	/**
+	 * Sets the class name remote service.
+	 *
+	 * @param classNameService the class name remote service
+	 */
+	public void setClassNameService(
+		com.liferay.portal.service.ClassNameService classNameService) {
+		this.classNameService = classNameService;
+	}
+
+	/**
+	 * Returns the class name persistence.
+	 *
+	 * @return the class name persistence
+	 */
+	public ClassNamePersistence getClassNamePersistence() {
+		return classNamePersistence;
+	}
+
+	/**
+	 * Sets the class name persistence.
+	 *
+	 * @param classNamePersistence the class name persistence
+	 */
+	public void setClassNamePersistence(
+		ClassNamePersistence classNamePersistence) {
+		this.classNamePersistence = classNamePersistence;
+	}
+
+	/**
 	 * Returns the resource local service.
 	 *
 	 * @return the resource local service
@@ -590,13 +662,18 @@ public abstract class AttachmentLocalServiceBaseImpl
 	}
 
 	/**
-	 * Performs an SQL query.
+	 * Performs a SQL query.
 	 *
 	 * @param sql the sql query
 	 */
-	protected void runSQL(String sql) throws SystemException {
+	protected void runSQL(String sql) {
 		try {
 			DataSource dataSource = attachmentPersistence.getDataSource();
+
+			DB db = DBFactoryUtil.getDB();
+
+			sql = db.buildSQL(sql);
+			sql = PortalUtil.transformSQL(sql);
 
 			SqlUpdate sqlUpdate = SqlUpdateFactoryUtil.getSqlUpdate(dataSource,
 					sql, new int[0]);
@@ -626,6 +703,12 @@ public abstract class AttachmentLocalServiceBaseImpl
 	protected MessagePersistence messagePersistence;
 	@BeanReference(type = com.liferay.counter.service.CounterLocalService.class)
 	protected com.liferay.counter.service.CounterLocalService counterLocalService;
+	@BeanReference(type = com.liferay.portal.service.ClassNameLocalService.class)
+	protected com.liferay.portal.service.ClassNameLocalService classNameLocalService;
+	@BeanReference(type = com.liferay.portal.service.ClassNameService.class)
+	protected com.liferay.portal.service.ClassNameService classNameService;
+	@BeanReference(type = ClassNamePersistence.class)
+	protected ClassNamePersistence classNamePersistence;
 	@BeanReference(type = com.liferay.portal.service.ResourceLocalService.class)
 	protected com.liferay.portal.service.ResourceLocalService resourceLocalService;
 	@BeanReference(type = com.liferay.portal.service.UserLocalService.class)

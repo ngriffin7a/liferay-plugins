@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -23,11 +23,11 @@
 	%>
 
 	<liferay-util:html-top>
-		<link href="<%= PortalUtil.getStaticResourceURL(request, request.getContextPath() + "/css/main.css", portlet.getTimestamp()) %>" rel="stylesheet" type="text/css" />
+		<link href="<%= PortalUtil.getStaticResourceURL(request, PortalUtil.getPathContext(request) + "/css/main.css", portlet.getTimestamp()) %>" rel="stylesheet" type="text/css" />
 	</liferay-util:html-top>
 
 	<liferay-util:html-bottom>
-		<script defer="defer" src="<%= PortalUtil.getStaticResourceURL(request, request.getContextPath() + "/js/main.js", portlet.getTimestamp()) %>" type="text/javascript"></script>
+		<script defer="defer" src="<%= PortalUtil.getStaticResourceURL(request, PortalUtil.getPathContext(request) + "/js/main.js", portlet.getTimestamp()) %>" type="text/javascript"></script>
 	</liferay-util:html-bottom>
 
 	<%
@@ -60,7 +60,7 @@
 			<div class="chat-status">
 				<div class="status-message">
 					<c:if test="<%= Validator.isNotNull(statusMessage) %>">
-						<%= LanguageUtil.format(pageContext, "you-are-x", "<strong>" + statusMessage + "</strong>", false) %>
+						<%= LanguageUtil.format(request, "you-are-x", "<strong>" + statusMessage + "</strong>", false) %>
 					</c:if>
 				</div>
 			</div>
@@ -69,15 +69,15 @@
 				<ul class="chat-tabs">
 					<li class="buddy-list loading <%= openPanelId.equals("buddylist") ? "selected" : "" %>">
 						<div class="panel-trigger" panelId="buddylist">
-							<span class="trigger-name"><%= LanguageUtil.format(pageContext, "online-friends-x", "(" + buddiesCount + ")", false) %></span>
+							<span class="trigger-name"><%= LanguageUtil.format(request, "online-friends-x", "(" + buddiesCount + ")", false) %></span>
 						</div>
 
 						<div class="chat-panel">
 							<div class="panel-window">
-								<div class="panel-button minimize"></div>
+								<div class="minimize panel-button"></div>
 
 								<div class="panel-title">
-									<%= LanguageUtil.format(pageContext, "online-friends-x", "(" + buddiesCount + ")", false) %>
+									<%= LanguageUtil.format(request, "online-friends-x", "(" + buddiesCount + ")", false) %>
 								</div>
 
 								<aui:input cssClass="search-buddies" label="" name="searchBuddies" placeholder="search" />
@@ -94,7 +94,7 @@
 											long portraitId = (Long)buddy[5];
 										%>
 
-											<li class="user active" userId="<%= userId %>">
+											<li class="active user" userId="<%= userId %>">
 												<img alt="" src="<%= themeDisplay.getPathImage() %>/user_portrait?img_id=<%= portraitId %>&t=<%= WebServerServletTokenUtil.getToken(portraitId) %>" />
 
 												<div class="name">
@@ -120,13 +120,13 @@
 
 						<div class="chat-panel">
 							<div class="panel-window">
-								<div class="panel-button minimize"></div>
+								<div class="minimize panel-button"></div>
 
 								<div class="panel-title"><liferay-ui:message key="settings" /></div>
 
 								<ul class="lfr-component settings">
 									<li>
-										<label for="statusMessage"><%= LanguageUtil.format(pageContext, "x-is", HtmlUtil.escape(user.getFullName()), false) %></label>
+										<label for="statusMessage"><%= LanguageUtil.format(request, "x-is", HtmlUtil.escape(user.getFullName()), false) %></label>
 
 										<input id="statusMessage" type="text" value="<%= statusMessage %>" />
 									</li>

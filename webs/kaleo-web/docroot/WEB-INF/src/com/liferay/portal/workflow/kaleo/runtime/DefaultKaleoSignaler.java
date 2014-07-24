@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,7 +15,6 @@
 package com.liferay.portal.workflow.kaleo.runtime;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.messaging.sender.DefaultSingleDestinationMessageSender;
 import com.liferay.portal.kernel.messaging.sender.SingleDestinationMessageSender;
@@ -56,7 +55,7 @@ public class DefaultKaleoSignaler
 	@Override
 	public void signalEntry(
 			String transitionName, ExecutionContext executionContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		KaleoInstanceToken kaleoInstanceToken =
 			executionContext.getKaleoInstanceToken();
@@ -75,7 +74,7 @@ public class DefaultKaleoSignaler
 		rollbackFor = {Exception.class})
 	public void signalExecute(
 			KaleoNode currentKaleoNode, ExecutionContext executionContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		NodeExecutor nodeExecutor = NodeExecutorFactory.getNodeExecutor(
 			currentKaleoNode.getType());
@@ -95,7 +94,7 @@ public class DefaultKaleoSignaler
 	@Override
 	public void signalExit(
 			String transitionName, ExecutionContext executionContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		KaleoInstanceToken kaleoInstanceToken =
 			executionContext.getKaleoInstanceToken();

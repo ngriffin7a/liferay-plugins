@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -22,8 +22,7 @@ ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_
 User curUser = (User)row.getObject();
 %>
 
-<liferay-ui:icon-menu>
-
+<liferay-ui:icon-menu icon="<%= StringPool.BLANK %>" message="<%= StringPool.BLANK %>">
 	<portlet:renderURL var="calendarsURL">
 		<portlet:param name="mvcPath" value="/view_calendars.jsp" />
 		<portlet:param name="redirect" value="<%= currentURL %>" />
@@ -32,7 +31,7 @@ User curUser = (User)row.getObject();
 	</portlet:renderURL>
 
 	<liferay-ui:icon
-		image="calendar"
+		iconCssClass="icon-calendar"
 		message="view-calendars"
 		url="<%= calendarsURL %>"
 	/>

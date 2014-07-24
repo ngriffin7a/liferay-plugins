@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -18,7 +18,7 @@ import com.liferay.marketplace.service.ClpSerializer;
 import com.liferay.marketplace.service.ModuleLocalServiceUtil;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.model.BaseModel;
@@ -77,6 +77,9 @@ public class ModuleClp extends BaseModelImpl<Module> implements Module {
 		attributes.put("appId", getAppId());
 		attributes.put("contextName", getContextName());
 
+		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
+		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
+
 		return attributes;
 	}
 
@@ -105,6 +108,9 @@ public class ModuleClp extends BaseModelImpl<Module> implements Module {
 		if (contextName != null) {
 			setContextName(contextName);
 		}
+
+		_entityCacheEnabled = GetterUtil.getBoolean("entityCacheEnabled");
+		_finderCacheEnabled = GetterUtil.getBoolean("finderCacheEnabled");
 	}
 
 	@Override
@@ -249,7 +255,7 @@ public class ModuleClp extends BaseModelImpl<Module> implements Module {
 	}
 
 	@Override
-	public void persist() throws SystemException {
+	public void persist() {
 		if (this.isNew()) {
 			ModuleLocalServiceUtil.addModule(this);
 		}
@@ -313,9 +319,23 @@ public class ModuleClp extends BaseModelImpl<Module> implements Module {
 		}
 	}
 
+	public Class<?> getClpSerializerClass() {
+		return _clpSerializerClass;
+	}
+
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	@Override
+	public boolean isEntityCacheEnabled() {
+		return _entityCacheEnabled;
+	}
+
+	@Override
+	public boolean isFinderCacheEnabled() {
+		return _finderCacheEnabled;
 	}
 
 	@Override
@@ -370,4 +390,7 @@ public class ModuleClp extends BaseModelImpl<Module> implements Module {
 	private long _appId;
 	private String _contextName;
 	private BaseModel<?> _moduleRemoteModel;
+	private Class<?> _clpSerializerClass = com.liferay.marketplace.service.ClpSerializer.class;
+	private boolean _entityCacheEnabled;
+	private boolean _finderCacheEnabled;
 }

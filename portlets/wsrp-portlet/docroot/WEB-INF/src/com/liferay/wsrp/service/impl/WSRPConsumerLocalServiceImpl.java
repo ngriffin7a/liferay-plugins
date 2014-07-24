@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -18,6 +18,7 @@ import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -25,6 +26,7 @@ import com.liferay.portal.kernel.util.ReleaseInfo;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Company;
+import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.wsrp.NoSuchConsumerException;
@@ -62,7 +64,7 @@ public class WSRPConsumerLocalServiceImpl
 			long companyId, String adminPortletId, String name, String url,
 			String forwardCookies, String forwardHeaders,
 			String markupCharacterSets, ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		Date now = new Date();
 
@@ -90,17 +92,20 @@ public class WSRPConsumerLocalServiceImpl
 
 	@Override
 	public WSRPConsumer deleteWSRPConsumer(long wsrpConsumerId)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		WSRPConsumer wsrpConsumer = wsrpConsumerPersistence.findByPrimaryKey(
 			wsrpConsumerId);
 
-		return deleteWSRPConsumer(wsrpConsumer);
+		return wsrpConsumerLocalService.deleteWSRPConsumer(wsrpConsumer);
 	}
 
 	@Override
+	@SystemEvent(
+		action = SystemEventConstants.ACTION_SKIP,
+		type = SystemEventConstants.TYPE_DELETE)
 	public WSRPConsumer deleteWSRPConsumer(WSRPConsumer wsrpConsumer)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		wsrpConsumerPortletLocalService.deleteWSRPConsumerPortlets(
 			wsrpConsumer.getWsrpConsumerId());
@@ -108,8 +113,18 @@ public class WSRPConsumerLocalServiceImpl
 		return wsrpConsumerPersistence.remove(wsrpConsumer);
 	}
 
+	@Override
+	public void deleteWSRPConsumers(long companyId) throws PortalException {
+		List<WSRPConsumer> wsrpConsumers =
+			wsrpConsumerPersistence.findByCompanyId(companyId);
+
+		for (WSRPConsumer wsrpConsumer : wsrpConsumers) {
+			wsrpConsumerLocalService.deleteWSRPConsumer(wsrpConsumer);
+		}
+	}
+
 	public WSRPConsumer getWSRPConsumer(String wsrpConsumerUuid)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		List<WSRPConsumer> wsrpConsumers = wsrpConsumerPersistence.findByUuid(
 			wsrpConsumerUuid);
@@ -124,20 +139,19 @@ public class WSRPConsumerLocalServiceImpl
 	}
 
 	public List<WSRPConsumer> getWSRPConsumers(
-			long companyId, int start, int end)
-		throws SystemException {
+		long companyId, int start, int end) {
 
 		return wsrpConsumerPersistence.findByCompanyId(companyId, start, end);
 	}
 
-	public int getWSRPConsumersCount(long companyId) throws SystemException {
+	public int getWSRPConsumersCount(long companyId) {
 		return wsrpConsumerPersistence.countByCompanyId(companyId);
 	}
 
 	public WSRPConsumer registerWSRPConsumer(
 			long wsrpConsumerId, String adminPortletId,
 			UnicodeProperties registrationProperties, String registrationHandle)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		WSRPConsumer wsrpConsumer = wsrpConsumerPersistence.findByPrimaryKey(
 			wsrpConsumerId);
@@ -175,9 +189,7 @@ public class WSRPConsumerLocalServiceImpl
 	}
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public void restartConsumer(long wsrpConsumerId)
-		throws PortalException, SystemException {
-
+	public void restartConsumer(long wsrpConsumerId) throws PortalException {
 		WSRPConsumer wsrpConsumer = wsrpConsumerPersistence.findByPrimaryKey(
 			wsrpConsumerId);
 
@@ -224,7 +236,7 @@ public class WSRPConsumerLocalServiceImpl
 	}
 
 	public void updateServiceDescription(long wsrpConsumerId)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		WSRPConsumer wsrpConsumer = wsrpConsumerPersistence.findByPrimaryKey(
 			wsrpConsumerId);
@@ -256,7 +268,7 @@ public class WSRPConsumerLocalServiceImpl
 			long wsrpConsumerId, String adminPortletId, String name, String url,
 			String forwardCookies, String forwardHeaders,
 			String markupCharacterSets)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		validate(name);
 

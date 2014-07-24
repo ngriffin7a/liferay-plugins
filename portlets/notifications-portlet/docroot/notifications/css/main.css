@@ -1,39 +1,75 @@
 @import "compass";
 
+@mixin keyframes($name) {
+	@-o-keyframes #{$name} {
+		@content;
+	}
+
+	@-moz-keyframes #{$name} {
+		@content;
+	}
+
+	@-webkit-keyframes #{$name} {
+		@content;
+	}
+
+	@keyframes #{$name} {
+		@content;
+	}
+}
+
+@include keyframes(shakeNotificationCount) {
+	0% {
+		@include transform(rotate(5deg));
+	}
+	25% {
+		@include transform(translate(3px, -4px), rotate(0deg));
+	}
+	50% {
+		@include transform(rotate(-5deg));
+	}
+	75% {
+		@include transform(rotate(0deg));
+	}
+	100% {
+		@include transform(translate(0, 0), rotate(5deg));
+	}
+}
+
 .dockbar-user-notifications, .notifications-portlet {
 	.user-notifications-count {
-		background-color: #F03D25;
-		border: 1px solid #F83722;
-		border-bottom-color: #C0311E;
-		border-top-color: #E23923;
-		font-size: 9px;
-		font-weight: bold;
-		left: 55%;
-		line-height: 12px;
-		overflow: hidden;
-		padding: 0 2px;
-		position: absolute;
-		top: 55%;
+		background-color: #0066B3;
+		border: 1px solid #0066B3;
+		display: block;
+		line-height: 1.25em;
+		margin: 4px 0;
+		padding: 2px 6px;
+		position: relative;
+
+		&.alert {
+			background-color: #FAA732;
+			border: 1px solid #FAA732;
+			color: #FFF;
+
+			@include experimental(animation, shakeNotificationCount 0.8s linear infinite);
+			@include experimental(animation-iteration-count, 2);
+			@include experimental(transform-origin, 50% 50%);
+		}
 	}
 
 	.dropdown-menu {
-		width: 400px;
+		@include box-sizing(border-box);
+
+		width: 350px;
 	}
 
 	.user-notifications-list {
 		list-style: none;
-		margin: 0;
+		padding: 5px;
 
 		.message {
+			padding: 5px;
 			text-align: center;
-
-			&.top {
-				border-bottom: 1px solid #FFF;
-			}
-
-			&.bottom {
-				border-top: 1px solid #FFF;
-			}
 
 			.left-nav {
 				float: left;
@@ -43,6 +79,13 @@
 			.right-nav {
 				float: right;
 				padding: 0 10px;
+			}
+
+			a {
+				border-radius: 4px;
+				display: inline;
+				margin: 2px 2px;
+				padding: 5px 5px;
 			}
 
 			a:hover {
@@ -56,17 +99,20 @@
 		}
 
 		.user-notification {
-			a {
-				clear: both;
-				display: block;
-				font-weight: normal;
-				padding: 5px;
-				white-space: normal;
+			background: #FFF;
+
+			@include border-radius(4px);
+
+			margin-bottom: 10px;
+			padding: 10px;
+
+			&:hover, &.hover {
+				background: #FAFAFA;
+				cursor: pointer;
 			}
 
-			a:hover {
-				color: #FFF;
-				text-decoration: none;
+			.btn {
+				margin-right: 10px;
 			}
 
 			.icon-remove-circle {
@@ -80,13 +126,16 @@
 				position: relative;
 
 				.user-thumbnail {
-					border: 0;
-					height: 45px;
+					@include border-radius(50%);
+					@include box-shadow(0 0 0 2px #5594E0);
+
+					display: block;
+					height: 30px;
+					margin: 5px 10px 0 0;
 					overflow: hidden;
-					width: 45px;
 
 					img {
-						width: 45px;
+						width: 30px;
 					}
 				}
 
@@ -108,24 +157,23 @@
 			}
 
 			.content {
-				margin-left: 65px;
+				margin-left: 40px;
+			}
+
+			.body {
+				color: #222;
+				overflow: hidden;
+				text-overflow: ellipsis;
 			}
 		}
 	}
 }
 
 .notifications-portlet {
-	.user-notifications-sidebar {
-		float: left;
-		padding: 0 10px 0 0;
-		width: 18%;
-	}
-
 	.nav {
 		margin-bottom: 10px;
 
 		a {
-			color: #333333;
 			display: block;
 			padding: 5px 10px;
 
@@ -136,24 +184,24 @@
 			.count {
 				float: right;
 			}
+
+			&:hover {
+				text-decoration: none;
+			}
 		}
 
-		a:hover {
-			background-color: #0A85E4;
-			color: #FFF;
-			text-decoration: none;
-		}
-
-		a.selected {
+		a:hover, a.selected {
 			background-color: #0A85E4;
 			color: #FFF;
 		}
 	}
 
+	.notifications-container, .user-notifications-list-container {
+		@include box-sizing(border-box);
+	}
+
 	.user-notifications-list-container {
 		border: 1px solid #D5D5D5;
-		float: left;
-		width: 80%;
 
 		.loading-mask {
 			min-height: 30px;
@@ -161,60 +209,107 @@
 	}
 
 	.user-notifications-list {
-		.user-notification {
-			a {
-				border-bottom: 1px solid #D5D5D5;
-				padding: 15px;
-			}
+		margin: 0;
 
-			a:hover {
-				background-color: #0A85E4;
+		.mark-all-as-read {
+			background-color: #FFF;
+			border-radius: 4px;
+			color: #000;
+			margin: 10px 10px;
+			padding: 5px 5px;
+			text-decoration: none;
+
+			&:hover {
+				background: #2FA4F5;
 				color: #FFF;
-				text-decoration: none;
-			}
-
-			&.unread {
-				background-color: #EFF1F7
+				cursor: pointer;
 			}
 		}
 
-		.message {
-			&.top {
-				border-bottom: 1px solid #D5D5D5;
+		.user-notification {
+			color: #000;
+			margin: 5px;
+
+			&:hover {
+				color: #FFF;
+				background: #2FA4F5
+			}
+
+			a {
+				color: #009AE5;
+			}
+		}
+
+		.message.top {
+			border-bottom: 1px solid #D5D5D5;
+			margin-bottom: 10px;
+		}
+	}
+
+	.manage-notifications {
+		overflow: auto;
+
+		.table {
+			max-width: none;
+		}
+
+		.title {
+			margin-bottom: 10px;
+
+			.notification-delivery {
+				font-size: 16px;
+				font-weight: bold;
+				margin-bottom: 10px;
+			}
+		}
+
+		.notification-deliveries {
+			caption {
+				font-size: 14px;
+				font-weight: bold;
+				margin-bottom: 10px 0;
+				text-align: left;
 			}
 		}
 	}
+}
+
+.span1, .span2, .span3, .span4, .span5, .span6 {
+	.notifications-portlet {
+		.user-notifications-sidebar, .user-notifications-list-container {
+			margin-left: 0;
+			width: 100%;
+		}
+	}
+}
+
+.span8 {
+	width: 70%;
 }
 
 /* ---------- Extras ---------- */
 
-.dockbar-user-notifications {
-	.user-notifications-count {
-		@include border-radius(2px);
-	}
+.dockbar-user-notifications .user-notifications-count, .notifications-portlet .nav a:hover, .notifications-portlet .nav a.selected, .notifications-portlet .user-notifications-list-container {
+	@include border-radius(4px);
 }
 
-.notifications-portlet {
-	.nav {
-		a:hover {
-			@include border-radius(4px);
+.aui {
+	li.user-notification {
+		line-height: 20px;
+	}
+
+	.dockbar .navbar-inner .container .nav-collapse > .nav li.dropdown.dockbar-user-notifications > ul.dropdown-menu {
+		left: auto;
+		max-height: none;
+		padding: 10px;
+		right: 0;
+
+		&.pull-right:after {
+			right: 20px;
 		}
-
-		a.selected {
-			@include border-radius(4px);
-		}
-	}
-
-	.user-notifications-list-container {
-		@include border-radius(4px);
 	}
 }
 
-.aui li.user-notification {
-	line-height: 20px;
-}
-
-.aui .dockbar .nav li.dropdown.dockbar-user-notifications .dropdown-menu {
-	left: auto;
-	right: 0;
+.ie8 .user-thumbnail img {
+	max-width: none;
 }

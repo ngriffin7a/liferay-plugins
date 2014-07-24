@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -49,17 +49,17 @@ flashAttributes = ParamUtil.getString(request, "flashAttributes", flashAttribute
 flashVariables = ParamUtil.getString(request, "flashVariables", flashVariables);
 %>
 
-<liferay-portlet:actionURL portletConfiguration="true" var="actionURL" />
+<liferay-portlet:actionURL portletConfiguration="true" var="configurationActionURL" />
 
-<aui:form action="<%= actionURL %>" method="post" name="fm">
+<aui:form action="<%= configurationActionURL %>" method="post" name="fm">
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.UPDATE %>" />
 
 	<aui:fieldset>
-		<aui:input cssClass="lfr-input-text-container" name="preferences--movie--" type="text" value="<%= movie %>" />
+		<aui:input name="preferences--movie--" type="text" value="<%= movie %>" wrapperCssClass="lfr-input-text-container" />
 
-		<aui:input cssClass="lfr-textarea-container" name="preferences--flashAttributes--" onKeyDown="Liferay.Util.checkTab(this); disableEsc();" type="textarea" value="<%= flashAttributes %>" wrap="soft" />
+		<aui:input name="preferences--flashAttributes--" onKeyDown="Liferay.Util.checkTab(this); disableEsc();" type="textarea" value="<%= flashAttributes %>" wrap="soft" wrapperCssClass="lfr-textarea-container" />
 
-		<aui:input cssClass="lfr-textarea-container" name="preferences--flashVariables--" onKeyDown="Liferay.Util.checkTab(this); Liferay.Util.disableEsc();" type="textarea" value="<%= flashVariables %>" wrap="soft" />
+		<aui:input name="preferences--flashVariables--" onKeyDown="Liferay.Util.checkTab(this); Liferay.Util.disableEsc();" type="textarea" value="<%= flashVariables %>" wrap="soft" wrapperCssClass="lfr-textarea-container" />
 	</aui:fieldset>
 
 	<aui:button-row>

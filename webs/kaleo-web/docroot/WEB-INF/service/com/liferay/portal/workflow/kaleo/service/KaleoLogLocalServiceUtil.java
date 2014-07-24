@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -38,18 +38,99 @@ public class KaleoLogLocalServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.portal.workflow.kaleo.service.impl.KaleoLogLocalServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static com.liferay.portal.workflow.kaleo.model.KaleoLog addActionExecutionKaleoLog(
+		com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken kaleoInstanceToken,
+		com.liferay.portal.workflow.kaleo.model.KaleoAction kaleoAction,
+		long startTime, long endTime, java.lang.String comment,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addActionExecutionKaleoLog(kaleoInstanceToken, kaleoAction,
+			startTime, endTime, comment, serviceContext);
+	}
 
 	/**
 	* Adds the kaleo log to the database. Also notifies the appropriate model listeners.
 	*
 	* @param kaleoLog the kaleo log
 	* @return the kaleo log that was added
-	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.portal.workflow.kaleo.model.KaleoLog addKaleoLog(
-		com.liferay.portal.workflow.kaleo.model.KaleoLog kaleoLog)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.workflow.kaleo.model.KaleoLog kaleoLog) {
 		return getService().addKaleoLog(kaleoLog);
+	}
+
+	public static com.liferay.portal.workflow.kaleo.model.KaleoLog addNodeEntryKaleoLog(
+		com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken kaleoInstanceToken,
+		com.liferay.portal.workflow.kaleo.model.KaleoNode sourceKaleoNode,
+		com.liferay.portal.workflow.kaleo.model.KaleoNode targetKaleoNode,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addNodeEntryKaleoLog(kaleoInstanceToken, sourceKaleoNode,
+			targetKaleoNode, serviceContext);
+	}
+
+	public static com.liferay.portal.workflow.kaleo.model.KaleoLog addNodeExitKaleoLog(
+		com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken kaleoInstanceToken,
+		com.liferay.portal.workflow.kaleo.model.KaleoNode departingKaleoNode,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addNodeExitKaleoLog(kaleoInstanceToken, departingKaleoNode,
+			serviceContext);
+	}
+
+	public static com.liferay.portal.workflow.kaleo.model.KaleoLog addTaskAssignmentKaleoLog(
+		java.util.List<com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignmentInstance> previousKaleoTaskAssignmentInstances,
+		com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceToken kaleoTaskInstanceToken,
+		java.lang.String comment,
+		java.util.Map<java.lang.String, java.io.Serializable> workflowContext,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addTaskAssignmentKaleoLog(previousKaleoTaskAssignmentInstances,
+			kaleoTaskInstanceToken, comment, workflowContext, serviceContext);
+	}
+
+	public static com.liferay.portal.workflow.kaleo.model.KaleoLog addTaskCompletionKaleoLog(
+		com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceToken kaleoTaskInstanceToken,
+		java.lang.String comment,
+		java.util.Map<java.lang.String, java.io.Serializable> workflowContext,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addTaskCompletionKaleoLog(kaleoTaskInstanceToken, comment,
+			workflowContext, serviceContext);
+	}
+
+	public static com.liferay.portal.workflow.kaleo.model.KaleoLog addTaskUpdateKaleoLog(
+		com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceToken kaleoTaskInstanceToken,
+		java.lang.String comment,
+		java.util.Map<java.lang.String, java.io.Serializable> workflowContext,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addTaskUpdateKaleoLog(kaleoTaskInstanceToken, comment,
+			workflowContext, serviceContext);
+	}
+
+	public static com.liferay.portal.workflow.kaleo.model.KaleoLog addWorkflowInstanceEndKaleoLog(
+		com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken kaleoInstanceToken,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addWorkflowInstanceEndKaleoLog(kaleoInstanceToken,
+			serviceContext);
+	}
+
+	public static com.liferay.portal.workflow.kaleo.model.KaleoLog addWorkflowInstanceStartKaleoLog(
+		com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken kaleoInstanceToken,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addWorkflowInstanceStartKaleoLog(kaleoInstanceToken,
+			serviceContext);
 	}
 
 	/**
@@ -63,19 +144,16 @@ public class KaleoLogLocalServiceUtil {
 		return getService().createKaleoLog(kaleoLogId);
 	}
 
-	/**
-	* Deletes the kaleo log with the primary key from the database. Also notifies the appropriate model listeners.
-	*
-	* @param kaleoLogId the primary key of the kaleo log
-	* @return the kaleo log that was removed
-	* @throws PortalException if a kaleo log with the primary key could not be found
-	* @throws SystemException if a system exception occurred
-	*/
-	public static com.liferay.portal.workflow.kaleo.model.KaleoLog deleteKaleoLog(
-		long kaleoLogId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().deleteKaleoLog(kaleoLogId);
+	public static void deleteCompanyKaleoLogs(long companyId) {
+		getService().deleteCompanyKaleoLogs(companyId);
+	}
+
+	public static void deleteKaleoDefinitionKaleoLogs(long kaleoDefinitionId) {
+		getService().deleteKaleoDefinitionKaleoLogs(kaleoDefinitionId);
+	}
+
+	public static void deleteKaleoInstanceKaleoLogs(long kaleoInstanceId) {
+		getService().deleteKaleoInstanceKaleoLogs(kaleoInstanceId);
 	}
 
 	/**
@@ -83,12 +161,32 @@ public class KaleoLogLocalServiceUtil {
 	*
 	* @param kaleoLog the kaleo log
 	* @return the kaleo log that was removed
-	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.portal.workflow.kaleo.model.KaleoLog deleteKaleoLog(
-		com.liferay.portal.workflow.kaleo.model.KaleoLog kaleoLog)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.workflow.kaleo.model.KaleoLog kaleoLog) {
 		return getService().deleteKaleoLog(kaleoLog);
+	}
+
+	/**
+	* Deletes the kaleo log with the primary key from the database. Also notifies the appropriate model listeners.
+	*
+	* @param kaleoLogId the primary key of the kaleo log
+	* @return the kaleo log that was removed
+	* @throws PortalException if a kaleo log with the primary key could not be found
+	*/
+	public static com.liferay.portal.workflow.kaleo.model.KaleoLog deleteKaleoLog(
+		long kaleoLogId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().deleteKaleoLog(kaleoLogId);
+	}
+
+	/**
+	* @throws PortalException
+	*/
+	public static com.liferay.portal.model.PersistedModel deletePersistedModel(
+		com.liferay.portal.model.PersistedModel persistedModel)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().deletePersistedModel(persistedModel);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery() {
@@ -100,12 +198,9 @@ public class KaleoLogLocalServiceUtil {
 	*
 	* @param dynamicQuery the dynamic query
 	* @return the matching rows
-	* @throws SystemException if a system exception occurred
 	*/
-	@SuppressWarnings("rawtypes")
-	public static java.util.List dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public static <T> java.util.List<T> dynamicQuery(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
 		return getService().dynamicQuery(dynamicQuery);
 	}
 
@@ -120,12 +215,10 @@ public class KaleoLogLocalServiceUtil {
 	* @param start the lower bound of the range of model instances
 	* @param end the upper bound of the range of model instances (not inclusive)
 	* @return the range of matching rows
-	* @throws SystemException if a system exception occurred
 	*/
-	@SuppressWarnings("rawtypes")
-	public static java.util.List dynamicQuery(
+	public static <T> java.util.List<T> dynamicQuery(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
-		int end) throws com.liferay.portal.kernel.exception.SystemException {
+		int end) {
 		return getService().dynamicQuery(dynamicQuery, start, end);
 	}
 
@@ -141,14 +234,11 @@ public class KaleoLogLocalServiceUtil {
 	* @param end the upper bound of the range of model instances (not inclusive)
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching rows
-	* @throws SystemException if a system exception occurred
 	*/
-	@SuppressWarnings("rawtypes")
-	public static java.util.List dynamicQuery(
+	public static <T> java.util.List<T> dynamicQuery(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
 		int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.util.OrderByComparator<T> orderByComparator) {
 		return getService()
 				   .dynamicQuery(dynamicQuery, start, end, orderByComparator);
 	}
@@ -158,11 +248,9 @@ public class KaleoLogLocalServiceUtil {
 	*
 	* @param dynamicQuery the dynamic query
 	* @return the number of rows that match the dynamic query
-	* @throws SystemException if a system exception occurred
 	*/
 	public static long dynamicQueryCount(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
 		return getService().dynamicQueryCount(dynamicQuery);
 	}
 
@@ -172,19 +260,44 @@ public class KaleoLogLocalServiceUtil {
 	* @param dynamicQuery the dynamic query
 	* @param projection the projection to apply to the query
 	* @return the number of rows that match the dynamic query
-	* @throws SystemException if a system exception occurred
 	*/
 	public static long dynamicQueryCount(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery,
-		com.liferay.portal.kernel.dao.orm.Projection projection)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.dao.orm.Projection projection) {
 		return getService().dynamicQueryCount(dynamicQuery, projection);
 	}
 
 	public static com.liferay.portal.workflow.kaleo.model.KaleoLog fetchKaleoLog(
-		long kaleoLogId)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		long kaleoLogId) {
 		return getService().fetchKaleoLog(kaleoLogId);
+	}
+
+	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
+		return getService().getActionableDynamicQuery();
+	}
+
+	/**
+	* Returns the Spring bean ID for this bean.
+	*
+	* @return the Spring bean ID for this bean
+	*/
+	public static java.lang.String getBeanIdentifier() {
+		return getService().getBeanIdentifier();
+	}
+
+	public static java.util.List<com.liferay.portal.workflow.kaleo.model.KaleoLog> getKaleoInstanceKaleoLogs(
+		long kaleoInstanceId, java.util.List<java.lang.Integer> logTypes,
+		int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.workflow.kaleo.model.KaleoLog> orderByComparator) {
+		return getService()
+				   .getKaleoInstanceKaleoLogs(kaleoInstanceId, logTypes, start,
+			end, orderByComparator);
+	}
+
+	public static int getKaleoInstanceKaleoLogsCount(long kaleoInstanceId,
+		java.util.List<java.lang.Integer> logTypes) {
+		return getService()
+				   .getKaleoInstanceKaleoLogsCount(kaleoInstanceId, logTypes);
 	}
 
 	/**
@@ -193,20 +306,11 @@ public class KaleoLogLocalServiceUtil {
 	* @param kaleoLogId the primary key of the kaleo log
 	* @return the kaleo log
 	* @throws PortalException if a kaleo log with the primary key could not be found
-	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.portal.workflow.kaleo.model.KaleoLog getKaleoLog(
 		long kaleoLogId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getKaleoLog(kaleoLogId);
-	}
-
-	public static com.liferay.portal.model.PersistedModel getPersistedModel(
-		java.io.Serializable primaryKeyObj)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().getPersistedModel(primaryKeyObj);
 	}
 
 	/**
@@ -219,11 +323,9 @@ public class KaleoLogLocalServiceUtil {
 	* @param start the lower bound of the range of kaleo logs
 	* @param end the upper bound of the range of kaleo logs (not inclusive)
 	* @return the range of kaleo logs
-	* @throws SystemException if a system exception occurred
 	*/
 	public static java.util.List<com.liferay.portal.workflow.kaleo.model.KaleoLog> getKaleoLogs(
-		int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		int start, int end) {
 		return getService().getKaleoLogs(start, end);
 	}
 
@@ -231,33 +333,38 @@ public class KaleoLogLocalServiceUtil {
 	* Returns the number of kaleo logs.
 	*
 	* @return the number of kaleo logs
-	* @throws SystemException if a system exception occurred
 	*/
-	public static int getKaleoLogsCount()
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public static int getKaleoLogsCount() {
 		return getService().getKaleoLogsCount();
 	}
 
-	/**
-	* Updates the kaleo log in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
-	*
-	* @param kaleoLog the kaleo log
-	* @return the kaleo log that was updated
-	* @throws SystemException if a system exception occurred
-	*/
-	public static com.liferay.portal.workflow.kaleo.model.KaleoLog updateKaleoLog(
-		com.liferay.portal.workflow.kaleo.model.KaleoLog kaleoLog)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().updateKaleoLog(kaleoLog);
+	public static java.util.List<com.liferay.portal.workflow.kaleo.model.KaleoLog> getKaleoTaskInstanceTokenKaleoLogs(
+		long kaleoTaskInstanceTokenId,
+		java.util.List<java.lang.Integer> logTypes, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.workflow.kaleo.model.KaleoLog> orderByComparator) {
+		return getService()
+				   .getKaleoTaskInstanceTokenKaleoLogs(kaleoTaskInstanceTokenId,
+			logTypes, start, end, orderByComparator);
 	}
 
-	/**
-	* Returns the Spring bean ID for this bean.
-	*
-	* @return the Spring bean ID for this bean
-	*/
-	public static java.lang.String getBeanIdentifier() {
-		return getService().getBeanIdentifier();
+	public static int getKaleoTaskInstanceTokenKaleoLogsCount(
+		long kaleoTaskInstanceTokenId,
+		java.util.List<java.lang.Integer> logTypes) {
+		return getService()
+				   .getKaleoTaskInstanceTokenKaleoLogsCount(kaleoTaskInstanceTokenId,
+			logTypes);
+	}
+
+	public static com.liferay.portal.model.PersistedModel getPersistedModel(
+		java.io.Serializable primaryKeyObj)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getPersistedModel(primaryKeyObj);
+	}
+
+	public static java.lang.Object invokeMethod(java.lang.String name,
+		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
+		throws java.lang.Throwable {
+		return getService().invokeMethod(name, parameterTypes, arguments);
 	}
 
 	/**
@@ -269,153 +376,15 @@ public class KaleoLogLocalServiceUtil {
 		getService().setBeanIdentifier(beanIdentifier);
 	}
 
-	public static java.lang.Object invokeMethod(java.lang.String name,
-		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
-		throws java.lang.Throwable {
-		return getService().invokeMethod(name, parameterTypes, arguments);
-	}
-
-	public static com.liferay.portal.workflow.kaleo.model.KaleoLog addActionExecutionKaleoLog(
-		com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken kaleoInstanceToken,
-		com.liferay.portal.workflow.kaleo.model.KaleoAction kaleoAction,
-		long startTime, long endTime, java.lang.String comment,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .addActionExecutionKaleoLog(kaleoInstanceToken, kaleoAction,
-			startTime, endTime, comment, serviceContext);
-	}
-
-	public static com.liferay.portal.workflow.kaleo.model.KaleoLog addNodeEntryKaleoLog(
-		com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken kaleoInstanceToken,
-		com.liferay.portal.workflow.kaleo.model.KaleoNode sourceKaleoNode,
-		com.liferay.portal.workflow.kaleo.model.KaleoNode targetKaleoNode,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .addNodeEntryKaleoLog(kaleoInstanceToken, sourceKaleoNode,
-			targetKaleoNode, serviceContext);
-	}
-
-	public static com.liferay.portal.workflow.kaleo.model.KaleoLog addNodeExitKaleoLog(
-		com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken kaleoInstanceToken,
-		com.liferay.portal.workflow.kaleo.model.KaleoNode departingKaleoNode,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .addNodeExitKaleoLog(kaleoInstanceToken, departingKaleoNode,
-			serviceContext);
-	}
-
-	public static com.liferay.portal.workflow.kaleo.model.KaleoLog addTaskAssignmentKaleoLog(
-		java.util.List<com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignmentInstance> previousKaleoTaskAssignmentInstances,
-		com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceToken kaleoTaskInstanceToken,
-		java.lang.String comment,
-		java.util.Map<java.lang.String, java.io.Serializable> workflowContext,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .addTaskAssignmentKaleoLog(previousKaleoTaskAssignmentInstances,
-			kaleoTaskInstanceToken, comment, workflowContext, serviceContext);
-	}
-
-	public static com.liferay.portal.workflow.kaleo.model.KaleoLog addTaskCompletionKaleoLog(
-		com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceToken kaleoTaskInstanceToken,
-		java.lang.String comment,
-		java.util.Map<java.lang.String, java.io.Serializable> workflowContext,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .addTaskCompletionKaleoLog(kaleoTaskInstanceToken, comment,
-			workflowContext, serviceContext);
-	}
-
-	public static com.liferay.portal.workflow.kaleo.model.KaleoLog addTaskUpdateKaleoLog(
-		com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceToken kaleoTaskInstanceToken,
-		java.lang.String comment,
-		java.util.Map<java.lang.String, java.io.Serializable> workflowContext,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .addTaskUpdateKaleoLog(kaleoTaskInstanceToken, comment,
-			workflowContext, serviceContext);
-	}
-
-	public static com.liferay.portal.workflow.kaleo.model.KaleoLog addWorkflowInstanceEndKaleoLog(
-		com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken kaleoInstanceToken,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .addWorkflowInstanceEndKaleoLog(kaleoInstanceToken,
-			serviceContext);
-	}
-
-	public static com.liferay.portal.workflow.kaleo.model.KaleoLog addWorkflowInstanceStartKaleoLog(
-		com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken kaleoInstanceToken,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .addWorkflowInstanceStartKaleoLog(kaleoInstanceToken,
-			serviceContext);
-	}
-
-	public static void deleteCompanyKaleoLogs(long companyId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		getService().deleteCompanyKaleoLogs(companyId);
-	}
-
-	public static void deleteKaleoDefinitionKaleoLogs(long kaleoDefinitionId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		getService().deleteKaleoDefinitionKaleoLogs(kaleoDefinitionId);
-	}
-
-	public static void deleteKaleoInstanceKaleoLogs(long kaleoInstanceId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		getService().deleteKaleoInstanceKaleoLogs(kaleoInstanceId);
-	}
-
-	public static java.util.List<com.liferay.portal.workflow.kaleo.model.KaleoLog> getKaleoInstanceKaleoLogs(
-		long kaleoInstanceId, java.util.List<java.lang.Integer> logTypes,
-		int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getKaleoInstanceKaleoLogs(kaleoInstanceId, logTypes, start,
-			end, orderByComparator);
-	}
-
-	public static int getKaleoInstanceKaleoLogsCount(long kaleoInstanceId,
-		java.util.List<java.lang.Integer> logTypes)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getKaleoInstanceKaleoLogsCount(kaleoInstanceId, logTypes);
-	}
-
-	public static java.util.List<com.liferay.portal.workflow.kaleo.model.KaleoLog> getKaleoTaskInstanceTokenKaleoLogs(
-		long kaleoTaskInstanceTokenId,
-		java.util.List<java.lang.Integer> logTypes, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getKaleoTaskInstanceTokenKaleoLogs(kaleoTaskInstanceTokenId,
-			logTypes, start, end, orderByComparator);
-	}
-
-	public static int getKaleoTaskInstanceTokenKaleoLogsCount(
-		long kaleoTaskInstanceTokenId,
-		java.util.List<java.lang.Integer> logTypes)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getKaleoTaskInstanceTokenKaleoLogsCount(kaleoTaskInstanceTokenId,
-			logTypes);
+	/**
+	* Updates the kaleo log in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	*
+	* @param kaleoLog the kaleo log
+	* @return the kaleo log that was updated
+	*/
+	public static com.liferay.portal.workflow.kaleo.model.KaleoLog updateKaleoLog(
+		com.liferay.portal.workflow.kaleo.model.KaleoLog kaleoLog) {
+		return getService().updateKaleoLog(kaleoLog);
 	}
 
 	public static void clearService() {
@@ -444,6 +413,7 @@ public class KaleoLogLocalServiceUtil {
 	/**
 	 * @deprecated As of 6.2.0
 	 */
+	@Deprecated
 	public void setService(KaleoLogLocalService service) {
 	}
 

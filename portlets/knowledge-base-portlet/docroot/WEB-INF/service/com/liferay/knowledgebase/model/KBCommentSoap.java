@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -43,6 +43,7 @@ public class KBCommentSoap implements Serializable {
 		soapModel.setClassPK(model.getClassPK());
 		soapModel.setContent(model.getContent());
 		soapModel.setHelpful(model.getHelpful());
+		soapModel.setStatus(model.getStatus());
 
 		return soapModel;
 	}
@@ -195,6 +196,14 @@ public class KBCommentSoap implements Serializable {
 		_helpful = helpful;
 	}
 
+	public int getStatus() {
+		return _status;
+	}
+
+	public void setStatus(int status) {
+		_status = status;
+	}
+
 	private String _uuid;
 	private long _kbCommentId;
 	private long _groupId;
@@ -207,4 +216,5 @@ public class KBCommentSoap implements Serializable {
 	private long _classPK;
 	private String _content;
 	private boolean _helpful;
+	private int _status;
 }

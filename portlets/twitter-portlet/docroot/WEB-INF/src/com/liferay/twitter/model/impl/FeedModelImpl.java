@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,15 +15,16 @@
 package com.liferay.twitter.model.impl;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.CacheModel;
+import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.BaseModelImpl;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 
 import com.liferay.portlet.expando.model.ExpandoBridge;
 import com.liferay.portlet.expando.util.ExpandoBridgeFactoryUtil;
@@ -139,6 +140,9 @@ public class FeedModelImpl extends BaseModelImpl<Feed> implements FeedModel {
 		attributes.put("twitterScreenName", getTwitterScreenName());
 		attributes.put("lastStatusId", getLastStatusId());
 
+		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
+		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
+
 		return attributes;
 	}
 
@@ -238,13 +242,19 @@ public class FeedModelImpl extends BaseModelImpl<Feed> implements FeedModel {
 	}
 
 	@Override
-	public String getUserUuid() throws SystemException {
-		return PortalUtil.getUserValue(getUserId(), "uuid", _userUuid);
+	public String getUserUuid() {
+		try {
+			User user = UserLocalServiceUtil.getUserById(getUserId());
+
+			return user.getUuid();
+		}
+		catch (PortalException pe) {
+			return StringPool.BLANK;
+		}
 	}
 
 	@Override
 	public void setUserUuid(String userUuid) {
-		_userUuid = userUuid;
 	}
 
 	public long getOriginalUserId() {
@@ -297,14 +307,19 @@ public class FeedModelImpl extends BaseModelImpl<Feed> implements FeedModel {
 	}
 
 	@Override
-	public String getTwitterUserUuid() throws SystemException {
-		return PortalUtil.getUserValue(getTwitterUserId(), "uuid",
-			_twitterUserUuid);
+	public String getTwitterUserUuid() {
+		try {
+			User user = UserLocalServiceUtil.getUserById(getTwitterUserId());
+
+			return user.getUuid();
+		}
+		catch (PortalException pe) {
+			return StringPool.BLANK;
+		}
 	}
 
 	@Override
 	public void setTwitterUserUuid(String twitterUserUuid) {
-		_twitterUserUuid = twitterUserUuid;
 	}
 
 	@Override
@@ -428,6 +443,16 @@ public class FeedModelImpl extends BaseModelImpl<Feed> implements FeedModel {
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	@Override
+	public boolean isEntityCacheEnabled() {
+		return ENTITY_CACHE_ENABLED;
+	}
+
+	@Override
+	public boolean isFinderCacheEnabled() {
+		return FINDER_CACHE_ENABLED;
 	}
 
 	@Override
@@ -576,14 +601,12 @@ public class FeedModelImpl extends BaseModelImpl<Feed> implements FeedModel {
 	private long _feedId;
 	private long _companyId;
 	private long _userId;
-	private String _userUuid;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
 	private long _twitterUserId;
-	private String _twitterUserUuid;
 	private String _twitterScreenName;
 	private String _originalTwitterScreenName;
 	private long _lastStatusId;

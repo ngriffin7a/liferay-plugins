@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -258,8 +258,15 @@ public class EditUserAction extends BaseStrutsPortletAction {
 
 		User user = PortalUtil.getSelectedUser(actionRequest);
 
-		Role role = RoleLocalServiceUtil.getRole(
+		Role role = RoleLocalServiceUtil.fetchRole(
 			user.getCompanyId(), RoleConstants.SOCIAL_OFFICE_USER);
+
+		if (role == null) {
+			originalStrutsPortletAction.processAction(
+				portletConfig, dynamicActionRequest, actionResponse);
+
+			return;
+		}
 
 		long[] roleIds = getLongArray(
 			actionRequest, "rolesSearchContainerPrimaryKeys");

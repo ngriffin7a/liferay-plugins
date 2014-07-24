@@ -150,7 +150,7 @@ input[type=button], input[type=reset], input[type=submit], #sign-in:hover, .aui-
 	border-width: 1px;
 }
 
-/* ---------- Login Screens ---------- */
+/* ---------- Login screens ---------- */
 
 #sign-in {
 	color: #34404F;
@@ -172,6 +172,14 @@ input[type=button], input[type=reset], input[type=submit], #sign-in:hover, .aui-
 
 		.aui-field-input-text {
 			width: 225px;
+		}
+
+		select, .taglib-captcha input[type="text"] {
+			width: 100%;
+		}
+
+		input[type="text"] {
+			width: 256px;
 		}
 
 		.navigation {
@@ -212,7 +220,6 @@ input[type=button], input[type=reset], input[type=submit], #sign-in:hover, .aui-
 	.signed-in-as {
 		padding: 20px 10px 40px;
 		text-align: center;
-		width: 100px;
 
 		.profile-image img {
 			margin-bottom: 1.5em;
@@ -244,7 +251,7 @@ input[type=button], input[type=reset], input[type=submit], #sign-in:hover, .aui-
 	}
 }
 
-/* ---------- Internet Explorer ---------- */
+/* ---------- Internet explorer ---------- */
 
 .ie {
 	#loginPage {

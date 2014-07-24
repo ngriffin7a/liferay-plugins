@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,8 +15,8 @@
 package com.liferay.socialcoding.model;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.DateUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.model.BaseModel;
@@ -80,6 +80,9 @@ public class JIRAChangeGroupClp extends BaseModelImpl<JIRAChangeGroup>
 		attributes.put("createDate", getCreateDate());
 		attributes.put("jiraIssueId", getJiraIssueId());
 
+		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
+		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
+
 		return attributes;
 	}
 
@@ -108,6 +111,9 @@ public class JIRAChangeGroupClp extends BaseModelImpl<JIRAChangeGroup>
 		if (jiraIssueId != null) {
 			setJiraIssueId(jiraIssueId);
 		}
+
+		_entityCacheEnabled = GetterUtil.getBoolean("entityCacheEnabled");
+		_finderCacheEnabled = GetterUtil.getBoolean("finderCacheEnabled");
 	}
 
 	@Override
@@ -254,7 +260,7 @@ public class JIRAChangeGroupClp extends BaseModelImpl<JIRAChangeGroup>
 	}
 
 	@Override
-	public void persist() throws SystemException {
+	public void persist() {
 		if (this.isNew()) {
 			JIRAChangeGroupLocalServiceUtil.addJIRAChangeGroup(this);
 		}
@@ -320,9 +326,23 @@ public class JIRAChangeGroupClp extends BaseModelImpl<JIRAChangeGroup>
 		}
 	}
 
+	public Class<?> getClpSerializerClass() {
+		return _clpSerializerClass;
+	}
+
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	@Override
+	public boolean isEntityCacheEnabled() {
+		return _entityCacheEnabled;
+	}
+
+	@Override
+	public boolean isFinderCacheEnabled() {
+		return _finderCacheEnabled;
 	}
 
 	@Override
@@ -377,4 +397,7 @@ public class JIRAChangeGroupClp extends BaseModelImpl<JIRAChangeGroup>
 	private Date _createDate;
 	private long _jiraIssueId;
 	private BaseModel<?> _jiraChangeGroupRemoteModel;
+	private Class<?> _clpSerializerClass = com.liferay.socialcoding.service.ClpSerializer.class;
+	private boolean _entityCacheEnabled;
+	private boolean _finderCacheEnabled;
 }

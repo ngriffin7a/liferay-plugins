@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,21 +15,18 @@
 package com.liferay.portal.workflow.kaleo.export;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 
 /**
  * @author Michael C. Han
  */
 public class DefinitionExporterUtil {
 
-	public static String export(long kaleoDefinitionId)
-		throws PortalException, SystemException {
-
+	public static String export(long kaleoDefinitionId) throws PortalException {
 		return getDefinitionExporter().export(kaleoDefinitionId);
 	}
 
 	public static String export(long companyId, String name, int version)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		return getDefinitionExporter().export(companyId, name, version);
 	}

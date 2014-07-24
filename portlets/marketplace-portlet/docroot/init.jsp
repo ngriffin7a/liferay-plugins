@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -32,6 +32,7 @@ page import="com.liferay.portal.kernel.dao.orm.QueryUtil" %><%@
 page import="com.liferay.portal.kernel.deploy.DeployManagerUtil" %><%@
 page import="com.liferay.portal.kernel.plugin.RequiredPluginPackageException" %><%@
 page import="com.liferay.portal.kernel.portlet.LiferayPortletURL" %><%@
+page import="com.liferay.portal.kernel.search.Indexer" %><%@
 page import="com.liferay.portal.kernel.servlet.ServletContextPool" %><%@
 page import="com.liferay.portal.kernel.upload.UploadException" %><%@
 page import="com.liferay.portal.kernel.util.Constants" %><%@
@@ -47,6 +48,7 @@ page import="com.liferay.portal.model.Plugin" %><%@
 page import="com.liferay.portal.model.PluginSetting" %><%@
 page import="com.liferay.portal.model.Portlet" %><%@
 page import="com.liferay.portal.model.Theme" %><%@
+page import="com.liferay.portal.service.CompanyLocalServiceUtil" %><%@
 page import="com.liferay.portal.service.PluginSettingLocalServiceUtil" %><%@
 page import="com.liferay.portal.service.PortletLocalServiceUtil" %><%@
 page import="com.liferay.portal.util.PortalUtil" %><%@

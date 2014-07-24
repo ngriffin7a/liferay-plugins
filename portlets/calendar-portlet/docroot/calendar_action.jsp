@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -22,17 +22,18 @@ ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_
 Calendar calendar = (Calendar)row.getObject();
 %>
 
-<liferay-ui:icon-menu>
+<liferay-ui:icon-menu icon="<%= StringPool.BLANK %>" message="<%= StringPool.BLANK %>">
 	<c:if test="<%= CalendarPermission.contains(permissionChecker, calendar, ActionKeys.UPDATE) %>">
 		<portlet:renderURL var="editURL">
 			<portlet:param name="mvcPath" value="/edit_calendar.jsp" />
-			<portlet:param name="redirect" value="<%= currentURL %>" />
+			<portlet:param name="backURL" value="<%= currentURL %>" />
 			<portlet:param name="calendarId" value="<%= String.valueOf(calendar.getCalendarId()) %>" />
 			<portlet:param name="calendarResourceId" value="<%= String.valueOf(calendar.getCalendarResourceId()) %>" />
 		</portlet:renderURL>
 
 		<liferay-ui:icon
-			image="edit"
+			iconCssClass="icon-edit"
+			message="edit"
 			url="<%= editURL %>"
 		/>
 	</c:if>
@@ -43,7 +44,8 @@ Calendar calendar = (Calendar)row.getObject();
 		</liferay-portlet:resourceURL>
 
 		<liferay-ui:icon
-			image="export"
+			iconCssClass="icon-arrow-up"
+			message="export"
 			url="<%= exportURL %>"
 		/>
 	</c:if>
@@ -65,7 +67,7 @@ Calendar calendar = (Calendar)row.getObject();
 		%>
 
 		<liferay-ui:icon
-			image="download"
+			iconCssClass="icon-arrow-down"
 			message="import"
 			url="<%= sb.toString() %>"
 		/>
@@ -78,11 +80,15 @@ Calendar calendar = (Calendar)row.getObject();
 			resourceGroupId="<%= calendar.getGroupId() %>"
 			resourcePrimKey="<%= String.valueOf(calendar.getCalendarId()) %>"
 			var="permissionsURL"
+			windowState="<%= LiferayWindowState.POP_UP.toString() %>"
 		/>
 
 		<liferay-ui:icon
-			image="permissions"
+			iconCssClass="icon-lock"
+			message="permissions"
+			method="get"
 			url="<%= permissionsURL %>"
+			useDialog="<%= true %>"
 		/>
 	</c:if>
 

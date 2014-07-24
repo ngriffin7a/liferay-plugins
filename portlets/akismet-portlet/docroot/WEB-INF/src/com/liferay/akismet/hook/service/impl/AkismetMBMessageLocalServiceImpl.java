@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -21,11 +21,11 @@ import com.liferay.akismet.util.AkismetUtil;
 import com.liferay.akismet.util.PortletPropsKeys;
 import com.liferay.akismet.util.PrefsPortletPropsUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
@@ -59,7 +59,7 @@ public class AkismetMBMessageLocalServiceImpl
 			long userId, String userName, long groupId, String className,
 			long classPK, long threadId, long parentMessageId, String subject,
 			String body, ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		boolean enabled = isDiscussionsEnabled(userId, serviceContext);
 
@@ -98,7 +98,7 @@ public class AkismetMBMessageLocalServiceImpl
 			List<ObjectValuePair<String, InputStream>> inputStreamOVPs,
 			boolean anonymous, double priority, boolean allowPingbacks,
 			ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		boolean enabled = isMessageBoardsEnabled(
 			userId, groupId, serviceContext);
@@ -138,7 +138,7 @@ public class AkismetMBMessageLocalServiceImpl
 			List<ObjectValuePair<String, InputStream>> inputStreamOVPs,
 			boolean anonymous, double priority, boolean allowPingbacks,
 			ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		boolean enabled = isMessageBoardsEnabled(
 			userId, groupId, serviceContext);
@@ -175,7 +175,7 @@ public class AkismetMBMessageLocalServiceImpl
 	public MBMessage updateDiscussionMessage(
 			long userId, long messageId, String className, long classPK,
 			String subject, String body, ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		boolean enabled = isDiscussionsEnabled(userId, serviceContext);
 
@@ -212,7 +212,7 @@ public class AkismetMBMessageLocalServiceImpl
 			List<ObjectValuePair<String, InputStream>> inputStreamOVPs,
 			List<String> existingFiles, double priority, boolean allowPingbacks,
 			ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		MBMessage message = super.getMBMessage(messageId);
 
@@ -279,7 +279,13 @@ public class AkismetMBMessageLocalServiceImpl
 
 	protected boolean isDiscussionsEnabled(
 			long userId, ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
+
+		if (serviceContext.getWorkflowAction() !=
+				WorkflowConstants.ACTION_PUBLISH) {
+
+			return false;
+		}
 
 		if (!AkismetUtil.hasRequiredInfo(serviceContext)) {
 			return false;
@@ -297,7 +303,13 @@ public class AkismetMBMessageLocalServiceImpl
 
 	protected boolean isMessageBoardsEnabled(
 			long userId, long groupId, ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
+
+		if (serviceContext.getWorkflowAction() !=
+				WorkflowConstants.ACTION_PUBLISH) {
+
+			return false;
+		}
 
 		if (!AkismetUtil.hasRequiredInfo(serviceContext)) {
 			return false;
@@ -325,8 +337,7 @@ public class AkismetMBMessageLocalServiceImpl
 	}
 
 	protected AkismetData updateAkismetData(
-			MBMessage message, ServiceContext serviceContext)
-		throws SystemException {
+		MBMessage message, ServiceContext serviceContext) {
 
 		if (!AkismetUtil.hasRequiredInfo(serviceContext)) {
 			return null;
@@ -337,7 +348,8 @@ public class AkismetMBMessageLocalServiceImpl
 		Map<String, String> headers = serviceContext.getHeaders();
 
 		String referrer = headers.get("referer");
-		String userAgent = headers.get(HttpHeaders.USER_AGENT.toLowerCase());
+		String userAgent = headers.get(
+			StringUtil.toLowerCase(HttpHeaders.USER_AGENT));
 
 		String userIP = serviceContext.getRemoteAddr();
 

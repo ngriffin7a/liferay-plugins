@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -29,9 +29,9 @@ String htmlAttributes =
 	"width=" + width + "\n";
 %>
 
-<liferay-portlet:actionURL portletConfiguration="true" var="actionURL" />
+<liferay-portlet:actionURL portletConfiguration="true" var="configurationActionURL" />
 
-<aui:form action="<%= actionURL %>" method="post" name="fm">
+<aui:form action="<%= configurationActionURL %>" method="post" name="fm">
 	<aui:input name="<%= Constants.CMD %>" type="hidden" />
 	<aui:input name="preferences--link--" type="hidden" />
 	<aui:input name="preferences--title--" type="hidden" />
@@ -55,16 +55,12 @@ String htmlAttributes =
 			servletContext="<%= application %>"
 		/>
 
-		<liferay-ui:search-container-results>
+		<%
+		Object[] widgets = NetvibesWidgetUtil.getWidgets(query, sort, category, region, searchContainer.getCur(), searchContainer.getDelta());
 
-			<%
-			Object[] widgets = NetvibesWidgetUtil.getWidgets(query, sort, category, region, searchContainer.getCur(), searchContainer.getDelta());
-
-			pageContext.setAttribute("results", (List<Object[]>)widgets[0]);
-			pageContext.setAttribute("total", (Integer)widgets[1]);
-			%>
-
-		</liferay-ui:search-container-results>
+		searchContainer.setResults((List<Object[]>)widgets[0]);
+		searchContainer.setTotal((Integer)widgets[1]);
+		%>
 
 		<liferay-ui:search-container-row
 			className="java.lang.Object"
@@ -86,7 +82,7 @@ String htmlAttributes =
 				href="<%= updateWidgetURL %>"
 				name="thumbnail"
 			>
-				<img alt="<%= curTitle %>" src="<%= curThumbnail %>" />
+				<img alt="<%= HtmlUtil.escapeAttribute(curTitle) %>" src="<%= curThumbnail %>" />
 			</liferay-ui:search-container-column-text>
 
 			<liferay-ui:search-container-column-text
@@ -107,7 +103,7 @@ String htmlAttributes =
 		<c:if test="<%= Validator.isNotNull(link) %>">
 			<aui:fieldset>
 				<div class="float-container">
-					<img alt="<%= title %>" src="<%= thumbnail %>" style="float: left; padding-right: 10px;" />
+					<img alt="<%= HtmlUtil.escapeAttribute(title) %>" src="<%= thumbnail %>" style="float: left; padding-right: 10px;" />
 
 					<div style="font-size: 1.2em;">
 						<strong><%= title %></strong>
@@ -116,7 +112,7 @@ String htmlAttributes =
 					<%= description %>
 				</div>
 
-				<aui:input cssClass="lfr-textarea-container lfr-textarea" name="preferences--htmlAttributes--" onKeyDown="Liferay.Util.checkTab(this); Liferay.Util.disableEsc();" type="textarea" value="<%= htmlAttributes %>" wrap="soft" />
+				<aui:input cssClass="lfr-textarea" name="preferences--htmlAttributes--" onKeyDown="Liferay.Util.checkTab(this); Liferay.Util.disableEsc();" type="textarea" value="<%= htmlAttributes %>" wrap="soft" wrapperCssClass="lfr-textarea-container" />
 			</aui:fieldset>
 
 			<%
@@ -149,7 +145,7 @@ String htmlAttributes =
 	}
 
 	function <portlet:namespace />updateWidget(link, title, description, thumbnail) {
-		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = "<%= Constants.UPDATE %>";
+		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = '<%= Constants.UPDATE %>';
 		document.<portlet:namespace />fm.<portlet:namespace />link.value = link;
 		document.<portlet:namespace />fm.<portlet:namespace />title.value = title;
 		document.<portlet:namespace />fm.<portlet:namespace />description.value = description;

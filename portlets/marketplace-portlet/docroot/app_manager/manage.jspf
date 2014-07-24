@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -62,6 +62,10 @@ portletURL.setParameter("category", category);
 
 			for (String contextName : app.getContextNames()) {
 				ServletContext servletContext = ServletContextPool.get(contextName);
+
+				if (servletContext == null) {
+					continue;
+				}
 
 				List<LayoutTemplate> servletContextLayoutTemplates = (List<LayoutTemplate>)servletContext.getAttribute(WebKeys.PLUGIN_LAYOUT_TEMPLATES);
 
@@ -135,6 +139,14 @@ portletURL.setParameter("category", category);
 						<%= app.getTitle() %>
 					</div>
 
+					<div class="version">
+						<span>
+							<liferay-ui:message key="version" />:
+						<span>
+
+						<%= app.getVersion() %>
+					</div>
+
 					<div class="description">
 						<%= app.getDescription() %>
 					</div>
@@ -183,14 +195,15 @@ portletURL.setParameter("category", category);
 
 				<c:if test="<%= displayActions %>">
 					<div class="app-actions">
-						<liferay-ui:icon-menu>
+						<liferay-ui:icon-menu icon="<%= StringPool.BLANK %>" message="<%= StringPool.BLANK %>">
 							<liferay-portlet:actionURL name="updatePluginSettings" var="activateURL">
 								<portlet:param name="contextNames" value="<%= StringUtil.merge(app.getContextNames()) %>" />
 								<portlet:param name="active" value="<%= String.valueOf(true) %>" />
 							</liferay-portlet:actionURL>
 
 							<liferay-ui:icon
-								image="activate"
+								iconCssClass="icon-ok-sign"
+								message="activate"
 								url="<%= activateURL %>"
 							/>
 
@@ -200,7 +213,8 @@ portletURL.setParameter("category", category);
 							</liferay-portlet:actionURL>
 
 							<liferay-ui:icon
-								image="deactivate"
+								iconCssClass="icon-remove-sign"
+								message="deactivate"
 								url="<%= deactivateURL %>"
 							/>
 
@@ -309,7 +323,7 @@ portletURL.setParameter("category", category);
 							actionButton.removeClass('disabled');
 						}
 					},
-					method: 'post',
+					method: 'POST',
 					on: {
 						failure: function(event, id, obj) {
 							showMessage(

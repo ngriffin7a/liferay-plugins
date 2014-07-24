@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -16,7 +16,6 @@ package com.liferay.akismet.hook.action;
 
 import com.liferay.akismet.util.AkismetUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.struts.BaseStrutsPortletAction;
 import com.liferay.portal.kernel.struts.StrutsPortletAction;
@@ -116,7 +115,7 @@ public class AkismetEditMessageAction extends BaseStrutsPortletAction {
 
 	protected void updateStatus(
 			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);

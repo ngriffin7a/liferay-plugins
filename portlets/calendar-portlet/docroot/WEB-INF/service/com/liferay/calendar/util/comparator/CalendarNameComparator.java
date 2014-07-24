@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -21,7 +21,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
  * @author Eduardo Lundgren
  * @author Fabio Pezzutto
  */
-public class CalendarNameComparator extends OrderByComparator {
+public class CalendarNameComparator extends OrderByComparator<Calendar> {
 
 	public static final String ORDER_BY_ASC = "Calendar.name ASC";
 
@@ -38,10 +38,7 @@ public class CalendarNameComparator extends OrderByComparator {
 	}
 
 	@Override
-	public int compare(Object obj1, Object obj2) {
-		Calendar calendar1 = (Calendar)obj1;
-		Calendar calendar2 = (Calendar)obj2;
-
+	public int compare(Calendar calendar1, Calendar calendar2) {
 		String name1 = calendar1.getName();
 		String name2 = calendar2.getName();
 

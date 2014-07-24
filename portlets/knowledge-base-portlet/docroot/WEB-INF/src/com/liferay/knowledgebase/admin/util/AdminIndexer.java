@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -17,7 +17,6 @@ package com.liferay.knowledgebase.admin.util;
 import com.liferay.knowledgebase.model.KBArticle;
 import com.liferay.knowledgebase.service.KBArticleLocalServiceUtil;
 import com.liferay.knowledgebase.service.permission.KBArticlePermission;
-import com.liferay.knowledgebase.service.persistence.KBArticleActionableDynamicQuery;
 import com.liferay.knowledgebase.util.KnowledgeBaseUtil;
 import com.liferay.knowledgebase.util.PortletKeys;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
@@ -48,6 +47,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
 
 /**
@@ -61,6 +62,10 @@ public class AdminIndexer extends BaseIndexer {
 	public static final String PORTLET_ID = PortletKeys.KNOWLEDGE_BASE_ADMIN;
 
 	public AdminIndexer() {
+		setDefaultSelectedFieldNames(
+			Field.COMPANY_ID, Field.CONTENT, Field.CREATE_DATE,
+			Field.DESCRIPTION, Field.ENTRY_CLASS_NAME, Field.ENTRY_CLASS_PK,
+			Field.MODIFIED_DATE, Field.TITLE, Field.UID, Field.USER_NAME);
 		setFilterSearch(true);
 		setPermissionAware(true);
 	}
@@ -129,8 +134,6 @@ public class AdminIndexer extends BaseIndexer {
 		document.addText(
 			Field.CONTENT, HtmlUtil.extractText(kbArticle.getContent()));
 		document.addText(Field.DESCRIPTION, kbArticle.getDescription());
-		document.addKeyword(
-			Field.ROOT_ENTRY_CLASS_PK, kbArticle.getRootResourcePrimKey());
 		document.addText(Field.TITLE, kbArticle.getTitle());
 
 		document.addKeyword("titleKeyword", kbArticle.getTitle(), true);
@@ -140,8 +143,8 @@ public class AdminIndexer extends BaseIndexer {
 
 	@Override
 	protected Summary doGetSummary(
-		Document document, Locale locale, String snippet,
-		PortletURL portletURL) {
+		Document document, Locale locale, String snippet, PortletURL portletURL,
+		PortletRequest portletRequest, PortletResponse portletResponse) {
 
 		String title = document.get(Field.TITLE);
 
@@ -175,7 +178,7 @@ public class AdminIndexer extends BaseIndexer {
 	@Override
 	protected void doReindex(String className, long classPK) throws Exception {
 		KBArticle kbArticle = KBArticleLocalServiceUtil.getLatestKBArticle(
-			classPK, WorkflowConstants.STATUS_APPROVED);
+			classPK, WorkflowConstants.STATUS_ANY);
 
 		reindexKBArticles(kbArticle);
 	}
@@ -197,7 +200,7 @@ public class AdminIndexer extends BaseIndexer {
 		// See KBArticlePermission#contains
 
 		List<KBArticle> kbArticles =
-			KBArticleLocalServiceUtil.getKBArticleAndAllDescendants(
+			KBArticleLocalServiceUtil.getKBArticleAndAllDescendantKBArticles(
 				kbArticle.getResourcePrimKey(),
 				WorkflowConstants.STATUS_APPROVED, null);
 
@@ -212,36 +215,40 @@ public class AdminIndexer extends BaseIndexer {
 	}
 
 	protected void reindexKBArticles(long companyId) throws Exception {
-		final Collection<Document> documents = new ArrayList<Document>();
+		final ActionableDynamicQuery actionableDynamicQuery =
+			KBArticleLocalServiceUtil.getActionableDynamicQuery();
 
-		ActionableDynamicQuery actionableDynamicQuery =
-			new KBArticleActionableDynamicQuery() {
+		actionableDynamicQuery.setAddCriteriaMethod(
+			new ActionableDynamicQuery.AddCriteriaMethod() {
 
-			@Override
-			protected void addCriteria(DynamicQuery dynamicQuery) {
-				Property property = PropertyFactoryUtil.forName("status");
+				@Override
+				public void addCriteria(DynamicQuery dynamicQuery) {
+					Property property = PropertyFactoryUtil.forName("status");
 
-				dynamicQuery.add(
-					property.eq(WorkflowConstants.STATUS_APPROVED));
-			}
+					dynamicQuery.add(
+						property.eq(WorkflowConstants.STATUS_APPROVED));
+				}
 
-			@Override
-			protected void performAction(Object object) throws PortalException {
-				KBArticle kbArticle = (KBArticle)object;
-
-				Document document = getDocument(kbArticle);
-
-				documents.add(document);
-			}
-
-		};
-
+			});
 		actionableDynamicQuery.setCompanyId(companyId);
+		actionableDynamicQuery.setPerformActionMethod(
+			new ActionableDynamicQuery.PerformActionMethod() {
+
+				@Override
+				public void performAction(Object object)
+					throws PortalException {
+
+					KBArticle kbArticle = (KBArticle)object;
+
+					Document document = getDocument(kbArticle);
+
+					actionableDynamicQuery.addDocument(document);
+				}
+
+			});
+		actionableDynamicQuery.setSearchEngineId(getSearchEngineId());
 
 		actionableDynamicQuery.performActions();
-
-		SearchEngineUtil.updateDocuments(
-			getSearchEngineId(), companyId, documents);
 	}
 
 }

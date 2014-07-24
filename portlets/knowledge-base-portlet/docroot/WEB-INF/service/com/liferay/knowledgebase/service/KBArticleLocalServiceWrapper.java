@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -35,13 +35,76 @@ public class KBArticleLocalServiceWrapper implements KBArticleLocalService,
 	*
 	* @param kbArticle the k b article
 	* @return the k b article that was added
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
 	public com.liferay.knowledgebase.model.KBArticle addKBArticle(
-		com.liferay.knowledgebase.model.KBArticle kbArticle)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.knowledgebase.model.KBArticle kbArticle) {
 		return _kbArticleLocalService.addKBArticle(kbArticle);
+	}
+
+	@Override
+	public com.liferay.knowledgebase.model.KBArticle addKBArticle(long userId,
+		long parentResourcePrimKey, java.lang.String title,
+		java.lang.String urlTitle, java.lang.String content,
+		java.lang.String description, java.lang.String[] sections,
+		java.lang.String[] selectedFileNames,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _kbArticleLocalService.addKBArticle(userId,
+			parentResourcePrimKey, title, urlTitle, content, description,
+			sections, selectedFileNames, serviceContext);
+	}
+
+	@Override
+	public void addKBArticleResources(
+		com.liferay.knowledgebase.model.KBArticle kbArticle,
+		boolean addGroupPermissions, boolean addGuestPermissions)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		_kbArticleLocalService.addKBArticleResources(kbArticle,
+			addGroupPermissions, addGuestPermissions);
+	}
+
+	@Override
+	public void addKBArticleResources(
+		com.liferay.knowledgebase.model.KBArticle kbArticle,
+		java.lang.String[] groupPermissions, java.lang.String[] guestPermissions)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		_kbArticleLocalService.addKBArticleResources(kbArticle,
+			groupPermissions, guestPermissions);
+	}
+
+	@Override
+	public void addKBArticleResources(long kbArticleId,
+		boolean addGroupPermissions, boolean addGuestPermissions)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		_kbArticleLocalService.addKBArticleResources(kbArticleId,
+			addGroupPermissions, addGuestPermissions);
+	}
+
+	@Override
+	public void addKBArticleResources(long kbArticleId,
+		java.lang.String[] groupPermissions, java.lang.String[] guestPermissions)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		_kbArticleLocalService.addKBArticleResources(kbArticleId,
+			groupPermissions, guestPermissions);
+	}
+
+	@Override
+	public void addKBArticlesMarkdown(long userId, long groupId,
+		java.lang.String fileName, java.io.InputStream inputStream,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		_kbArticleLocalService.addKBArticlesMarkdown(userId, groupId, fileName,
+			inputStream, serviceContext);
+	}
+
+	@Override
+	public void addTempAttachment(long groupId, long userId,
+		java.lang.String fileName, java.lang.String tempFolderName,
+		java.io.InputStream inputStream, java.lang.String mimeType)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		_kbArticleLocalService.addTempAttachment(groupId, userId, fileName,
+			tempFolderName, inputStream, mimeType);
 	}
 
 	/**
@@ -56,20 +119,10 @@ public class KBArticleLocalServiceWrapper implements KBArticleLocalService,
 		return _kbArticleLocalService.createKBArticle(kbArticleId);
 	}
 
-	/**
-	* Deletes the k b article with the primary key from the database. Also notifies the appropriate model listeners.
-	*
-	* @param kbArticleId the primary key of the k b article
-	* @return the k b article that was removed
-	* @throws PortalException if a k b article with the primary key could not be found
-	* @throws SystemException if a system exception occurred
-	*/
 	@Override
-	public com.liferay.knowledgebase.model.KBArticle deleteKBArticle(
-		long kbArticleId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.deleteKBArticle(kbArticleId);
+	public void deleteGroupKBArticles(long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		_kbArticleLocalService.deleteGroupKBArticles(groupId);
 	}
 
 	/**
@@ -78,14 +131,50 @@ public class KBArticleLocalServiceWrapper implements KBArticleLocalService,
 	* @param kbArticle the k b article
 	* @return the k b article that was removed
 	* @throws PortalException
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
 	public com.liferay.knowledgebase.model.KBArticle deleteKBArticle(
 		com.liferay.knowledgebase.model.KBArticle kbArticle)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return _kbArticleLocalService.deleteKBArticle(kbArticle);
+	}
+
+	/**
+	* Deletes the k b article with the primary key from the database. Also notifies the appropriate model listeners.
+	*
+	* @param kbArticleId the primary key of the k b article
+	* @return the k b article that was removed
+	* @throws PortalException if a k b article with the primary key could not be found
+	*/
+	@Override
+	public com.liferay.knowledgebase.model.KBArticle deleteKBArticle(
+		long kbArticleId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _kbArticleLocalService.deleteKBArticle(kbArticleId);
+	}
+
+	@Override
+	public void deleteKBArticles(long[] resourcePrimKeys)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		_kbArticleLocalService.deleteKBArticles(resourcePrimKeys);
+	}
+
+	/**
+	* @throws PortalException
+	*/
+	@Override
+	public com.liferay.portal.model.PersistedModel deletePersistedModel(
+		com.liferay.portal.model.PersistedModel persistedModel)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _kbArticleLocalService.deletePersistedModel(persistedModel);
+	}
+
+	@Override
+	public void deleteTempAttachment(long groupId, long userId,
+		java.lang.String fileName, java.lang.String tempFolderName)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		_kbArticleLocalService.deleteTempAttachment(groupId, userId, fileName,
+			tempFolderName);
 	}
 
 	@Override
@@ -98,13 +187,10 @@ public class KBArticleLocalServiceWrapper implements KBArticleLocalService,
 	*
 	* @param dynamicQuery the dynamic query
 	* @return the matching rows
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
-	@SuppressWarnings("rawtypes")
-	public java.util.List dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public <T> java.util.List<T> dynamicQuery(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
 		return _kbArticleLocalService.dynamicQuery(dynamicQuery);
 	}
 
@@ -119,13 +205,11 @@ public class KBArticleLocalServiceWrapper implements KBArticleLocalService,
 	* @param start the lower bound of the range of model instances
 	* @param end the upper bound of the range of model instances (not inclusive)
 	* @return the range of matching rows
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
-	@SuppressWarnings("rawtypes")
-	public java.util.List dynamicQuery(
+	public <T> java.util.List<T> dynamicQuery(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
-		int end) throws com.liferay.portal.kernel.exception.SystemException {
+		int end) {
 		return _kbArticleLocalService.dynamicQuery(dynamicQuery, start, end);
 	}
 
@@ -141,15 +225,12 @@ public class KBArticleLocalServiceWrapper implements KBArticleLocalService,
 	* @param end the upper bound of the range of model instances (not inclusive)
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching rows
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
-	@SuppressWarnings("rawtypes")
-	public java.util.List dynamicQuery(
+	public <T> java.util.List<T> dynamicQuery(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
 		int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.util.OrderByComparator<T> orderByComparator) {
 		return _kbArticleLocalService.dynamicQuery(dynamicQuery, start, end,
 			orderByComparator);
 	}
@@ -159,12 +240,10 @@ public class KBArticleLocalServiceWrapper implements KBArticleLocalService,
 	*
 	* @param dynamicQuery the dynamic query
 	* @return the number of rows that match the dynamic query
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
 	public long dynamicQueryCount(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
 		return _kbArticleLocalService.dynamicQueryCount(dynamicQuery);
 	}
 
@@ -174,37 +253,24 @@ public class KBArticleLocalServiceWrapper implements KBArticleLocalService,
 	* @param dynamicQuery the dynamic query
 	* @param projection the projection to apply to the query
 	* @return the number of rows that match the dynamic query
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
 	public long dynamicQueryCount(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery,
-		com.liferay.portal.kernel.dao.orm.Projection projection)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.dao.orm.Projection projection) {
 		return _kbArticleLocalService.dynamicQueryCount(dynamicQuery, projection);
 	}
 
 	@Override
 	public com.liferay.knowledgebase.model.KBArticle fetchKBArticle(
-		long kbArticleId)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		long kbArticleId) {
 		return _kbArticleLocalService.fetchKBArticle(kbArticleId);
 	}
 
-	/**
-	* Returns the k b article with the matching UUID and company.
-	*
-	* @param uuid the k b article's UUID
-	* @param companyId the primary key of the company
-	* @return the matching k b article, or <code>null</code> if a matching k b article could not be found
-	* @throws SystemException if a system exception occurred
-	*/
 	@Override
-	public com.liferay.knowledgebase.model.KBArticle fetchKBArticleByUuidAndCompanyId(
-		java.lang.String uuid, long companyId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.fetchKBArticleByUuidAndCompanyId(uuid,
-			companyId);
+	public com.liferay.knowledgebase.model.KBArticle fetchKBArticleByUrlTitle(
+		long groupId, java.lang.String urlTitle) {
+		return _kbArticleLocalService.fetchKBArticleByUrlTitle(groupId, urlTitle);
 	}
 
 	/**
@@ -213,14 +279,82 @@ public class KBArticleLocalServiceWrapper implements KBArticleLocalService,
 	* @param uuid the k b article's UUID
 	* @param groupId the primary key of the group
 	* @return the matching k b article, or <code>null</code> if a matching k b article could not be found
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
 	public com.liferay.knowledgebase.model.KBArticle fetchKBArticleByUuidAndGroupId(
-		java.lang.String uuid, long groupId)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		java.lang.String uuid, long groupId) {
 		return _kbArticleLocalService.fetchKBArticleByUuidAndGroupId(uuid,
 			groupId);
+	}
+
+	@Override
+	public com.liferay.knowledgebase.model.KBArticle fetchLatestKBArticle(
+		long resourcePrimKey, int status) {
+		return _kbArticleLocalService.fetchLatestKBArticle(resourcePrimKey,
+			status);
+	}
+
+	@Override
+	public com.liferay.knowledgebase.model.KBArticle fetchLatestKBArticleByUrlTitle(
+		long groupId, java.lang.String urlTitle, int status) {
+		return _kbArticleLocalService.fetchLatestKBArticleByUrlTitle(groupId,
+			urlTitle, status);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
+		return _kbArticleLocalService.getActionableDynamicQuery();
+	}
+
+	@Override
+	public java.util.List<com.liferay.knowledgebase.model.KBArticle> getAllDescendantKBArticles(
+		long resourcePrimKey, int status,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.knowledgebase.model.KBArticle> orderByComparator) {
+		return _kbArticleLocalService.getAllDescendantKBArticles(resourcePrimKey,
+			status, orderByComparator);
+	}
+
+	/**
+	* Returns the Spring bean ID for this bean.
+	*
+	* @return the Spring bean ID for this bean
+	*/
+	@Override
+	public java.lang.String getBeanIdentifier() {
+		return _kbArticleLocalService.getBeanIdentifier();
+	}
+
+	@Override
+	public java.util.List<com.liferay.knowledgebase.model.KBArticle> getCompanyKBArticles(
+		long companyId, int status, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.knowledgebase.model.KBArticle> orderByComparator) {
+		return _kbArticleLocalService.getCompanyKBArticles(companyId, status,
+			start, end, orderByComparator);
+	}
+
+	@Override
+	public int getCompanyKBArticlesCount(long companyId, int status) {
+		return _kbArticleLocalService.getCompanyKBArticlesCount(companyId,
+			status);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery getExportActionableDynamicQuery(
+		com.liferay.portal.kernel.lar.PortletDataContext portletDataContext) {
+		return _kbArticleLocalService.getExportActionableDynamicQuery(portletDataContext);
+	}
+
+	@Override
+	public java.util.List<com.liferay.knowledgebase.model.KBArticle> getGroupKBArticles(
+		long groupId, int status, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.knowledgebase.model.KBArticle> orderByComparator) {
+		return _kbArticleLocalService.getGroupKBArticles(groupId, status,
+			start, end, orderByComparator);
+	}
+
+	@Override
+	public int getGroupKBArticlesCount(long groupId, int status) {
+		return _kbArticleLocalService.getGroupKBArticlesCount(groupId, status);
 	}
 
 	/**
@@ -229,40 +363,47 @@ public class KBArticleLocalServiceWrapper implements KBArticleLocalService,
 	* @param kbArticleId the primary key of the k b article
 	* @return the k b article
 	* @throws PortalException if a k b article with the primary key could not be found
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
 	public com.liferay.knowledgebase.model.KBArticle getKBArticle(
 		long kbArticleId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return _kbArticleLocalService.getKBArticle(kbArticleId);
 	}
 
 	@Override
-	public com.liferay.portal.model.PersistedModel getPersistedModel(
-		java.io.Serializable primaryKeyObj)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.getPersistedModel(primaryKeyObj);
+	public com.liferay.knowledgebase.model.KBArticle getKBArticle(
+		long resourcePrimKey, int version)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _kbArticleLocalService.getKBArticle(resourcePrimKey, version);
+	}
+
+	@Override
+	public java.util.List<com.liferay.knowledgebase.model.KBArticle> getKBArticleAndAllDescendantKBArticles(
+		long resourcePrimKey, int status,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.knowledgebase.model.KBArticle> orderByComparator) {
+		return _kbArticleLocalService.getKBArticleAndAllDescendantKBArticles(resourcePrimKey,
+			status, orderByComparator);
 	}
 
 	/**
-	* Returns the k b article with the matching UUID and company.
-	*
-	* @param uuid the k b article's UUID
-	* @param companyId the primary key of the company
-	* @return the matching k b article
-	* @throws PortalException if a matching k b article could not be found
-	* @throws SystemException if a system exception occurred
+	* @deprecated As of 7.0.0, replaced by
+	{@link #getKBArticleAndAllDescendantKBArticles(long, int,
+	com.liferay.portal.kernel.util.OrderByComparator)}
 	*/
 	@Override
-	public com.liferay.knowledgebase.model.KBArticle getKBArticleByUuidAndCompanyId(
-		java.lang.String uuid, long companyId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.getKBArticleByUuidAndCompanyId(uuid,
-			companyId);
+	public java.util.List<com.liferay.knowledgebase.model.KBArticle> getKBArticleAndAllDescendants(
+		long resourcePrimKey, int status,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.knowledgebase.model.KBArticle> orderByComparator) {
+		return _kbArticleLocalService.getKBArticleAndAllDescendants(resourcePrimKey,
+			status, orderByComparator);
+	}
+
+	@Override
+	public com.liferay.knowledgebase.model.KBArticle getKBArticleByUrlTitle(
+		long groupId, java.lang.String urlTitle)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _kbArticleLocalService.getKBArticleByUrlTitle(groupId, urlTitle);
 	}
 
 	/**
@@ -272,14 +413,43 @@ public class KBArticleLocalServiceWrapper implements KBArticleLocalService,
 	* @param groupId the primary key of the group
 	* @return the matching k b article
 	* @throws PortalException if a matching k b article could not be found
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
 	public com.liferay.knowledgebase.model.KBArticle getKBArticleByUuidAndGroupId(
 		java.lang.String uuid, long groupId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return _kbArticleLocalService.getKBArticleByUuidAndGroupId(uuid, groupId);
+	}
+
+	@Override
+	public java.util.List<com.liferay.knowledgebase.model.KBArticle> getKBArticleVersions(
+		long resourcePrimKey, int status, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.knowledgebase.model.KBArticle> orderByComparator) {
+		return _kbArticleLocalService.getKBArticleVersions(resourcePrimKey,
+			status, start, end, orderByComparator);
+	}
+
+	@Override
+	public int getKBArticleVersionsCount(long resourcePrimKey, int status) {
+		return _kbArticleLocalService.getKBArticleVersionsCount(resourcePrimKey,
+			status);
+	}
+
+	@Override
+	public java.util.List<com.liferay.knowledgebase.model.KBArticle> getKBArticles(
+		long groupId, long parentResourcePrimKey, int status, int start,
+		int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.knowledgebase.model.KBArticle> orderByComparator) {
+		return _kbArticleLocalService.getKBArticles(groupId,
+			parentResourcePrimKey, status, start, end, orderByComparator);
+	}
+
+	@Override
+	public java.util.List<com.liferay.knowledgebase.model.KBArticle> getKBArticles(
+		long[] resourcePrimKeys, int status,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.knowledgebase.model.KBArticle> orderByComparator) {
+		return _kbArticleLocalService.getKBArticles(resourcePrimKeys, status,
+			orderByComparator);
 	}
 
 	/**
@@ -292,49 +462,147 @@ public class KBArticleLocalServiceWrapper implements KBArticleLocalService,
 	* @param start the lower bound of the range of k b articles
 	* @param end the upper bound of the range of k b articles (not inclusive)
 	* @return the range of k b articles
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
 	public java.util.List<com.liferay.knowledgebase.model.KBArticle> getKBArticles(
-		int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		int start, int end) {
 		return _kbArticleLocalService.getKBArticles(start, end);
+	}
+
+	@Override
+	public java.util.List<com.liferay.knowledgebase.model.KBArticle> getKBArticlesByUuidAndCompanyId(
+		java.lang.String uuid, long companyId) {
+		return _kbArticleLocalService.getKBArticlesByUuidAndCompanyId(uuid,
+			companyId);
+	}
+
+	@Override
+	public java.util.List<com.liferay.knowledgebase.model.KBArticle> getKBArticlesByUuidAndCompanyId(
+		java.lang.String uuid, long companyId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.knowledgebase.model.KBArticle> orderByComparator) {
+		return _kbArticleLocalService.getKBArticlesByUuidAndCompanyId(uuid,
+			companyId, start, end, orderByComparator);
 	}
 
 	/**
 	* Returns the number of k b articles.
 	*
 	* @return the number of k b articles
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
-	public int getKBArticlesCount()
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public int getKBArticlesCount() {
 		return _kbArticleLocalService.getKBArticlesCount();
 	}
 
-	/**
-	* Updates the k b article in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
-	*
-	* @param kbArticle the k b article
-	* @return the k b article that was updated
-	* @throws SystemException if a system exception occurred
-	*/
 	@Override
-	public com.liferay.knowledgebase.model.KBArticle updateKBArticle(
-		com.liferay.knowledgebase.model.KBArticle kbArticle)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.updateKBArticle(kbArticle);
+	public int getKBArticlesCount(long groupId, long parentResourcePrimKey,
+		int status) {
+		return _kbArticleLocalService.getKBArticlesCount(groupId,
+			parentResourcePrimKey, status);
+	}
+
+	@Override
+	public com.liferay.knowledgebase.model.KBArticle getLatestKBArticle(
+		long resourcePrimKey, int status)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _kbArticleLocalService.getLatestKBArticle(resourcePrimKey, status);
+	}
+
+	@Override
+	public com.liferay.knowledgebase.model.KBArticle getLatestKBArticleByUrlTitle(
+		long groupId, java.lang.String urlTitle, int status)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _kbArticleLocalService.getLatestKBArticleByUrlTitle(groupId,
+			urlTitle, status);
+	}
+
+	@Override
+	public com.liferay.portal.model.PersistedModel getPersistedModel(
+		java.io.Serializable primaryKeyObj)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _kbArticleLocalService.getPersistedModel(primaryKeyObj);
+	}
+
+	@Override
+	public com.liferay.knowledgebase.model.KBArticle[] getPreviousAndNextKBArticles(
+		long kbArticleId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _kbArticleLocalService.getPreviousAndNextKBArticles(kbArticleId);
+	}
+
+	@Override
+	public java.util.List<com.liferay.knowledgebase.model.KBArticle> getSectionsKBArticles(
+		long groupId, java.lang.String[] sections, int status, int start,
+		int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.knowledgebase.model.KBArticle> orderByComparator) {
+		return _kbArticleLocalService.getSectionsKBArticles(groupId, sections,
+			status, start, end, orderByComparator);
+	}
+
+	@Override
+	public int getSectionsKBArticlesCount(long groupId,
+		java.lang.String[] sections, int status) {
+		return _kbArticleLocalService.getSectionsKBArticlesCount(groupId,
+			sections, status);
 	}
 
 	/**
-	* Returns the Spring bean ID for this bean.
-	*
-	* @return the Spring bean ID for this bean
+	* @deprecated As of 7.0.0, replaced by {@link #getKBArticles(long, long,
+	int, int, int,
+	com.liferay.portal.kernel.util.OrderByComparator)}
 	*/
 	@Override
-	public java.lang.String getBeanIdentifier() {
-		return _kbArticleLocalService.getBeanIdentifier();
+	public java.util.List<com.liferay.knowledgebase.model.KBArticle> getSiblingKBArticles(
+		long groupId, long parentResourcePrimKey, int status, int start,
+		int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.knowledgebase.model.KBArticle> orderByComparator) {
+		return _kbArticleLocalService.getSiblingKBArticles(groupId,
+			parentResourcePrimKey, status, start, end, orderByComparator);
+	}
+
+	/**
+	* @deprecated As of 7.0.0, replaced by {@link #getKBArticlesCount(long,
+	long, int)}
+	*/
+	@Override
+	public int getSiblingKBArticlesCount(long groupId,
+		long parentResourcePrimKey, int status) {
+		return _kbArticleLocalService.getSiblingKBArticlesCount(groupId,
+			parentResourcePrimKey, status);
+	}
+
+	@Override
+	public java.lang.String[] getTempAttachmentNames(long groupId, long userId,
+		java.lang.String tempFolderName)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _kbArticleLocalService.getTempAttachmentNames(groupId, userId,
+			tempFolderName);
+	}
+
+	@Override
+	public java.lang.Object invokeMethod(java.lang.String name,
+		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
+		throws java.lang.Throwable {
+		return _kbArticleLocalService.invokeMethod(name, parameterTypes,
+			arguments);
+	}
+
+	@Override
+	public void moveKBArticle(long userId, long resourcePrimKey,
+		long parentResourcePrimKey, double priority)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		_kbArticleLocalService.moveKBArticle(userId, resourcePrimKey,
+			parentResourcePrimKey, priority);
+	}
+
+	@Override
+	public java.util.List<com.liferay.knowledgebase.model.KBArticle> search(
+		long groupId, java.lang.String title, java.lang.String content,
+		int status, java.util.Date startDate, java.util.Date endDate,
+		boolean andOperator, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.knowledgebase.model.KBArticle> orderByComparator) {
+		return _kbArticleLocalService.search(groupId, title, content, status,
+			startDate, endDate, andOperator, start, end, orderByComparator);
 	}
 
 	/**
@@ -348,307 +616,71 @@ public class KBArticleLocalServiceWrapper implements KBArticleLocalService,
 	}
 
 	@Override
-	public java.lang.Object invokeMethod(java.lang.String name,
-		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
-		throws java.lang.Throwable {
-		return _kbArticleLocalService.invokeMethod(name, parameterTypes,
-			arguments);
-	}
-
-	@Override
-	public void addAttachment(java.lang.String dirName,
-		java.lang.String shortFileName, java.io.InputStream inputStream,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		_kbArticleLocalService.addAttachment(dirName, shortFileName,
-			inputStream, serviceContext);
-	}
-
-	@Override
-	public com.liferay.knowledgebase.model.KBArticle addKBArticle(long userId,
-		long parentResourcePrimKey, java.lang.String title,
-		java.lang.String content, java.lang.String description,
-		java.lang.String[] sections, java.lang.String dirName,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.addKBArticle(userId,
-			parentResourcePrimKey, title, content, description, sections,
-			dirName, serviceContext);
-	}
-
-	@Override
-	public void addKBArticleResources(
-		com.liferay.knowledgebase.model.KBArticle kbArticle,
-		boolean addGroupPermissions, boolean addGuestPermissions)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		_kbArticleLocalService.addKBArticleResources(kbArticle,
-			addGroupPermissions, addGuestPermissions);
-	}
-
-	@Override
-	public void addKBArticleResources(
-		com.liferay.knowledgebase.model.KBArticle kbArticle,
-		java.lang.String[] groupPermissions, java.lang.String[] guestPermissions)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		_kbArticleLocalService.addKBArticleResources(kbArticle,
-			groupPermissions, guestPermissions);
-	}
-
-	@Override
-	public void addKBArticleResources(long kbArticleId,
-		boolean addGroupPermissions, boolean addGuestPermissions)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		_kbArticleLocalService.addKBArticleResources(kbArticleId,
-			addGroupPermissions, addGuestPermissions);
-	}
-
-	@Override
-	public void addKBArticleResources(long kbArticleId,
-		java.lang.String[] groupPermissions, java.lang.String[] guestPermissions)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		_kbArticleLocalService.addKBArticleResources(kbArticleId,
-			groupPermissions, guestPermissions);
-	}
-
-	@Override
-	public void checkAttachments()
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		_kbArticleLocalService.checkAttachments();
-	}
-
-	@Override
-	public void deleteAttachment(long companyId, java.lang.String fileName)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		_kbArticleLocalService.deleteAttachment(companyId, fileName);
-	}
-
-	@Override
-	public void deleteGroupKBArticles(long groupId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		_kbArticleLocalService.deleteGroupKBArticles(groupId);
-	}
-
-	@Override
-	public void deleteKBArticles(long[] resourcePrimKeys)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		_kbArticleLocalService.deleteKBArticles(resourcePrimKeys);
-	}
-
-	@Override
-	public java.util.List<com.liferay.knowledgebase.model.KBArticle> getCompanyKBArticles(
-		long companyId, int status, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.getCompanyKBArticles(companyId, status,
-			start, end, orderByComparator);
-	}
-
-	@Override
-	public int getCompanyKBArticlesCount(long companyId, int status)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.getCompanyKBArticlesCount(companyId,
-			status);
-	}
-
-	@Override
-	public java.util.List<com.liferay.knowledgebase.model.KBArticle> getGroupKBArticles(
-		long groupId, int status, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.getGroupKBArticles(groupId, status,
-			start, end, orderByComparator);
-	}
-
-	@Override
-	public int getGroupKBArticlesCount(long groupId, int status)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.getGroupKBArticlesCount(groupId, status);
-	}
-
-	@Override
-	public com.liferay.knowledgebase.model.KBArticle getKBArticle(
-		long resourcePrimKey, int version)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.getKBArticle(resourcePrimKey, version);
-	}
-
-	@Override
-	public java.util.List<com.liferay.knowledgebase.model.KBArticle> getKBArticleAndAllDescendants(
-		long resourcePrimKey, int status,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.getKBArticleAndAllDescendants(resourcePrimKey,
-			status, orderByComparator);
-	}
-
-	@Override
-	public java.util.List<com.liferay.knowledgebase.model.KBArticle> getKBArticles(
-		long[] resourcePrimKeys, int status,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.getKBArticles(resourcePrimKeys, status,
-			orderByComparator);
-	}
-
-	@Override
-	public java.util.List<com.liferay.knowledgebase.model.KBArticle> getKBArticleVersions(
-		long resourcePrimKey, int status, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.getKBArticleVersions(resourcePrimKey,
-			status, start, end, orderByComparator);
-	}
-
-	@Override
-	public int getKBArticleVersionsCount(long resourcePrimKey, int status)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.getKBArticleVersionsCount(resourcePrimKey,
-			status);
-	}
-
-	@Override
-	public com.liferay.knowledgebase.model.KBArticle getLatestKBArticle(
-		long resourcePrimKey, int status)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.getLatestKBArticle(resourcePrimKey, status);
-	}
-
-	@Override
-	public java.util.List<com.liferay.knowledgebase.model.KBArticle> getSectionsKBArticles(
-		long groupId, java.lang.String[] sections, int status, int start,
-		int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.getSectionsKBArticles(groupId, sections,
-			status, start, end, orderByComparator);
-	}
-
-	@Override
-	public int getSectionsKBArticlesCount(long groupId,
-		java.lang.String[] sections, int status)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.getSectionsKBArticlesCount(groupId,
-			sections, status);
-	}
-
-	@Override
-	public java.util.List<com.liferay.knowledgebase.model.KBArticle> getSiblingKBArticles(
-		long groupId, long parentResourcePrimKey, int status, int start,
-		int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.getSiblingKBArticles(groupId,
-			parentResourcePrimKey, status, start, end, orderByComparator);
-	}
-
-	@Override
-	public int getSiblingKBArticlesCount(long groupId,
-		long parentResourcePrimKey, int status)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.getSiblingKBArticlesCount(groupId,
-			parentResourcePrimKey, status);
-	}
-
-	@Override
-	public void moveKBArticle(long userId, long resourcePrimKey,
-		long parentResourcePrimKey, double priority)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		_kbArticleLocalService.moveKBArticle(userId, resourcePrimKey,
-			parentResourcePrimKey, priority);
-	}
-
-	@Override
-	public java.util.List<com.liferay.knowledgebase.model.KBArticle> search(
-		long groupId, java.lang.String title, java.lang.String content,
-		int status, java.util.Date startDate, java.util.Date endDate,
-		boolean andOperator, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.search(groupId, title, content, status,
-			startDate, endDate, andOperator, start, end, orderByComparator);
-	}
-
-	@Override
 	public void subscribeGroupKBArticles(long userId, long groupId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		_kbArticleLocalService.subscribeGroupKBArticles(userId, groupId);
 	}
 
 	@Override
 	public void subscribeKBArticle(long userId, long groupId,
 		long resourcePrimKey)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		_kbArticleLocalService.subscribeKBArticle(userId, groupId,
 			resourcePrimKey);
 	}
 
 	@Override
 	public void unsubscribeGroupKBArticles(long userId, long groupId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		_kbArticleLocalService.unsubscribeGroupKBArticles(userId, groupId);
 	}
 
 	@Override
 	public void unsubscribeKBArticle(long userId, long resourcePrimKey)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		_kbArticleLocalService.unsubscribeKBArticle(userId, resourcePrimKey);
 	}
 
+	/**
+	* Updates the k b article in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	*
+	* @param kbArticle the k b article
+	* @return the k b article that was updated
+	*/
 	@Override
-	public java.lang.String updateAttachments(long resourcePrimKey,
-		java.lang.String dirName,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return _kbArticleLocalService.updateAttachments(resourcePrimKey,
-			dirName, serviceContext);
+	public com.liferay.knowledgebase.model.KBArticle updateKBArticle(
+		com.liferay.knowledgebase.model.KBArticle kbArticle) {
+		return _kbArticleLocalService.updateKBArticle(kbArticle);
 	}
 
 	@Override
 	public com.liferay.knowledgebase.model.KBArticle updateKBArticle(
 		long userId, long resourcePrimKey, java.lang.String title,
 		java.lang.String content, java.lang.String description,
-		java.lang.String[] sections, java.lang.String dirName,
+		java.lang.String[] sections, java.lang.String[] selectedFileNames,
+		long[] removeFileEntryIds,
 		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return _kbArticleLocalService.updateKBArticle(userId, resourcePrimKey,
-			title, content, description, sections, dirName, serviceContext);
+			title, content, description, sections, selectedFileNames,
+			removeFileEntryIds, serviceContext);
 	}
 
 	@Override
 	public void updateKBArticleAsset(long userId,
 		com.liferay.knowledgebase.model.KBArticle kbArticle,
-		long[] assetCategoryIds, java.lang.String[] assetTagNames)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		long[] assetCategoryIds, java.lang.String[] assetTagNames,
+		long[] assetLinkEntryIds)
+		throws com.liferay.portal.kernel.exception.PortalException {
 		_kbArticleLocalService.updateKBArticleAsset(userId, kbArticle,
-			assetCategoryIds, assetTagNames);
+			assetCategoryIds, assetTagNames, assetLinkEntryIds);
 	}
 
 	@Override
 	public void updateKBArticleResources(
 		com.liferay.knowledgebase.model.KBArticle kbArticle,
 		java.lang.String[] groupPermissions, java.lang.String[] guestPermissions)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		_kbArticleLocalService.updateKBArticleResources(kbArticle,
 			groupPermissions, guestPermissions);
 	}
@@ -656,15 +688,12 @@ public class KBArticleLocalServiceWrapper implements KBArticleLocalService,
 	@Override
 	public void updateKBArticlesPriorities(
 		java.util.Map<java.lang.Long, java.lang.Double> resourcePrimKeyToPriorityMap)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		_kbArticleLocalService.updateKBArticlesPriorities(resourcePrimKeyToPriorityMap);
 	}
 
 	@Override
-	public void updatePriority(long resourcePrimKey, double priority)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+	public void updatePriority(long resourcePrimKey, double priority) {
 		_kbArticleLocalService.updatePriority(resourcePrimKey, priority);
 	}
 
@@ -672,16 +701,14 @@ public class KBArticleLocalServiceWrapper implements KBArticleLocalService,
 	public com.liferay.knowledgebase.model.KBArticle updateStatus(long userId,
 		long resourcePrimKey, int status,
 		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return _kbArticleLocalService.updateStatus(userId, resourcePrimKey,
 			status, serviceContext);
 	}
 
 	@Override
 	public void updateViewCount(long userId, long resourcePrimKey, int viewCount)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		_kbArticleLocalService.updateViewCount(userId, resourcePrimKey,
 			viewCount);
 	}
@@ -689,6 +716,7 @@ public class KBArticleLocalServiceWrapper implements KBArticleLocalService,
 	/**
 	 * @deprecated As of 6.1.0, replaced by {@link #getWrappedService}
 	 */
+	@Deprecated
 	public KBArticleLocalService getWrappedKBArticleLocalService() {
 		return _kbArticleLocalService;
 	}
@@ -696,6 +724,7 @@ public class KBArticleLocalServiceWrapper implements KBArticleLocalService,
 	/**
 	 * @deprecated As of 6.1.0, replaced by {@link #setWrappedService}
 	 */
+	@Deprecated
 	public void setWrappedKBArticleLocalService(
 		KBArticleLocalService kbArticleLocalService) {
 		_kbArticleLocalService = kbArticleLocalService;

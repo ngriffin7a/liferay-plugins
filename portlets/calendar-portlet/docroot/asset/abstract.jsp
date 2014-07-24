@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -19,7 +19,7 @@
 <div>
 	<p>
 		<liferay-ui:icon
-			image="../common/user_icon"
+			iconCssClass="icon-user"
 			message=""
 		/>
 
@@ -39,7 +39,7 @@
 			<br />
 
 			<liferay-ui:icon
-				image="../common/organization_icon"
+				iconCssClass="icon-globe"
 				message="resources"
 			/>
 
@@ -55,14 +55,14 @@
 			}
 			%>
 
-			<%= StringUtil.merge(calendarResourcesNames, ", ") %>
+			<%= HtmlUtil.escape(StringUtil.merge(calendarResourcesNames, ", ")) %>
 		</c:if>
 
 		<br />
 		<br />
 
 		<liferay-ui:icon
-			image="../common/revision"
+			iconCssClass="icon-calendar"
 			message="start-date"
 		/>
 
@@ -75,7 +75,7 @@
 		<br />
 
 		<liferay-ui:icon
-			image="../common/revision"
+			iconCssClass="icon-calendar"
 			message="end-date"
 		/>
 

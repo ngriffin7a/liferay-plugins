@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -66,6 +66,45 @@ import java.util.Map;
  * @generated
  */
 public class CalendarBookingServiceSoap {
+	public static com.liferay.calendar.model.CalendarBookingSoap addCalendarBooking(
+		long calendarId, long[] childCalendarIds, long parentCalendarBookingId,
+		java.lang.String[] titleMapLanguageIds,
+		java.lang.String[] titleMapValues,
+		java.lang.String[] descriptionMapLanguageIds,
+		java.lang.String[] descriptionMapValues, java.lang.String location,
+		int startTimeYear, int startTimeMonth, int startTimeDay,
+		int startTimeHour, int startTimeMinute, int endTimeYear,
+		int endTimeMonth, int endTimeDay, int endTimeHour, int endTimeMinute,
+		java.lang.String timeZoneId, boolean allDay,
+		java.lang.String recurrence, long firstReminder,
+		java.lang.String firstReminderType, long secondReminder,
+		java.lang.String secondReminderType,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			Map<Locale, String> titleMap = LocalizationUtil.getLocalizationMap(titleMapLanguageIds,
+					titleMapValues);
+			Map<Locale, String> descriptionMap = LocalizationUtil.getLocalizationMap(descriptionMapLanguageIds,
+					descriptionMapValues);
+
+			com.liferay.calendar.model.CalendarBooking returnValue = CalendarBookingServiceUtil.addCalendarBooking(calendarId,
+					childCalendarIds, parentCalendarBookingId, titleMap,
+					descriptionMap, location, startTimeYear, startTimeMonth,
+					startTimeDay, startTimeHour, startTimeMinute, endTimeYear,
+					endTimeMonth, endTimeDay, endTimeHour, endTimeMinute,
+					timeZoneId, allDay, recurrence, firstReminder,
+					firstReminderType, secondReminder, secondReminderType,
+					serviceContext);
+
+			return com.liferay.calendar.model.CalendarBookingSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static com.liferay.calendar.model.CalendarBookingSoap addCalendarBooking(
 		long calendarId, long[] childCalendarIds, long parentCalendarBookingId,
 		java.lang.String[] titleMapLanguageIds,
@@ -251,6 +290,36 @@ public class CalendarBookingServiceSoap {
 		}
 	}
 
+	public static com.liferay.calendar.model.CalendarBookingSoap getNewStartTimeAndDurationCalendarBooking(
+		long calendarBookingId, long offset, long duration)
+		throws RemoteException {
+		try {
+			com.liferay.calendar.model.CalendarBooking returnValue = CalendarBookingServiceUtil.getNewStartTimeAndDurationCalendarBooking(calendarBookingId,
+					offset, duration);
+
+			return com.liferay.calendar.model.CalendarBookingSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static boolean hasChildCalendarBookings(long parentCalendarBookingId)
+		throws RemoteException {
+		try {
+			boolean returnValue = CalendarBookingServiceUtil.hasChildCalendarBookings(parentCalendarBookingId);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static void invokeTransition(long calendarBookingId, int status,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws RemoteException {
@@ -265,13 +334,12 @@ public class CalendarBookingServiceSoap {
 		}
 	}
 
-	public static void invokeTransition(long calendarBookingId,
-		java.lang.String transitionName,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws RemoteException {
+	public static com.liferay.calendar.model.CalendarBookingSoap moveCalendarBookingToTrash(
+		long calendarBookingId) throws RemoteException {
 		try {
-			CalendarBookingServiceUtil.invokeTransition(calendarBookingId,
-				transitionName, serviceContext);
+			com.liferay.calendar.model.CalendarBooking returnValue = CalendarBookingServiceUtil.moveCalendarBookingToTrash(calendarBookingId);
+
+			return com.liferay.calendar.model.CalendarBookingSoap.toSoapModel(returnValue);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -280,22 +348,12 @@ public class CalendarBookingServiceSoap {
 		}
 	}
 
-	public static void moveCalendarBookingToTrash(long calendarBookingId)
-		throws RemoteException {
+	public static com.liferay.calendar.model.CalendarBookingSoap restoreCalendarBookingFromTrash(
+		long calendarBookingId) throws RemoteException {
 		try {
-			CalendarBookingServiceUtil.moveCalendarBookingToTrash(calendarBookingId);
-		}
-		catch (Exception e) {
-			_log.error(e, e);
+			com.liferay.calendar.model.CalendarBooking returnValue = CalendarBookingServiceUtil.restoreCalendarBookingFromTrash(calendarBookingId);
 
-			throw new RemoteException(e.getMessage());
-		}
-	}
-
-	public static void restoreCalendarBookingFromTrash(long calendarBookingId)
-		throws RemoteException {
-		try {
-			CalendarBookingServiceUtil.restoreCalendarBookingFromTrash(calendarBookingId);
+			return com.liferay.calendar.model.CalendarBookingSoap.toSoapModel(returnValue);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -309,7 +367,7 @@ public class CalendarBookingServiceSoap {
 		long[] calendarResourceIds, long parentCalendarBookingId,
 		java.lang.String keywords, long startTime, long endTime,
 		boolean recurring, int[] statuses, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.calendar.model.CalendarBooking> orderByComparator)
 		throws RemoteException {
 		try {
 			java.util.List<com.liferay.calendar.model.CalendarBooking> returnValue =
@@ -334,7 +392,7 @@ public class CalendarBookingServiceSoap {
 		java.lang.String location, long startTime, long endTime,
 		boolean recurring, int[] statuses, boolean andOperator, int start,
 		int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.calendar.model.CalendarBooking> orderByComparator)
 		throws RemoteException {
 		try {
 			java.util.List<com.liferay.calendar.model.CalendarBooking> returnValue =
@@ -461,7 +519,78 @@ public class CalendarBookingServiceSoap {
 	}
 
 	public static com.liferay.calendar.model.CalendarBookingSoap updateCalendarBookingInstance(
-		long calendarBookingId, long calendarId, long[] childCalendarIds,
+		long calendarBookingId, int instanceIndex, long calendarId,
+		long[] childCalendarIds, java.lang.String[] titleMapLanguageIds,
+		java.lang.String[] titleMapValues,
+		java.lang.String[] descriptionMapLanguageIds,
+		java.lang.String[] descriptionMapValues, java.lang.String location,
+		long startTime, long endTime, boolean allDay,
+		java.lang.String recurrence, boolean allFollowing, long firstReminder,
+		java.lang.String firstReminderType, long secondReminder,
+		java.lang.String secondReminderType, int status,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			Map<Locale, String> titleMap = LocalizationUtil.getLocalizationMap(titleMapLanguageIds,
+					titleMapValues);
+			Map<Locale, String> descriptionMap = LocalizationUtil.getLocalizationMap(descriptionMapLanguageIds,
+					descriptionMapValues);
+
+			com.liferay.calendar.model.CalendarBooking returnValue = CalendarBookingServiceUtil.updateCalendarBookingInstance(calendarBookingId,
+					instanceIndex, calendarId, childCalendarIds, titleMap,
+					descriptionMap, location, startTime, endTime, allDay,
+					recurrence, allFollowing, firstReminder, firstReminderType,
+					secondReminder, secondReminderType, status, serviceContext);
+
+			return com.liferay.calendar.model.CalendarBookingSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.calendar.model.CalendarBookingSoap updateCalendarBookingInstance(
+		long calendarBookingId, int instanceIndex, long calendarId,
+		java.lang.String[] titleMapLanguageIds,
+		java.lang.String[] titleMapValues,
+		java.lang.String[] descriptionMapLanguageIds,
+		java.lang.String[] descriptionMapValues, java.lang.String location,
+		int startTimeYear, int startTimeMonth, int startTimeDay,
+		int startTimeHour, int startTimeMinute, int endTimeYear,
+		int endTimeMonth, int endTimeDay, int endTimeHour, int endTimeMinute,
+		java.lang.String timeZoneId, boolean allDay,
+		java.lang.String recurrence, boolean allFollowing, long firstReminder,
+		java.lang.String firstReminderType, long secondReminder,
+		java.lang.String secondReminderType, int status,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			Map<Locale, String> titleMap = LocalizationUtil.getLocalizationMap(titleMapLanguageIds,
+					titleMapValues);
+			Map<Locale, String> descriptionMap = LocalizationUtil.getLocalizationMap(descriptionMapLanguageIds,
+					descriptionMapValues);
+
+			com.liferay.calendar.model.CalendarBooking returnValue = CalendarBookingServiceUtil.updateCalendarBookingInstance(calendarBookingId,
+					instanceIndex, calendarId, titleMap, descriptionMap,
+					location, startTimeYear, startTimeMonth, startTimeDay,
+					startTimeHour, startTimeMinute, endTimeYear, endTimeMonth,
+					endTimeDay, endTimeHour, endTimeMinute, timeZoneId, allDay,
+					recurrence, allFollowing, firstReminder, firstReminderType,
+					secondReminder, secondReminderType, status, serviceContext);
+
+			return com.liferay.calendar.model.CalendarBookingSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.calendar.model.CalendarBookingSoap updateCalendarBookingInstance(
+		long calendarBookingId, int instanceIndex, long calendarId,
 		java.lang.String[] titleMapLanguageIds,
 		java.lang.String[] titleMapValues,
 		java.lang.String[] descriptionMapLanguageIds,
@@ -479,7 +608,7 @@ public class CalendarBookingServiceSoap {
 					descriptionMapValues);
 
 			com.liferay.calendar.model.CalendarBooking returnValue = CalendarBookingServiceUtil.updateCalendarBookingInstance(calendarBookingId,
-					calendarId, childCalendarIds, titleMap, descriptionMap,
+					instanceIndex, calendarId, titleMap, descriptionMap,
 					location, startTime, endTime, allDay, recurrence,
 					allFollowing, firstReminder, firstReminderType,
 					secondReminder, secondReminderType, status, serviceContext);
@@ -493,14 +622,14 @@ public class CalendarBookingServiceSoap {
 		}
 	}
 
-	public static com.liferay.calendar.model.CalendarBookingSoap updateCalendarBookingInstance(
-		long calendarBookingId, long calendarId,
+	public static com.liferay.calendar.model.CalendarBookingSoap updateOffsetAndDuration(
+		long calendarBookingId, long calendarId, long[] childCalendarIds,
 		java.lang.String[] titleMapLanguageIds,
 		java.lang.String[] titleMapValues,
 		java.lang.String[] descriptionMapLanguageIds,
 		java.lang.String[] descriptionMapValues, java.lang.String location,
-		long startTime, long endTime, boolean allDay,
-		java.lang.String recurrence, boolean allFollowing, long firstReminder,
+		long offset, long duration, boolean allDay,
+		java.lang.String recurrence, long firstReminder,
 		java.lang.String firstReminderType, long secondReminder,
 		java.lang.String secondReminderType, int status,
 		com.liferay.portal.service.ServiceContext serviceContext)
@@ -511,9 +640,42 @@ public class CalendarBookingServiceSoap {
 			Map<Locale, String> descriptionMap = LocalizationUtil.getLocalizationMap(descriptionMapLanguageIds,
 					descriptionMapValues);
 
-			com.liferay.calendar.model.CalendarBooking returnValue = CalendarBookingServiceUtil.updateCalendarBookingInstance(calendarBookingId,
-					calendarId, titleMap, descriptionMap, location, startTime,
-					endTime, allDay, recurrence, allFollowing, firstReminder,
+			com.liferay.calendar.model.CalendarBooking returnValue = CalendarBookingServiceUtil.updateOffsetAndDuration(calendarBookingId,
+					calendarId, childCalendarIds, titleMap, descriptionMap,
+					location, offset, duration, allDay, recurrence,
+					firstReminder, firstReminderType, secondReminder,
+					secondReminderType, status, serviceContext);
+
+			return com.liferay.calendar.model.CalendarBookingSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.calendar.model.CalendarBookingSoap updateOffsetAndDuration(
+		long calendarBookingId, long calendarId,
+		java.lang.String[] titleMapLanguageIds,
+		java.lang.String[] titleMapValues,
+		java.lang.String[] descriptionMapLanguageIds,
+		java.lang.String[] descriptionMapValues, java.lang.String location,
+		long offset, long duration, boolean allDay,
+		java.lang.String recurrence, long firstReminder,
+		java.lang.String firstReminderType, long secondReminder,
+		java.lang.String secondReminderType, int status,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			Map<Locale, String> titleMap = LocalizationUtil.getLocalizationMap(titleMapLanguageIds,
+					titleMapValues);
+			Map<Locale, String> descriptionMap = LocalizationUtil.getLocalizationMap(descriptionMapLanguageIds,
+					descriptionMapValues);
+
+			com.liferay.calendar.model.CalendarBooking returnValue = CalendarBookingServiceUtil.updateOffsetAndDuration(calendarBookingId,
+					calendarId, titleMap, descriptionMap, location, offset,
+					duration, allDay, recurrence, firstReminder,
 					firstReminderType, secondReminder, secondReminderType,
 					status, serviceContext);
 

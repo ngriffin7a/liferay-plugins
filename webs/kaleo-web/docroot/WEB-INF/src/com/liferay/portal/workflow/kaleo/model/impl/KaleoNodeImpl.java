@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,7 +15,6 @@
 package com.liferay.portal.workflow.kaleo.model.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.workflow.kaleo.model.KaleoTransition;
 import com.liferay.portal.workflow.kaleo.service.KaleoTransitionLocalServiceUtil;
 
@@ -30,29 +29,27 @@ public class KaleoNodeImpl extends KaleoNodeBaseImpl {
 	}
 
 	@Override
-	public KaleoTransition getDefaultKaleoTransition()
-		throws PortalException, SystemException {
-
+	public KaleoTransition getDefaultKaleoTransition() throws PortalException {
 		return KaleoTransitionLocalServiceUtil.getDefaultKaleoTransition(
 			getKaleoNodeId());
 	}
 
 	@Override
 	public KaleoTransition getKaleoTransition(String name)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		return KaleoTransitionLocalServiceUtil.getKaleoTransition(
 			getKaleoNodeId(), name);
 	}
 
 	@Override
-	public List<KaleoTransition> getKaleoTransitions() throws SystemException {
+	public List<KaleoTransition> getKaleoTransitions() {
 		return KaleoTransitionLocalServiceUtil.getKaleoTransitions(
 			getKaleoNodeId());
 	}
 
 	@Override
-	public boolean hasKaleoTransition() throws SystemException {
+	public boolean hasKaleoTransition() {
 		int count = KaleoTransitionLocalServiceUtil.getKaleoTransitionsCount(
 			getKaleoNodeId());
 

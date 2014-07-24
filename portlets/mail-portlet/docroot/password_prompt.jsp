@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -31,7 +31,7 @@ MailManager mailManager = MailManager.getInstance(request);
 	<%
 	Account mailAccount = AccountLocalServiceUtil.getAccount(accountId);
 
-	String taglibLabel = LanguageUtil.format(pageContext, "please-enter-your-password-for-x", mailAccount.getAddress());
+	String taglibLabel = LanguageUtil.format(request, "please-enter-your-password-for-x", mailAccount.getAddress(), false);
 	%>
 
 	<aui:input label="<%= taglibLabel %>" name="password" type="password" />
@@ -41,7 +41,7 @@ MailManager mailManager = MailManager.getInstance(request);
 	</aui:button-row>
 </aui:form>
 
-<aui:script use="aui-io">
+<aui:script use="aui-io-deprecated">
 	var form = A.one('#<portlet:namespace />dialogFm');
 
 	A.one('#<portlet:namespace />login').on(
@@ -52,9 +52,9 @@ MailManager mailManager = MailManager.getInstance(request);
 			A.io.request(
 				themeDisplay.getLayoutURL() + '/-/mail/store_password',
 				{
-					dataType: 'json',
+					dataType: 'JSON',
 					form: {
-						id: form.getDOM()
+						id: form.getDOMNode()
 					},
 					method: 'POST',
 					on: {
@@ -68,8 +68,6 @@ MailManager mailManager = MailManager.getInstance(request);
 
 							if (responseData.status == 'success') {
 								Liferay.Mail.loadAccount(<%= accountId %>, <%= inboxFolderId %>);
-
-								A.DialogManager.closeByChild(form);
 							}
 						}
 					}

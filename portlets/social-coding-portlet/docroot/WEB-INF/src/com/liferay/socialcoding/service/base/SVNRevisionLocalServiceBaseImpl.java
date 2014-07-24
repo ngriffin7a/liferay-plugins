@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -16,8 +16,12 @@ package com.liferay.socialcoding.service.base;
 
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.bean.IdentifiableBean;
+import com.liferay.portal.kernel.dao.db.DB;
+import com.liferay.portal.kernel.dao.db.DBFactoryUtil;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdate;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DefaultActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.Projection;
@@ -29,7 +33,9 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.model.PersistedModel;
 import com.liferay.portal.service.BaseLocalServiceImpl;
 import com.liferay.portal.service.PersistedModelLocalServiceRegistryUtil;
+import com.liferay.portal.service.persistence.ClassNamePersistence;
 import com.liferay.portal.service.persistence.UserPersistence;
+import com.liferay.portal.util.PortalUtil;
 
 import com.liferay.socialcoding.model.SVNRevision;
 import com.liferay.socialcoding.service.SVNRevisionLocalService;
@@ -75,12 +81,10 @@ public abstract class SVNRevisionLocalServiceBaseImpl
 	 *
 	 * @param svnRevision the s v n revision
 	 * @return the s v n revision that was added
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
-	public SVNRevision addSVNRevision(SVNRevision svnRevision)
-		throws SystemException {
+	public SVNRevision addSVNRevision(SVNRevision svnRevision) {
 		svnRevision.setNew(true);
 
 		return svnRevisionPersistence.update(svnRevision);
@@ -103,12 +107,11 @@ public abstract class SVNRevisionLocalServiceBaseImpl
 	 * @param svnRevisionId the primary key of the s v n revision
 	 * @return the s v n revision that was removed
 	 * @throws PortalException if a s v n revision with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public SVNRevision deleteSVNRevision(long svnRevisionId)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return svnRevisionPersistence.remove(svnRevisionId);
 	}
 
@@ -117,12 +120,10 @@ public abstract class SVNRevisionLocalServiceBaseImpl
 	 *
 	 * @param svnRevision the s v n revision
 	 * @return the s v n revision that was removed
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public SVNRevision deleteSVNRevision(SVNRevision svnRevision)
-		throws SystemException {
+	public SVNRevision deleteSVNRevision(SVNRevision svnRevision) {
 		return svnRevisionPersistence.remove(svnRevision);
 	}
 
@@ -139,12 +140,9 @@ public abstract class SVNRevisionLocalServiceBaseImpl
 	 *
 	 * @param dynamicQuery the dynamic query
 	 * @return the matching rows
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public List dynamicQuery(DynamicQuery dynamicQuery)
-		throws SystemException {
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery) {
 		return svnRevisionPersistence.findWithDynamicQuery(dynamicQuery);
 	}
 
@@ -159,12 +157,10 @@ public abstract class SVNRevisionLocalServiceBaseImpl
 	 * @param start the lower bound of the range of model instances
 	 * @param end the upper bound of the range of model instances (not inclusive)
 	 * @return the range of matching rows
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public List dynamicQuery(DynamicQuery dynamicQuery, int start, int end)
-		throws SystemException {
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery, int start,
+		int end) {
 		return svnRevisionPersistence.findWithDynamicQuery(dynamicQuery, start,
 			end);
 	}
@@ -181,12 +177,10 @@ public abstract class SVNRevisionLocalServiceBaseImpl
 	 * @param end the upper bound of the range of model instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching rows
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public List dynamicQuery(DynamicQuery dynamicQuery, int start, int end,
-		OrderByComparator orderByComparator) throws SystemException {
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery, int start,
+		int end, OrderByComparator<T> orderByComparator) {
 		return svnRevisionPersistence.findWithDynamicQuery(dynamicQuery, start,
 			end, orderByComparator);
 	}
@@ -196,11 +190,9 @@ public abstract class SVNRevisionLocalServiceBaseImpl
 	 *
 	 * @param dynamicQuery the dynamic query
 	 * @return the number of rows that match the dynamic query
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public long dynamicQueryCount(DynamicQuery dynamicQuery)
-		throws SystemException {
+	public long dynamicQueryCount(DynamicQuery dynamicQuery) {
 		return svnRevisionPersistence.countWithDynamicQuery(dynamicQuery);
 	}
 
@@ -210,18 +202,16 @@ public abstract class SVNRevisionLocalServiceBaseImpl
 	 * @param dynamicQuery the dynamic query
 	 * @param projection the projection to apply to the query
 	 * @return the number of rows that match the dynamic query
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public long dynamicQueryCount(DynamicQuery dynamicQuery,
-		Projection projection) throws SystemException {
+		Projection projection) {
 		return svnRevisionPersistence.countWithDynamicQuery(dynamicQuery,
 			projection);
 	}
 
 	@Override
-	public SVNRevision fetchSVNRevision(long svnRevisionId)
-		throws SystemException {
+	public SVNRevision fetchSVNRevision(long svnRevisionId) {
 		return svnRevisionPersistence.fetchByPrimaryKey(svnRevisionId);
 	}
 
@@ -231,17 +221,47 @@ public abstract class SVNRevisionLocalServiceBaseImpl
 	 * @param svnRevisionId the primary key of the s v n revision
 	 * @return the s v n revision
 	 * @throws PortalException if a s v n revision with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public SVNRevision getSVNRevision(long svnRevisionId)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return svnRevisionPersistence.findByPrimaryKey(svnRevisionId);
 	}
 
 	@Override
+	public ActionableDynamicQuery getActionableDynamicQuery() {
+		ActionableDynamicQuery actionableDynamicQuery = new DefaultActionableDynamicQuery();
+
+		actionableDynamicQuery.setBaseLocalService(com.liferay.socialcoding.service.SVNRevisionLocalServiceUtil.getService());
+		actionableDynamicQuery.setClass(SVNRevision.class);
+		actionableDynamicQuery.setClassLoader(getClassLoader());
+
+		actionableDynamicQuery.setPrimaryKeyPropertyName("svnRevisionId");
+
+		return actionableDynamicQuery;
+	}
+
+	protected void initActionableDynamicQuery(
+		ActionableDynamicQuery actionableDynamicQuery) {
+		actionableDynamicQuery.setBaseLocalService(com.liferay.socialcoding.service.SVNRevisionLocalServiceUtil.getService());
+		actionableDynamicQuery.setClass(SVNRevision.class);
+		actionableDynamicQuery.setClassLoader(getClassLoader());
+
+		actionableDynamicQuery.setPrimaryKeyPropertyName("svnRevisionId");
+	}
+
+	/**
+	 * @throws PortalException
+	 */
+	@Override
+	public PersistedModel deletePersistedModel(PersistedModel persistedModel)
+		throws PortalException {
+		return svnRevisionLocalService.deleteSVNRevision((SVNRevision)persistedModel);
+	}
+
+	@Override
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return svnRevisionPersistence.findByPrimaryKey(primaryKeyObj);
 	}
 
@@ -255,11 +275,9 @@ public abstract class SVNRevisionLocalServiceBaseImpl
 	 * @param start the lower bound of the range of s v n revisions
 	 * @param end the upper bound of the range of s v n revisions (not inclusive)
 	 * @return the range of s v n revisions
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public List<SVNRevision> getSVNRevisions(int start, int end)
-		throws SystemException {
+	public List<SVNRevision> getSVNRevisions(int start, int end) {
 		return svnRevisionPersistence.findAll(start, end);
 	}
 
@@ -267,10 +285,9 @@ public abstract class SVNRevisionLocalServiceBaseImpl
 	 * Returns the number of s v n revisions.
 	 *
 	 * @return the number of s v n revisions
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public int getSVNRevisionsCount() throws SystemException {
+	public int getSVNRevisionsCount() {
 		return svnRevisionPersistence.countAll();
 	}
 
@@ -279,12 +296,10 @@ public abstract class SVNRevisionLocalServiceBaseImpl
 	 *
 	 * @param svnRevision the s v n revision
 	 * @return the s v n revision that was updated
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
-	public SVNRevision updateSVNRevision(SVNRevision svnRevision)
-		throws SystemException {
+	public SVNRevision updateSVNRevision(SVNRevision svnRevision) {
 		return svnRevisionPersistence.update(svnRevision);
 	}
 
@@ -591,6 +606,63 @@ public abstract class SVNRevisionLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the class name local service.
+	 *
+	 * @return the class name local service
+	 */
+	public com.liferay.portal.service.ClassNameLocalService getClassNameLocalService() {
+		return classNameLocalService;
+	}
+
+	/**
+	 * Sets the class name local service.
+	 *
+	 * @param classNameLocalService the class name local service
+	 */
+	public void setClassNameLocalService(
+		com.liferay.portal.service.ClassNameLocalService classNameLocalService) {
+		this.classNameLocalService = classNameLocalService;
+	}
+
+	/**
+	 * Returns the class name remote service.
+	 *
+	 * @return the class name remote service
+	 */
+	public com.liferay.portal.service.ClassNameService getClassNameService() {
+		return classNameService;
+	}
+
+	/**
+	 * Sets the class name remote service.
+	 *
+	 * @param classNameService the class name remote service
+	 */
+	public void setClassNameService(
+		com.liferay.portal.service.ClassNameService classNameService) {
+		this.classNameService = classNameService;
+	}
+
+	/**
+	 * Returns the class name persistence.
+	 *
+	 * @return the class name persistence
+	 */
+	public ClassNamePersistence getClassNamePersistence() {
+		return classNamePersistence;
+	}
+
+	/**
+	 * Sets the class name persistence.
+	 *
+	 * @param classNamePersistence the class name persistence
+	 */
+	public void setClassNamePersistence(
+		ClassNamePersistence classNamePersistence) {
+		this.classNamePersistence = classNamePersistence;
+	}
+
+	/**
 	 * Returns the resource local service.
 	 *
 	 * @return the resource local service
@@ -729,13 +801,18 @@ public abstract class SVNRevisionLocalServiceBaseImpl
 	}
 
 	/**
-	 * Performs an SQL query.
+	 * Performs a SQL query.
 	 *
 	 * @param sql the sql query
 	 */
-	protected void runSQL(String sql) throws SystemException {
+	protected void runSQL(String sql) {
 		try {
 			DataSource dataSource = svnRevisionPersistence.getDataSource();
+
+			DB db = DBFactoryUtil.getDB();
+
+			sql = db.buildSQL(sql);
+			sql = PortalUtil.transformSQL(sql);
 
 			SqlUpdate sqlUpdate = SqlUpdateFactoryUtil.getSqlUpdate(dataSource,
 					sql, new int[0]);
@@ -779,6 +856,12 @@ public abstract class SVNRevisionLocalServiceBaseImpl
 	protected SVNRevisionPersistence svnRevisionPersistence;
 	@BeanReference(type = com.liferay.counter.service.CounterLocalService.class)
 	protected com.liferay.counter.service.CounterLocalService counterLocalService;
+	@BeanReference(type = com.liferay.portal.service.ClassNameLocalService.class)
+	protected com.liferay.portal.service.ClassNameLocalService classNameLocalService;
+	@BeanReference(type = com.liferay.portal.service.ClassNameService.class)
+	protected com.liferay.portal.service.ClassNameService classNameService;
+	@BeanReference(type = ClassNamePersistence.class)
+	protected ClassNamePersistence classNamePersistence;
 	@BeanReference(type = com.liferay.portal.service.ResourceLocalService.class)
 	protected com.liferay.portal.service.ResourceLocalService resourceLocalService;
 	@BeanReference(type = com.liferay.portal.service.UserLocalService.class)

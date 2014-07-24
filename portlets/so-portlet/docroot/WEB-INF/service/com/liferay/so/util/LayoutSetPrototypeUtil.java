@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -19,9 +19,9 @@ package com.liferay.so.util;
 
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ClassResolverUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.kernel.util.PortalClassInvoker;
 import com.liferay.portal.kernel.util.StringPool;
@@ -34,6 +34,7 @@ import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.util.comparator.LayoutPriorityComparator;
 import com.liferay.portlet.expando.model.ExpandoTableConstants;
 import com.liferay.portlet.expando.model.ExpandoValue;
 import com.liferay.portlet.expando.service.ExpandoValueLocalServiceUtil;
@@ -48,7 +49,7 @@ public class LayoutSetPrototypeUtil {
 
 	public static LayoutSetPrototype fetchLayoutSetPrototype(
 			long companyId, String layoutSetPrototypeKey)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		List<ExpandoValue> expandoValues =
 			ExpandoValueLocalServiceUtil.getColumnValues(
@@ -71,7 +72,7 @@ public class LayoutSetPrototypeUtil {
 
 	public static void removeLayoutSetPrototype(
 			Group group, boolean privateLayout, String layoutSetPrototypeKey)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		LayoutSet layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
 			group.getGroupId(), privateLayout);
@@ -109,6 +110,8 @@ public class LayoutSetPrototypeUtil {
 
 		layouts = LayoutLocalServiceUtil.getLayouts(
 			group.getGroupId(), privateLayout);
+
+		layouts = ListUtil.sort(layouts, new LayoutPriorityComparator(false));
 
 		for (Layout layout : layouts) {
 			if (ArrayUtil.contains(

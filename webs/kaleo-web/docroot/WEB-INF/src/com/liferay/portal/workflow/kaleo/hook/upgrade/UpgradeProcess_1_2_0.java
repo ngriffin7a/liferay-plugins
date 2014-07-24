@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,6 +15,7 @@
 package com.liferay.portal.workflow.kaleo.hook.upgrade;
 
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
+import com.liferay.portal.workflow.kaleo.hook.upgrade.v1_2_0.UpgradeKaleoLog;
 import com.liferay.portal.workflow.kaleo.hook.upgrade.v1_2_0.UpgradeKaleoNotificationRecipient;
 
 /**
@@ -29,6 +30,7 @@ public class UpgradeProcess_1_2_0 extends UpgradeProcess {
 
 	@Override
 	protected void doUpgrade() throws Exception {
+		upgrade(UpgradeKaleoLog.class);
 		upgrade(UpgradeKaleoNotificationRecipient.class);
 	}
 

@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 6.2.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_6_2_0.dtd">
+
+<service-builder package-path="com.liferay.sync" auto-namespace-tables="false">
+	<namespace>Sync</namespace>
+	<entity name="SyncDLFileVersionDiff" local-service="true" remote-service="false">
+
+		<!-- PK fields -->
+
+		<column name="syncDLFileVersionDiffId" type="long" primary="true" />
+
+		<!-- Other fields -->
+
+		<column name="fileEntryId" type="long" />
+		<column name="sourceFileVersionId" type="long" />
+		<column name="targetFileVersionId" type="long" />
+		<column name="dataFileEntryId" type="long" />
+		<column name="size" type="long" />
+		<column name="expirationDate" type="Date" />
+
+		<!-- Finder methods -->
+
+		<finder name="ExpirationDate" return-type="Collection">
+			<finder-column name="expirationDate" comparator="&lt;" />
+		</finder>
+		<finder name="F_S_T" return-type="SyncDLFileVersionDiff" unique="true">
+			<finder-column name="fileEntryId" />
+			<finder-column name="sourceFileVersionId" />
+			<finder-column name="targetFileVersionId" />
+		</finder>
+
+		<!-- References -->
+
+		<reference package-path="com.liferay.portlet.documentlibrary" entity="DLApp" />
+	</entity>
+	<entity name="SyncDLObject" local-service="true" remote-service="true">
+
+		<!-- PK fields -->
+
+		<column name="syncDLObjectId" type="long" primary="true" />
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+		<column name="createTime" type="long" />
+		<column name="modifiedTime" type="long" />
+
+		<!-- Other fields -->
+
+		<column name="repositoryId" type="long" />
+		<column name="parentFolderId" type="long" />
+		<column name="name" type="String" />
+		<column name="extension" type="String" />
+		<column name="mimeType" type="String" />
+		<column name="description" type="String" />
+		<column name="changeLog" type="String" />
+		<column name="extraSettings" type="String" />
+		<column name="version" type="String" />
+		<column name="size" type="long" />
+		<column name="checksum" type="String" />
+		<column name="event" type="String" />
+		<column name="lockExpirationDate" type="Date" />
+		<column name="lockUserId" type="long" />
+		<column name="lockUserName" type="String" />
+		<column name="type" type="String" />
+		<column name="typePK" type="long" />
+		<column name="typeUuid" type="String" />
+
+		<!-- Order -->
+
+		<order by="asc">
+			<order-column name="companyId" />
+			<order-column name="modifiedTime" />
+			<order-column name="repositoryId" />
+		</order>
+
+		<!-- Finder methods -->
+
+		<finder name="T_T" return-type="SyncDLObject" unique="true">
+			<finder-column name="type" />
+			<finder-column name="typePK" />
+		</finder>
+		<finder name="C_M_R" return-type="Collection">
+			<finder-column name="companyId" />
+			<finder-column name="modifiedTime" comparator="&gt;" />
+			<finder-column name="repositoryId" />
+		</finder>
+
+		<!-- References -->
+
+		<reference package-path="com.liferay.portal" entity="Group" />
+		<reference package-path="com.liferay.portal" entity="Repository" />
+		<reference package-path="com.liferay.portlet.documentlibrary" entity="DLApp" />
+		<reference package-path="com.liferay.portlet.documentlibrary" entity="DLFileEntry" />
+		<reference package-path="com.liferay.portlet.documentlibrary" entity="DLFileVersion" />
+
+		<!-- Transactions -->
+
+		<tx-required>getFileDeltaAsStream</tx-required>
+	</entity>
+	<exceptions>
+		<exception>SyncDLObjectChecksum</exception>
+	</exceptions>
+</service-builder>

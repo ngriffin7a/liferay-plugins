@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,17 +15,18 @@
 package com.liferay.portal.workflow.kaleo.service.persistence;
 
 import com.liferay.portal.kernel.dao.orm.BaseActionableDynamicQuery;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.workflow.kaleo.model.KaleoNotification;
 import com.liferay.portal.workflow.kaleo.service.KaleoNotificationLocalServiceUtil;
 
 /**
  * @author Brian Wing Shun Chan
+ * @deprecated As of 7.0.0, replaced by {@link KaleoNotificationLocalServiceUtil#getActionableDynamicQuery()}
  * @generated
  */
+@Deprecated
 public abstract class KaleoNotificationActionableDynamicQuery
 	extends BaseActionableDynamicQuery {
-	public KaleoNotificationActionableDynamicQuery() throws SystemException {
+	public KaleoNotificationActionableDynamicQuery() {
 		setBaseLocalService(KaleoNotificationLocalServiceUtil.getService());
 		setClass(KaleoNotification.class);
 

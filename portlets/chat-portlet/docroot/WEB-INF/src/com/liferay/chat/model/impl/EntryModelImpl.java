@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -18,15 +18,16 @@ import com.liferay.chat.model.Entry;
 import com.liferay.chat.model.EntryModel;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.CacheModel;
+import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.BaseModelImpl;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 
 import com.liferay.portlet.expando.model.ExpandoBridge;
 import com.liferay.portlet.expando.util.ExpandoBridgeFactoryUtil;
@@ -133,6 +134,9 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 		attributes.put("content", getContent());
 		attributes.put("flag", getFlag());
 
+		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
+		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
+
 		return attributes;
 	}
 
@@ -226,13 +230,19 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 	}
 
 	@Override
-	public String getFromUserUuid() throws SystemException {
-		return PortalUtil.getUserValue(getFromUserId(), "uuid", _fromUserUuid);
+	public String getFromUserUuid() {
+		try {
+			User user = UserLocalServiceUtil.getUserById(getFromUserId());
+
+			return user.getUuid();
+		}
+		catch (PortalException pe) {
+			return StringPool.BLANK;
+		}
 	}
 
 	@Override
 	public void setFromUserUuid(String fromUserUuid) {
-		_fromUserUuid = fromUserUuid;
 	}
 
 	public long getOriginalFromUserId() {
@@ -258,13 +268,19 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 	}
 
 	@Override
-	public String getToUserUuid() throws SystemException {
-		return PortalUtil.getUserValue(getToUserId(), "uuid", _toUserUuid);
+	public String getToUserUuid() {
+		try {
+			User user = UserLocalServiceUtil.getUserById(getToUserId());
+
+			return user.getUuid();
+		}
+		catch (PortalException pe) {
+			return StringPool.BLANK;
+		}
 	}
 
 	@Override
 	public void setToUserUuid(String toUserUuid) {
-		_toUserUuid = toUserUuid;
 	}
 
 	public long getOriginalToUserId() {
@@ -400,6 +416,16 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 	}
 
 	@Override
+	public boolean isEntityCacheEnabled() {
+		return ENTITY_CACHE_ENABLED;
+	}
+
+	@Override
+	public boolean isFinderCacheEnabled() {
+		return FINDER_CACHE_ENABLED;
+	}
+
+	@Override
 	public void resetOriginalValues() {
 		EntryModelImpl entryModelImpl = this;
 
@@ -511,11 +537,9 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 	private long _originalCreateDate;
 	private boolean _setOriginalCreateDate;
 	private long _fromUserId;
-	private String _fromUserUuid;
 	private long _originalFromUserId;
 	private boolean _setOriginalFromUserId;
 	private long _toUserId;
-	private String _toUserUuid;
 	private long _originalToUserId;
 	private boolean _setOriginalToUserId;
 	private String _content;

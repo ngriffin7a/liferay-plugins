@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -76,19 +76,21 @@ public interface WorkflowEngine {
 	public List<WorkflowInstance> getWorkflowInstances(
 			Long userId, String assetClassName, Long assetClassPK,
 			Boolean completed, int start, int end,
-			OrderByComparator orderByComparator, ServiceContext serviceContext)
+			OrderByComparator<WorkflowInstance> orderByComparator,
+			ServiceContext serviceContext)
 		throws WorkflowException;
 
 	public List<WorkflowInstance> getWorkflowInstances(
 			Long userId, String[] assetClassNames, Boolean completed, int start,
-			int end, OrderByComparator orderByComparator,
+			int end, OrderByComparator<WorkflowInstance> orderByComparator,
 			ServiceContext serviceContext)
 		throws WorkflowException;
 
 	public List<WorkflowInstance> getWorkflowInstances(
 			String workflowDefinitionName, int workflowDefinitionVersion,
 			boolean completed, int start, int end,
-			OrderByComparator orderByComparator, ServiceContext serviceContext)
+			OrderByComparator<WorkflowInstance> orderByComparator,
+			ServiceContext serviceContext)
 		throws WorkflowException;
 
 	public WorkflowInstance signalWorkflowInstance(

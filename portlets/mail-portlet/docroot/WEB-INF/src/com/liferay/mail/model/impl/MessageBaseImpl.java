@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -16,8 +16,6 @@ package com.liferay.mail.model.impl;
 
 import com.liferay.mail.model.Message;
 import com.liferay.mail.service.MessageLocalServiceUtil;
-
-import com.liferay.portal.kernel.exception.SystemException;
 
 /**
  * The extended model base implementation for the Message service. Represents a row in the &quot;Mail_Message&quot; database table, with each column mapped to a property of this class.
@@ -39,7 +37,7 @@ public abstract class MessageBaseImpl extends MessageModelImpl
 	 * Never modify or reference this class directly. All methods that expect a message model instance should use the {@link Message} interface instead.
 	 */
 	@Override
-	public void persist() throws SystemException {
+	public void persist() {
 		if (this.isNew()) {
 			MessageLocalServiceUtil.addMessage(this);
 		}

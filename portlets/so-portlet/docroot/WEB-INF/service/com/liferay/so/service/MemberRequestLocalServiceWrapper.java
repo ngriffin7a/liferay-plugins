@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -36,13 +36,42 @@ public class MemberRequestLocalServiceWrapper
 	*
 	* @param memberRequest the member request
 	* @return the member request that was added
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
 	public com.liferay.so.model.MemberRequest addMemberRequest(
-		com.liferay.so.model.MemberRequest memberRequest)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.so.model.MemberRequest memberRequest) {
 		return _memberRequestLocalService.addMemberRequest(memberRequest);
+	}
+
+	@Override
+	public com.liferay.so.model.MemberRequest addMemberRequest(long userId,
+		long groupId, long receiverUserId,
+		java.lang.String receiverEmailAddress, long invitedRoleId,
+		long invitedTeamId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _memberRequestLocalService.addMemberRequest(userId, groupId,
+			receiverUserId, receiverEmailAddress, invitedRoleId, invitedTeamId,
+			serviceContext);
+	}
+
+	@Override
+	public void addMemberRequests(long userId, long groupId,
+		java.lang.String[] emailAddresses, long invitedRoleId,
+		long invitedTeamId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		_memberRequestLocalService.addMemberRequests(userId, groupId,
+			emailAddresses, invitedRoleId, invitedTeamId, serviceContext);
+	}
+
+	@Override
+	public void addMemberRequests(long userId, long groupId,
+		long[] receiverUserIds, long invitedRoleId, long invitedTeamId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		_memberRequestLocalService.addMemberRequests(userId, groupId,
+			receiverUserIds, invitedRoleId, invitedTeamId, serviceContext);
 	}
 
 	/**
@@ -58,33 +87,39 @@ public class MemberRequestLocalServiceWrapper
 	}
 
 	/**
+	* Deletes the member request from the database. Also notifies the appropriate model listeners.
+	*
+	* @param memberRequest the member request
+	* @return the member request that was removed
+	*/
+	@Override
+	public com.liferay.so.model.MemberRequest deleteMemberRequest(
+		com.liferay.so.model.MemberRequest memberRequest) {
+		return _memberRequestLocalService.deleteMemberRequest(memberRequest);
+	}
+
+	/**
 	* Deletes the member request with the primary key from the database. Also notifies the appropriate model listeners.
 	*
 	* @param memberRequestId the primary key of the member request
 	* @return the member request that was removed
 	* @throws PortalException if a member request with the primary key could not be found
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
 	public com.liferay.so.model.MemberRequest deleteMemberRequest(
 		long memberRequestId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return _memberRequestLocalService.deleteMemberRequest(memberRequestId);
 	}
 
 	/**
-	* Deletes the member request from the database. Also notifies the appropriate model listeners.
-	*
-	* @param memberRequest the member request
-	* @return the member request that was removed
-	* @throws SystemException if a system exception occurred
+	* @throws PortalException
 	*/
 	@Override
-	public com.liferay.so.model.MemberRequest deleteMemberRequest(
-		com.liferay.so.model.MemberRequest memberRequest)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _memberRequestLocalService.deleteMemberRequest(memberRequest);
+	public com.liferay.portal.model.PersistedModel deletePersistedModel(
+		com.liferay.portal.model.PersistedModel persistedModel)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _memberRequestLocalService.deletePersistedModel(persistedModel);
 	}
 
 	@Override
@@ -97,13 +132,10 @@ public class MemberRequestLocalServiceWrapper
 	*
 	* @param dynamicQuery the dynamic query
 	* @return the matching rows
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
-	@SuppressWarnings("rawtypes")
-	public java.util.List dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public <T> java.util.List<T> dynamicQuery(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
 		return _memberRequestLocalService.dynamicQuery(dynamicQuery);
 	}
 
@@ -118,13 +150,11 @@ public class MemberRequestLocalServiceWrapper
 	* @param start the lower bound of the range of model instances
 	* @param end the upper bound of the range of model instances (not inclusive)
 	* @return the range of matching rows
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
-	@SuppressWarnings("rawtypes")
-	public java.util.List dynamicQuery(
+	public <T> java.util.List<T> dynamicQuery(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
-		int end) throws com.liferay.portal.kernel.exception.SystemException {
+		int end) {
 		return _memberRequestLocalService.dynamicQuery(dynamicQuery, start, end);
 	}
 
@@ -140,15 +170,12 @@ public class MemberRequestLocalServiceWrapper
 	* @param end the upper bound of the range of model instances (not inclusive)
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching rows
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
-	@SuppressWarnings("rawtypes")
-	public java.util.List dynamicQuery(
+	public <T> java.util.List<T> dynamicQuery(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
 		int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.util.OrderByComparator<T> orderByComparator) {
 		return _memberRequestLocalService.dynamicQuery(dynamicQuery, start,
 			end, orderByComparator);
 	}
@@ -158,12 +185,10 @@ public class MemberRequestLocalServiceWrapper
 	*
 	* @param dynamicQuery the dynamic query
 	* @return the number of rows that match the dynamic query
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
 	public long dynamicQueryCount(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
 		return _memberRequestLocalService.dynamicQueryCount(dynamicQuery);
 	}
 
@@ -173,22 +198,42 @@ public class MemberRequestLocalServiceWrapper
 	* @param dynamicQuery the dynamic query
 	* @param projection the projection to apply to the query
 	* @return the number of rows that match the dynamic query
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
 	public long dynamicQueryCount(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery,
-		com.liferay.portal.kernel.dao.orm.Projection projection)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.dao.orm.Projection projection) {
 		return _memberRequestLocalService.dynamicQueryCount(dynamicQuery,
 			projection);
 	}
 
 	@Override
 	public com.liferay.so.model.MemberRequest fetchMemberRequest(
-		long memberRequestId)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		long memberRequestId) {
 		return _memberRequestLocalService.fetchMemberRequest(memberRequestId);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
+		return _memberRequestLocalService.getActionableDynamicQuery();
+	}
+
+	/**
+	* Returns the Spring bean ID for this bean.
+	*
+	* @return the Spring bean ID for this bean
+	*/
+	@Override
+	public java.lang.String getBeanIdentifier() {
+		return _memberRequestLocalService.getBeanIdentifier();
+	}
+
+	@Override
+	public com.liferay.so.model.MemberRequest getMemberRequest(long groupId,
+		long receiverUserId, int status)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _memberRequestLocalService.getMemberRequest(groupId,
+			receiverUserId, status);
 	}
 
 	/**
@@ -197,22 +242,12 @@ public class MemberRequestLocalServiceWrapper
 	* @param memberRequestId the primary key of the member request
 	* @return the member request
 	* @throws PortalException if a member request with the primary key could not be found
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
 	public com.liferay.so.model.MemberRequest getMemberRequest(
 		long memberRequestId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return _memberRequestLocalService.getMemberRequest(memberRequestId);
-	}
-
-	@Override
-	public com.liferay.portal.model.PersistedModel getPersistedModel(
-		java.io.Serializable primaryKeyObj)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return _memberRequestLocalService.getPersistedModel(primaryKeyObj);
 	}
 
 	/**
@@ -225,12 +260,10 @@ public class MemberRequestLocalServiceWrapper
 	* @param start the lower bound of the range of member requests
 	* @param end the upper bound of the range of member requests (not inclusive)
 	* @return the range of member requests
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
 	public java.util.List<com.liferay.so.model.MemberRequest> getMemberRequests(
-		int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		int start, int end) {
 		return _memberRequestLocalService.getMemberRequests(start, end);
 	}
 
@@ -238,36 +271,57 @@ public class MemberRequestLocalServiceWrapper
 	* Returns the number of member requests.
 	*
 	* @return the number of member requests
-	* @throws SystemException if a system exception occurred
 	*/
 	@Override
-	public int getMemberRequestsCount()
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public int getMemberRequestsCount() {
 		return _memberRequestLocalService.getMemberRequestsCount();
 	}
 
-	/**
-	* Updates the member request in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
-	*
-	* @param memberRequest the member request
-	* @return the member request that was updated
-	* @throws SystemException if a system exception occurred
-	*/
 	@Override
-	public com.liferay.so.model.MemberRequest updateMemberRequest(
-		com.liferay.so.model.MemberRequest memberRequest)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _memberRequestLocalService.updateMemberRequest(memberRequest);
+	public com.liferay.portal.model.PersistedModel getPersistedModel(
+		java.io.Serializable primaryKeyObj)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _memberRequestLocalService.getPersistedModel(primaryKeyObj);
 	}
 
-	/**
-	* Returns the Spring bean ID for this bean.
-	*
-	* @return the Spring bean ID for this bean
-	*/
 	@Override
-	public java.lang.String getBeanIdentifier() {
-		return _memberRequestLocalService.getBeanIdentifier();
+	public java.util.List<com.liferay.so.model.MemberRequest> getReceiverMemberRequest(
+		long receiverUserId, int start, int end) {
+		return _memberRequestLocalService.getReceiverMemberRequest(receiverUserId,
+			start, end);
+	}
+
+	@Override
+	public int getReceiverMemberRequestCount(long receiverUserId) {
+		return _memberRequestLocalService.getReceiverMemberRequestCount(receiverUserId);
+	}
+
+	@Override
+	public java.util.List<com.liferay.so.model.MemberRequest> getReceiverStatusMemberRequest(
+		long receiverUserId, int status, int start, int end) {
+		return _memberRequestLocalService.getReceiverStatusMemberRequest(receiverUserId,
+			status, start, end);
+	}
+
+	@Override
+	public int getReceiverStatusMemberRequestCount(long receiverUserId,
+		int status) {
+		return _memberRequestLocalService.getReceiverStatusMemberRequestCount(receiverUserId,
+			status);
+	}
+
+	@Override
+	public boolean hasPendingMemberRequest(long groupId, long receiverUserId) {
+		return _memberRequestLocalService.hasPendingMemberRequest(groupId,
+			receiverUserId);
+	}
+
+	@Override
+	public java.lang.Object invokeMethod(java.lang.String name,
+		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
+		throws java.lang.Throwable {
+		return _memberRequestLocalService.invokeMethod(name, parameterTypes,
+			arguments);
 	}
 
 	/**
@@ -281,90 +335,23 @@ public class MemberRequestLocalServiceWrapper
 	}
 
 	@Override
-	public java.lang.Object invokeMethod(java.lang.String name,
-		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
-		throws java.lang.Throwable {
-		return _memberRequestLocalService.invokeMethod(name, parameterTypes,
-			arguments);
-	}
-
-	@Override
-	public com.liferay.so.model.MemberRequest addMemberRequest(long userId,
-		long groupId, long receiverUserId,
-		java.lang.String receiverEmailAddress, long invitedRoleId,
-		long invitedTeamId,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return _memberRequestLocalService.addMemberRequest(userId, groupId,
-			receiverUserId, receiverEmailAddress, invitedRoleId, invitedTeamId,
-			serviceContext);
-	}
-
-	@Override
-	public void addMemberRequests(long userId, long groupId,
-		long[] receiverUserIds, long invitedRoleId, long invitedTeamId,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		_memberRequestLocalService.addMemberRequests(userId, groupId,
-			receiverUserIds, invitedRoleId, invitedTeamId, serviceContext);
-	}
-
-	@Override
-	public void addMemberRequests(long userId, long groupId,
-		java.lang.String[] emailAddresses, long invitedRoleId,
-		long invitedTeamId,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		_memberRequestLocalService.addMemberRequests(userId, groupId,
-			emailAddresses, invitedRoleId, invitedTeamId, serviceContext);
-	}
-
-	@Override
-	public com.liferay.so.model.MemberRequest getMemberRequest(long groupId,
-		long receiverUserId, int status)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return _memberRequestLocalService.getMemberRequest(groupId,
-			receiverUserId, status);
-	}
-
-	@Override
-	public java.util.List<com.liferay.so.model.MemberRequest> getReceiverMemberRequest(
-		long receiverUserId, int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _memberRequestLocalService.getReceiverMemberRequest(receiverUserId,
-			start, end);
-	}
-
-	@Override
-	public int getReceiverMemberRequestCount(long receiverUserId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _memberRequestLocalService.getReceiverMemberRequestCount(receiverUserId);
-	}
-
-	@Override
-	public java.util.List<com.liferay.so.model.MemberRequest> getReceiverStatusMemberRequest(
-		long receiverUserId, int status, int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _memberRequestLocalService.getReceiverStatusMemberRequest(receiverUserId,
-			status, start, end);
-	}
-
-	@Override
-	public int getReceiverStatusMemberRequestCount(long receiverUserId,
-		int status) throws com.liferay.portal.kernel.exception.SystemException {
-		return _memberRequestLocalService.getReceiverStatusMemberRequestCount(receiverUserId,
-			status);
-	}
-
-	@Override
-	public boolean hasPendingMemberRequest(long groupId, long receiverUserId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _memberRequestLocalService.hasPendingMemberRequest(groupId,
+	public com.liferay.so.model.MemberRequest updateMemberRequest(
+		java.lang.String key, long receiverUserId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _memberRequestLocalService.updateMemberRequest(key,
 			receiverUserId);
+	}
+
+	/**
+	* Updates the member request in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	*
+	* @param memberRequest the member request
+	* @return the member request that was updated
+	*/
+	@Override
+	public com.liferay.so.model.MemberRequest updateMemberRequest(
+		com.liferay.so.model.MemberRequest memberRequest) {
+		return _memberRequestLocalService.updateMemberRequest(memberRequest);
 	}
 
 	@Override
@@ -374,18 +361,10 @@ public class MemberRequestLocalServiceWrapper
 			memberRequestId, status);
 	}
 
-	@Override
-	public com.liferay.so.model.MemberRequest updateMemberRequest(
-		java.lang.String key, long receiverUserId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return _memberRequestLocalService.updateMemberRequest(key,
-			receiverUserId);
-	}
-
 	/**
 	 * @deprecated As of 6.1.0, replaced by {@link #getWrappedService}
 	 */
+	@Deprecated
 	public MemberRequestLocalService getWrappedMemberRequestLocalService() {
 		return _memberRequestLocalService;
 	}
@@ -393,6 +372,7 @@ public class MemberRequestLocalServiceWrapper
 	/**
 	 * @deprecated As of 6.1.0, replaced by {@link #setWrappedService}
 	 */
+	@Deprecated
 	public void setWrappedMemberRequestLocalService(
 		MemberRequestLocalService memberRequestLocalService) {
 		_memberRequestLocalService = memberRequestLocalService;

@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -18,6 +18,12 @@
 
 <aui:form action="<%= installAppURL %>" cssClass="install-apps" enctype="multipart/form-data" method="post" name="fm1">
 	<aui:input name="redirect" type="hidden" value="<%= portletURL.toString() %>" />
+
+	<c:if test="<%= CompanyLocalServiceUtil.getCompaniesCount(false) > 1 %>">
+		<div class="alert alert-info">
+			<liferay-ui:message key="installed-apps-are-available-to-all-portal-instances.-go-to-plugins-configuration-within-each-portal-instance-to-enable-disable-each-app" />
+		</div>
+	</c:if>
 
 	<aui:fieldset label="install">
 		<liferay-ui:success key="pluginUploaded" message="the-plugin-was-uploaded-successfully-and-is-now-being-installed" />

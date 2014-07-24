@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -48,13 +48,14 @@ public class FooServiceUtil {
 		return getService().getBeanIdentifier();
 	}
 
-	/**
-	* Sets the Spring bean ID for this bean.
-	*
-	* @param beanIdentifier the Spring bean ID for this bean
-	*/
-	public static void setBeanIdentifier(java.lang.String beanIdentifier) {
-		getService().setBeanIdentifier(beanIdentifier);
+	public static com.liferay.portal.model.User getUser(long userId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getUser(userId);
+	}
+
+	public static java.util.List<com.liferay.portal.model.Group> getUserSitesGroups()
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getUserSitesGroups();
 	}
 
 	public static java.lang.Object invokeMethod(java.lang.String name,
@@ -63,16 +64,13 @@ public class FooServiceUtil {
 		return getService().invokeMethod(name, parameterTypes, arguments);
 	}
 
-	public static com.liferay.portal.model.User getUser(long userId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().getUser(userId);
-	}
-
-	public static java.util.List<com.liferay.portal.model.Group> getUserSitesGroups()
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().getUserSitesGroups();
+	/**
+	* Sets the Spring bean ID for this bean.
+	*
+	* @param beanIdentifier the Spring bean ID for this bean
+	*/
+	public static void setBeanIdentifier(java.lang.String beanIdentifier) {
+		getService().setBeanIdentifier(beanIdentifier);
 	}
 
 	public static void clearService() {
@@ -100,6 +98,7 @@ public class FooServiceUtil {
 	/**
 	 * @deprecated As of 6.2.0
 	 */
+	@Deprecated
 	public void setService(FooService service) {
 	}
 

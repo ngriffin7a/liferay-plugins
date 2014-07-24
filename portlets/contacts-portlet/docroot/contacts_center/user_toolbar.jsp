@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -43,7 +43,7 @@ else if (SocialRelationLocalServiceUtil.hasRelation(themeDisplay.getUserId(), us
 
 			<liferay-ui:icon
 				cssClass="action remove-connection"
-				image="../social/remove_coworker"
+				image="../aui/minus-sign"
 				label="<%= true %>"
 				message="disconnect"
 				method="get"
@@ -53,7 +53,7 @@ else if (SocialRelationLocalServiceUtil.hasRelation(themeDisplay.getUserId(), us
 		<c:when test="<%= SocialRequestLocalServiceUtil.hasRequest(themeDisplay.getUserId(), User.class.getName(), themeDisplay.getUserId(), SocialRelationConstants.TYPE_BI_CONNECTION, user2.getUserId(), SocialRequestConstants.STATUS_PENDING) %>">
 			<liferay-ui:icon
 				cssClass="disabled"
-				image="../social/coworker"
+				image="../aui/user"
 				label="<%= true %>"
 				message="connection-requested"
 			/>
@@ -67,7 +67,7 @@ else if (SocialRelationLocalServiceUtil.hasRelation(themeDisplay.getUserId(), us
 
 			<liferay-ui:icon
 				cssClass="action add-connection"
-				image="../social/add_coworker"
+				image="../aui/plus-sign"
 				label="<%= true %>"
 				message="connect"
 				method="get"
@@ -86,7 +86,7 @@ else if (SocialRelationLocalServiceUtil.hasRelation(themeDisplay.getUserId(), us
 
 			<liferay-ui:icon
 				cssClass="action unfollow"
-				image="../social/unfollow"
+				image="../aui/minus-sign"
 				label="<%= true %>"
 				message="unfollow"
 				method="get"
@@ -102,7 +102,7 @@ else if (SocialRelationLocalServiceUtil.hasRelation(themeDisplay.getUserId(), us
 
 			<liferay-ui:icon
 				cssClass="action follow"
-				image="../social/follow"
+				image="../aui/plus-sign"
 				label="<%= true %>"
 				message="follow"
 				method="get"
@@ -122,7 +122,7 @@ else if (SocialRelationLocalServiceUtil.hasRelation(themeDisplay.getUserId(), us
 
 		<liferay-ui:icon
 			cssClass="action unblock"
-			image="../social/unblock"
+			image="../aui/ok"
 			label="<%= true %>"
 			message="unblock"
 			method="get"
@@ -138,7 +138,7 @@ else if (SocialRelationLocalServiceUtil.hasRelation(themeDisplay.getUserId(), us
 
 		<liferay-ui:icon
 			cssClass="action block"
-			image="../social/block"
+			image="../aui/ban-circle"
 			label="<%= true %>"
 			message="block"
 			method="get"
@@ -155,7 +155,7 @@ else if (SocialRelationLocalServiceUtil.hasRelation(themeDisplay.getUserId(), us
 
 	<liferay-ui:icon
 		cssClass="send-message"
-		image="../mail/compose"
+		image="../aui/envelope"
 		label="<%= true %>"
 		message="message"
 		onClick="<%= messageTaglibOnClick %>"
@@ -168,47 +168,46 @@ else if (SocialRelationLocalServiceUtil.hasRelation(themeDisplay.getUserId(), us
 </portlet:resourceURL>
 
 <liferay-ui:icon
-	image="export"
+	image="../aui/save"
 	label="<%= true %>"
 	message="vcard"
 	url="<%= exportURL %>"
 />
 
 <aui:script>
-	function <portlet:namespace />sendMessage() {
-		var A = AUI();
+	Liferay.provide(
+		window,
+		'<portlet:namespace />sendMessage',
+		function() {
+			<portlet:renderURL var="redirectURL" windowState="<%= LiferayWindowState.NORMAL.toString() %>" />
 
-		<portlet:renderURL var="redirectURL" windowState="<%= LiferayWindowState.NORMAL.toString() %>" />
+			var uri = '<liferay-portlet:renderURL portletName="<%= PortletKeys.PRIVATE_MESSAGING %>" windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="mvcPath" value="/new_message.jsp" /><portlet:param name="redirect" value="<%= redirectURL %>" /></liferay-portlet:renderURL>';
 
-		var uri = '<liferay-portlet:renderURL portletName="1_WAR_privatemessagingportlet" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>"><portlet:param name="mvcPath" value="/new_message.jsp" /><portlet:param name="redirect" value="<%= redirectURL %>" /></liferay-portlet:renderURL>';
+			uri = Liferay.Util.addParams('<%= PortalUtil.getPortletNamespace(PortletKeys.PRIVATE_MESSAGING) %>userIds=' + '<%= user2.getUserId() %>', uri) || uri;
 
-		new A.Dialog(
-			{
-				align: Liferay.Util.Window.ALIGN_CENTER,
-				cssClass: 'private-messaging-portlet',
-				destroyOnClose: true,
-				modal: true,
-				title: '<%= UnicodeLanguageUtil.get(pageContext, "new-message") %>',
-				width: 600
-			}
-		).plug(
-			A.Plugin.IO,
-			{
-				data: {
-					userIds: <%= user2.getUserId() %>
-				},
-				uri: uri
-			}
-		).render();
-	}
+			Liferay.Util.openWindow(
+				{
+					dialog: {
+						centered: true,
+						constrain: true,
+						cssClass: 'private-messaging-portlet',
+						destroyOnHide: true,
+						height: 600,
+						modal: true,
+						plugins: [Liferay.WidgetZIndex],
+						width: 600
+					},
+					id: '<%= PortalUtil.getPortletNamespace(PortletKeys.PRIVATE_MESSAGING) %>Dialog',
+					title: '<%= UnicodeLanguageUtil.get(request, "new-message") %>',
+					uri: uri
+				}
+			);
+		},
+		['liferay-util-window']
+	);
 </aui:script>
 
-<aui:script use="aui-base,aui-dialog,aui-dialog-iframe">
-	<liferay-portlet:renderURL var="viewSummaryURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
-		<portlet:param name="mvcPath" value="/contacts_center/view_user.jsp" />
-		<portlet:param name="userId" value="<%= String.valueOf(user2.getUserId()) %>" />
-	</liferay-portlet:renderURL>
-
+<aui:script use="aui-base,aui-io-request-deprecated">
 	var contactAction = A.one('.contacts-portlet .contacts-action-content');
 
 	if (contactAction) {
@@ -233,8 +232,12 @@ else if (SocialRelationLocalServiceUtil.hasRelation(themeDisplay.getUserId(), us
 									);
 								}
 
-								contactProfile.io.set('uri', '<%= viewSummaryURL %>');
+								<liferay-portlet:renderURL var="viewSummaryURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
+									<portlet:param name="mvcPath" value="/contacts_center/view_user.jsp" />
+									<portlet:param name="userId" value="<%= String.valueOf(user2.getUserId()) %>" />
+								</liferay-portlet:renderURL>
 
+								contactProfile.io.set('uri', '<%= viewSummaryURL %>');
 								contactProfile.io.start();
 							}
 						}

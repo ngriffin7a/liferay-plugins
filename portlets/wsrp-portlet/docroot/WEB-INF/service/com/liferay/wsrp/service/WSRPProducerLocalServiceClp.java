@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -28,826 +28,164 @@ public class WSRPProducerLocalServiceClp implements WSRPProducerLocalService {
 		_methodName0 = "addWSRPProducer";
 
 		_methodParameterTypes0 = new String[] {
-				"com.liferay.wsrp.model.WSRPProducer"
-			};
-
-		_methodName1 = "createWSRPProducer";
-
-		_methodParameterTypes1 = new String[] { "long" };
-
-		_methodName2 = "deleteWSRPProducer";
-
-		_methodParameterTypes2 = new String[] { "long" };
-
-		_methodName3 = "deleteWSRPProducer";
-
-		_methodParameterTypes3 = new String[] {
-				"com.liferay.wsrp.model.WSRPProducer"
-			};
-
-		_methodName4 = "dynamicQuery";
-
-		_methodParameterTypes4 = new String[] {  };
-
-		_methodName5 = "dynamicQuery";
-
-		_methodParameterTypes5 = new String[] {
-				"com.liferay.portal.kernel.dao.orm.DynamicQuery"
-			};
-
-		_methodName6 = "dynamicQuery";
-
-		_methodParameterTypes6 = new String[] {
-				"com.liferay.portal.kernel.dao.orm.DynamicQuery", "int", "int"
-			};
-
-		_methodName7 = "dynamicQuery";
-
-		_methodParameterTypes7 = new String[] {
-				"com.liferay.portal.kernel.dao.orm.DynamicQuery", "int", "int",
-				"com.liferay.portal.kernel.util.OrderByComparator"
-			};
-
-		_methodName8 = "dynamicQueryCount";
-
-		_methodParameterTypes8 = new String[] {
-				"com.liferay.portal.kernel.dao.orm.DynamicQuery"
-			};
-
-		_methodName9 = "dynamicQueryCount";
-
-		_methodParameterTypes9 = new String[] {
-				"com.liferay.portal.kernel.dao.orm.DynamicQuery",
-				"com.liferay.portal.kernel.dao.orm.Projection"
-			};
-
-		_methodName10 = "fetchWSRPProducer";
-
-		_methodParameterTypes10 = new String[] { "long" };
-
-		_methodName11 = "fetchWSRPProducerByUuidAndCompanyId";
-
-		_methodParameterTypes11 = new String[] { "java.lang.String", "long" };
-
-		_methodName12 = "fetchWSRPProducerByUuidAndGroupId";
-
-		_methodParameterTypes12 = new String[] { "java.lang.String", "long" };
-
-		_methodName13 = "getWSRPProducer";
-
-		_methodParameterTypes13 = new String[] { "long" };
-
-		_methodName14 = "getPersistedModel";
-
-		_methodParameterTypes14 = new String[] { "java.io.Serializable" };
-
-		_methodName15 = "getWSRPProducerByUuidAndCompanyId";
-
-		_methodParameterTypes15 = new String[] { "java.lang.String", "long" };
-
-		_methodName16 = "getWSRPProducerByUuidAndGroupId";
-
-		_methodParameterTypes16 = new String[] { "java.lang.String", "long" };
-
-		_methodName17 = "getWSRPProducers";
-
-		_methodParameterTypes17 = new String[] { "int", "int" };
-
-		_methodName18 = "getWSRPProducersCount";
-
-		_methodParameterTypes18 = new String[] {  };
-
-		_methodName19 = "updateWSRPProducer";
-
-		_methodParameterTypes19 = new String[] {
-				"com.liferay.wsrp.model.WSRPProducer"
-			};
-
-		_methodName20 = "getBeanIdentifier";
-
-		_methodParameterTypes20 = new String[] {  };
-
-		_methodName21 = "setBeanIdentifier";
-
-		_methodParameterTypes21 = new String[] { "java.lang.String" };
-
-		_methodName23 = "addWSRPProducer";
-
-		_methodParameterTypes23 = new String[] {
 				"long", "long", "java.lang.String", "java.lang.String",
 				"java.lang.String", "com.liferay.portal.service.ServiceContext"
 			};
 
-		_methodName24 = "addWSRPProducer";
+		_methodName1 = "addWSRPProducer";
 
-		_methodParameterTypes24 = new String[] {
+		_methodParameterTypes1 = new String[] {
 				"long", "java.lang.String", "java.lang.String",
 				"java.lang.String", "com.liferay.portal.service.ServiceContext"
 			};
 
-		_methodName25 = "getWSRPProducer";
+		_methodName2 = "addWSRPProducer";
 
-		_methodParameterTypes25 = new String[] { "java.lang.String" };
+		_methodParameterTypes2 = new String[] {
+				"com.liferay.wsrp.model.WSRPProducer"
+			};
 
-		_methodName26 = "getWSRPProducers";
+		_methodName3 = "createWSRPProducer";
 
-		_methodParameterTypes26 = new String[] { "long", "int", "int" };
+		_methodParameterTypes3 = new String[] { "long" };
+
+		_methodName4 = "deletePersistedModel";
+
+		_methodParameterTypes4 = new String[] {
+				"com.liferay.portal.model.PersistedModel"
+			};
+
+		_methodName5 = "deleteWSRPProducer";
+
+		_methodParameterTypes5 = new String[] {
+				"com.liferay.wsrp.model.WSRPProducer"
+			};
+
+		_methodName6 = "deleteWSRPProducer";
+
+		_methodParameterTypes6 = new String[] { "long" };
+
+		_methodName7 = "deleteWSRPProducers";
+
+		_methodParameterTypes7 = new String[] { "long" };
+
+		_methodName8 = "dynamicQuery";
+
+		_methodParameterTypes8 = new String[] {  };
+
+		_methodName9 = "dynamicQuery";
+
+		_methodParameterTypes9 = new String[] {
+				"com.liferay.portal.kernel.dao.orm.DynamicQuery"
+			};
+
+		_methodName10 = "dynamicQuery";
+
+		_methodParameterTypes10 = new String[] {
+				"com.liferay.portal.kernel.dao.orm.DynamicQuery", "int", "int"
+			};
+
+		_methodName11 = "dynamicQuery";
+
+		_methodParameterTypes11 = new String[] {
+				"com.liferay.portal.kernel.dao.orm.DynamicQuery", "int", "int",
+				"com.liferay.portal.kernel.util.OrderByComparator"
+			};
+
+		_methodName12 = "dynamicQueryCount";
+
+		_methodParameterTypes12 = new String[] {
+				"com.liferay.portal.kernel.dao.orm.DynamicQuery"
+			};
+
+		_methodName13 = "dynamicQueryCount";
+
+		_methodParameterTypes13 = new String[] {
+				"com.liferay.portal.kernel.dao.orm.DynamicQuery",
+				"com.liferay.portal.kernel.dao.orm.Projection"
+			};
+
+		_methodName14 = "fetchWSRPProducer";
+
+		_methodParameterTypes14 = new String[] { "long" };
+
+		_methodName15 = "fetchWSRPProducerByUuidAndGroupId";
+
+		_methodParameterTypes15 = new String[] { "java.lang.String", "long" };
+
+		_methodName16 = "getActionableDynamicQuery";
+
+		_methodParameterTypes16 = new String[] {  };
+
+		_methodName17 = "getBeanIdentifier";
+
+		_methodParameterTypes17 = new String[] {  };
+
+		_methodName18 = "getExportActionableDynamicQuery";
+
+		_methodParameterTypes18 = new String[] {
+				"com.liferay.portal.kernel.lar.PortletDataContext"
+			};
+
+		_methodName19 = "getPersistedModel";
+
+		_methodParameterTypes19 = new String[] { "java.io.Serializable" };
+
+		_methodName20 = "getWSRPProducer";
+
+		_methodParameterTypes20 = new String[] { "long" };
+
+		_methodName21 = "getWSRPProducer";
+
+		_methodParameterTypes21 = new String[] { "java.lang.String" };
+
+		_methodName22 = "getWSRPProducerByUuidAndGroupId";
+
+		_methodParameterTypes22 = new String[] { "java.lang.String", "long" };
+
+		_methodName23 = "getWSRPProducers";
+
+		_methodParameterTypes23 = new String[] { "long", "int", "int" };
+
+		_methodName24 = "getWSRPProducers";
+
+		_methodParameterTypes24 = new String[] { "int", "int" };
+
+		_methodName25 = "getWSRPProducersByUuidAndCompanyId";
+
+		_methodParameterTypes25 = new String[] { "java.lang.String", "long" };
+
+		_methodName26 = "getWSRPProducersByUuidAndCompanyId";
+
+		_methodParameterTypes26 = new String[] {
+				"java.lang.String", "long", "int", "int",
+				"com.liferay.portal.kernel.util.OrderByComparator"
+			};
 
 		_methodName27 = "getWSRPProducersCount";
 
-		_methodParameterTypes27 = new String[] { "long" };
+		_methodParameterTypes27 = new String[] {  };
 
-		_methodName28 = "updateWSRPProducer";
+		_methodName28 = "getWSRPProducersCount";
 
-		_methodParameterTypes28 = new String[] {
+		_methodParameterTypes28 = new String[] { "long" };
+
+		_methodName30 = "setBeanIdentifier";
+
+		_methodParameterTypes30 = new String[] { "java.lang.String" };
+
+		_methodName31 = "updateWSRPProducer";
+
+		_methodParameterTypes31 = new String[] {
+				"com.liferay.wsrp.model.WSRPProducer"
+			};
+
+		_methodName32 = "updateWSRPProducer";
+
+		_methodParameterTypes32 = new String[] {
 				"long", "java.lang.String", "java.lang.String",
 				"java.lang.String"
 			};
-	}
-
-	@Override
-	public com.liferay.wsrp.model.WSRPProducer addWSRPProducer(
-		com.liferay.wsrp.model.WSRPProducer wsrpProducer)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName0,
-					_methodParameterTypes0,
-					new Object[] { ClpSerializer.translateInput(wsrpProducer) });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.liferay.wsrp.model.WSRPProducer)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public com.liferay.wsrp.model.WSRPProducer createWSRPProducer(
-		long wsrpProducerId) {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName1,
-					_methodParameterTypes1, new Object[] { wsrpProducerId });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.liferay.wsrp.model.WSRPProducer)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public com.liferay.wsrp.model.WSRPProducer deleteWSRPProducer(
-		long wsrpProducerId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName2,
-					_methodParameterTypes2, new Object[] { wsrpProducerId });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
-				throw (com.liferay.portal.kernel.exception.PortalException)t;
-			}
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.liferay.wsrp.model.WSRPProducer)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public com.liferay.wsrp.model.WSRPProducer deleteWSRPProducer(
-		com.liferay.wsrp.model.WSRPProducer wsrpProducer)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName3,
-					_methodParameterTypes3,
-					new Object[] { ClpSerializer.translateInput(wsrpProducer) });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
-				throw (com.liferay.portal.kernel.exception.PortalException)t;
-			}
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.liferay.wsrp.model.WSRPProducer)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery() {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName4,
-					_methodParameterTypes4, new Object[] {  });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.liferay.portal.kernel.dao.orm.DynamicQuery)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	@SuppressWarnings("rawtypes")
-	public java.util.List dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName5,
-					_methodParameterTypes5,
-					new Object[] { ClpSerializer.translateInput(dynamicQuery) });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (java.util.List)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	@SuppressWarnings("rawtypes")
-	public java.util.List dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
-		int end) throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName6,
-					_methodParameterTypes6,
-					new Object[] {
-						ClpSerializer.translateInput(dynamicQuery),
-						
-					start,
-						
-					end
-					});
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (java.util.List)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	@SuppressWarnings("rawtypes")
-	public java.util.List dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
-		int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName7,
-					_methodParameterTypes7,
-					new Object[] {
-						ClpSerializer.translateInput(dynamicQuery),
-						
-					start,
-						
-					end,
-						
-					ClpSerializer.translateInput(orderByComparator)
-					});
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (java.util.List)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public long dynamicQueryCount(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName8,
-					_methodParameterTypes8,
-					new Object[] { ClpSerializer.translateInput(dynamicQuery) });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return ((Long)returnObj).longValue();
-	}
-
-	@Override
-	public long dynamicQueryCount(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery,
-		com.liferay.portal.kernel.dao.orm.Projection projection)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName9,
-					_methodParameterTypes9,
-					new Object[] {
-						ClpSerializer.translateInput(dynamicQuery),
-						
-					ClpSerializer.translateInput(projection)
-					});
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return ((Long)returnObj).longValue();
-	}
-
-	@Override
-	public com.liferay.wsrp.model.WSRPProducer fetchWSRPProducer(
-		long wsrpProducerId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName10,
-					_methodParameterTypes10, new Object[] { wsrpProducerId });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.liferay.wsrp.model.WSRPProducer)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public com.liferay.wsrp.model.WSRPProducer fetchWSRPProducerByUuidAndCompanyId(
-		java.lang.String uuid, long companyId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName11,
-					_methodParameterTypes11,
-					new Object[] { ClpSerializer.translateInput(uuid), companyId });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.liferay.wsrp.model.WSRPProducer)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public com.liferay.wsrp.model.WSRPProducer fetchWSRPProducerByUuidAndGroupId(
-		java.lang.String uuid, long groupId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName12,
-					_methodParameterTypes12,
-					new Object[] { ClpSerializer.translateInput(uuid), groupId });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.liferay.wsrp.model.WSRPProducer)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public com.liferay.wsrp.model.WSRPProducer getWSRPProducer(
-		long wsrpProducerId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName13,
-					_methodParameterTypes13, new Object[] { wsrpProducerId });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
-				throw (com.liferay.portal.kernel.exception.PortalException)t;
-			}
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.liferay.wsrp.model.WSRPProducer)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public com.liferay.portal.model.PersistedModel getPersistedModel(
-		java.io.Serializable primaryKeyObj)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName14,
-					_methodParameterTypes14,
-					new Object[] { ClpSerializer.translateInput(primaryKeyObj) });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
-				throw (com.liferay.portal.kernel.exception.PortalException)t;
-			}
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.liferay.portal.model.PersistedModel)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public com.liferay.wsrp.model.WSRPProducer getWSRPProducerByUuidAndCompanyId(
-		java.lang.String uuid, long companyId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName15,
-					_methodParameterTypes15,
-					new Object[] { ClpSerializer.translateInput(uuid), companyId });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
-				throw (com.liferay.portal.kernel.exception.PortalException)t;
-			}
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.liferay.wsrp.model.WSRPProducer)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public com.liferay.wsrp.model.WSRPProducer getWSRPProducerByUuidAndGroupId(
-		java.lang.String uuid, long groupId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName16,
-					_methodParameterTypes16,
-					new Object[] { ClpSerializer.translateInput(uuid), groupId });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
-				throw (com.liferay.portal.kernel.exception.PortalException)t;
-			}
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.liferay.wsrp.model.WSRPProducer)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public java.util.List<com.liferay.wsrp.model.WSRPProducer> getWSRPProducers(
-		int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName17,
-					_methodParameterTypes17, new Object[] { start, end });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (java.util.List<com.liferay.wsrp.model.WSRPProducer>)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public int getWSRPProducersCount()
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName18,
-					_methodParameterTypes18, new Object[] {  });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return ((Integer)returnObj).intValue();
-	}
-
-	@Override
-	public com.liferay.wsrp.model.WSRPProducer updateWSRPProducer(
-		com.liferay.wsrp.model.WSRPProducer wsrpProducer)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName19,
-					_methodParameterTypes19,
-					new Object[] { ClpSerializer.translateInput(wsrpProducer) });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.liferay.wsrp.model.WSRPProducer)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public java.lang.String getBeanIdentifier() {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName20,
-					_methodParameterTypes20, new Object[] {  });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (java.lang.String)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public void setBeanIdentifier(java.lang.String beanIdentifier) {
-		try {
-			_invokableLocalService.invokeMethod(_methodName21,
-				_methodParameterTypes21,
-				new Object[] { ClpSerializer.translateInput(beanIdentifier) });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-	}
-
-	@Override
-	public java.lang.Object invokeMethod(java.lang.String name,
-		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
-		throws java.lang.Throwable {
-		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -855,13 +193,12 @@ public class WSRPProducerLocalServiceClp implements WSRPProducerLocalService {
 		long groupId, java.lang.String name, java.lang.String version,
 		java.lang.String portletIds,
 		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName23,
-					_methodParameterTypes23,
+			returnObj = _invokableLocalService.invokeMethod(_methodName0,
+					_methodParameterTypes0,
 					new Object[] {
 						userId,
 						
@@ -883,10 +220,6 @@ public class WSRPProducerLocalServiceClp implements WSRPProducerLocalService {
 				throw (com.liferay.portal.kernel.exception.PortalException)t;
 			}
 
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
 			}
@@ -904,13 +237,12 @@ public class WSRPProducerLocalServiceClp implements WSRPProducerLocalService {
 		java.lang.String name, java.lang.String version,
 		java.lang.String portletIds,
 		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName24,
-					_methodParameterTypes24,
+			returnObj = _invokableLocalService.invokeMethod(_methodName1,
+					_methodParameterTypes1,
 					new Object[] {
 						userId,
 						
@@ -930,8 +262,517 @@ public class WSRPProducerLocalServiceClp implements WSRPProducerLocalService {
 				throw (com.liferay.portal.kernel.exception.PortalException)t;
 			}
 
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.wsrp.model.WSRPProducer)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public com.liferay.wsrp.model.WSRPProducer addWSRPProducer(
+		com.liferay.wsrp.model.WSRPProducer wsrpProducer) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName2,
+					_methodParameterTypes2,
+					new Object[] { ClpSerializer.translateInput(wsrpProducer) });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.wsrp.model.WSRPProducer)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public com.liferay.wsrp.model.WSRPProducer createWSRPProducer(
+		long wsrpProducerId) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName3,
+					_methodParameterTypes3, new Object[] { wsrpProducerId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.wsrp.model.WSRPProducer)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public com.liferay.portal.model.PersistedModel deletePersistedModel(
+		com.liferay.portal.model.PersistedModel persistedModel)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName4,
+					_methodParameterTypes4,
+					new Object[] { ClpSerializer.translateInput(persistedModel) });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.portal.model.PersistedModel)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public com.liferay.wsrp.model.WSRPProducer deleteWSRPProducer(
+		com.liferay.wsrp.model.WSRPProducer wsrpProducer)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName5,
+					_methodParameterTypes5,
+					new Object[] { ClpSerializer.translateInput(wsrpProducer) });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.wsrp.model.WSRPProducer)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public com.liferay.wsrp.model.WSRPProducer deleteWSRPProducer(
+		long wsrpProducerId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName6,
+					_methodParameterTypes6, new Object[] { wsrpProducerId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.wsrp.model.WSRPProducer)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public void deleteWSRPProducers(long companyId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		try {
+			_invokableLocalService.invokeMethod(_methodName7,
+				_methodParameterTypes7, new Object[] { companyId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+	}
+
+	@Override
+	public com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery() {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName8,
+					_methodParameterTypes8, new Object[] {  });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.portal.kernel.dao.orm.DynamicQuery)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public <T> java.util.List<T> dynamicQuery(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName9,
+					_methodParameterTypes9,
+					new Object[] { ClpSerializer.translateInput(dynamicQuery) });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<T>)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public <T> java.util.List<T> dynamicQuery(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
+		int end) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName10,
+					_methodParameterTypes10,
+					new Object[] {
+						ClpSerializer.translateInput(dynamicQuery),
+						
+					start,
+						
+					end
+					});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<T>)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public <T> java.util.List<T> dynamicQuery(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
+		int end,
+		com.liferay.portal.kernel.util.OrderByComparator<T> orderByComparator) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName11,
+					_methodParameterTypes11,
+					new Object[] {
+						ClpSerializer.translateInput(dynamicQuery),
+						
+					start,
+						
+					end,
+						
+					ClpSerializer.translateInput(orderByComparator)
+					});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<T>)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public long dynamicQueryCount(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName12,
+					_methodParameterTypes12,
+					new Object[] { ClpSerializer.translateInput(dynamicQuery) });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Long)returnObj).longValue();
+	}
+
+	@Override
+	public long dynamicQueryCount(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery,
+		com.liferay.portal.kernel.dao.orm.Projection projection) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName13,
+					_methodParameterTypes13,
+					new Object[] {
+						ClpSerializer.translateInput(dynamicQuery),
+						
+					ClpSerializer.translateInput(projection)
+					});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Long)returnObj).longValue();
+	}
+
+	@Override
+	public com.liferay.wsrp.model.WSRPProducer fetchWSRPProducer(
+		long wsrpProducerId) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName14,
+					_methodParameterTypes14, new Object[] { wsrpProducerId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.wsrp.model.WSRPProducer)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public com.liferay.wsrp.model.WSRPProducer fetchWSRPProducerByUuidAndGroupId(
+		java.lang.String uuid, long groupId) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName15,
+					_methodParameterTypes15,
+					new Object[] { ClpSerializer.translateInput(uuid), groupId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.wsrp.model.WSRPProducer)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName16,
+					_methodParameterTypes16, new Object[] {  });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public java.lang.String getBeanIdentifier() {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName17,
+					_methodParameterTypes17, new Object[] {  });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.lang.String)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery getExportActionableDynamicQuery(
+		com.liferay.portal.kernel.lar.PortletDataContext portletDataContext) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName18,
+					_methodParameterTypes18,
+					new Object[] {
+						ClpSerializer.translateInput(portletDataContext)
+					});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public com.liferay.portal.model.PersistedModel getPersistedModel(
+		java.io.Serializable primaryKeyObj)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName19,
+					_methodParameterTypes19,
+					new Object[] { ClpSerializer.translateInput(primaryKeyObj) });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.portal.model.PersistedModel)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public com.liferay.wsrp.model.WSRPProducer getWSRPProducer(
+		long wsrpProducerId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName20,
+					_methodParameterTypes20, new Object[] { wsrpProducerId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
 			}
 
 			if (t instanceof RuntimeException) {
@@ -949,13 +790,12 @@ public class WSRPProducerLocalServiceClp implements WSRPProducerLocalService {
 	@Override
 	public com.liferay.wsrp.model.WSRPProducer getWSRPProducer(
 		java.lang.String wsrpProducerUuid)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName25,
-					_methodParameterTypes25,
+			returnObj = _invokableLocalService.invokeMethod(_methodName21,
+					_methodParameterTypes21,
 					new Object[] { ClpSerializer.translateInput(
 							wsrpProducerUuid) });
 		}
@@ -966,8 +806,34 @@ public class WSRPProducerLocalServiceClp implements WSRPProducerLocalService {
 				throw (com.liferay.portal.kernel.exception.PortalException)t;
 			}
 
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.wsrp.model.WSRPProducer)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public com.liferay.wsrp.model.WSRPProducer getWSRPProducerByUuidAndGroupId(
+		java.lang.String uuid, long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName22,
+					_methodParameterTypes22,
+					new Object[] { ClpSerializer.translateInput(uuid), groupId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
 			}
 
 			if (t instanceof RuntimeException) {
@@ -984,21 +850,16 @@ public class WSRPProducerLocalServiceClp implements WSRPProducerLocalService {
 
 	@Override
 	public java.util.List<com.liferay.wsrp.model.WSRPProducer> getWSRPProducers(
-		long companyId, int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		long companyId, int start, int end) {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName26,
-					_methodParameterTypes26,
+			returnObj = _invokableLocalService.invokeMethod(_methodName23,
+					_methodParameterTypes23,
 					new Object[] { companyId, start, end });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -1013,20 +874,100 @@ public class WSRPProducerLocalServiceClp implements WSRPProducerLocalService {
 	}
 
 	@Override
-	public int getWSRPProducersCount(long companyId)
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public java.util.List<com.liferay.wsrp.model.WSRPProducer> getWSRPProducers(
+		int start, int end) {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName27,
-					_methodParameterTypes27, new Object[] { companyId });
+			returnObj = _invokableLocalService.invokeMethod(_methodName24,
+					_methodParameterTypes24, new Object[] { start, end });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
 
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
 			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<com.liferay.wsrp.model.WSRPProducer>)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public java.util.List<com.liferay.wsrp.model.WSRPProducer> getWSRPProducersByUuidAndCompanyId(
+		java.lang.String uuid, long companyId) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName25,
+					_methodParameterTypes25,
+					new Object[] { ClpSerializer.translateInput(uuid), companyId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<com.liferay.wsrp.model.WSRPProducer>)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public java.util.List<com.liferay.wsrp.model.WSRPProducer> getWSRPProducersByUuidAndCompanyId(
+		java.lang.String uuid, long companyId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.wsrp.model.WSRPProducer> orderByComparator) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName26,
+					_methodParameterTypes26,
+					new Object[] {
+						ClpSerializer.translateInput(uuid),
+						
+					companyId,
+						
+					start,
+						
+					end,
+						
+					ClpSerializer.translateInput(orderByComparator)
+					});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<com.liferay.wsrp.model.WSRPProducer>)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public int getWSRPProducersCount() {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName27,
+					_methodParameterTypes27, new Object[] {  });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -1041,16 +982,90 @@ public class WSRPProducerLocalServiceClp implements WSRPProducerLocalService {
 	}
 
 	@Override
-	public com.liferay.wsrp.model.WSRPProducer updateWSRPProducer(
-		long wsrpProducerId, java.lang.String name, java.lang.String version,
-		java.lang.String portletIds)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+	public int getWSRPProducersCount(long companyId) {
 		Object returnObj = null;
 
 		try {
 			returnObj = _invokableLocalService.invokeMethod(_methodName28,
-					_methodParameterTypes28,
+					_methodParameterTypes28, new Object[] { companyId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Integer)returnObj).intValue();
+	}
+
+	@Override
+	public java.lang.Object invokeMethod(java.lang.String name,
+		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
+		throws java.lang.Throwable {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setBeanIdentifier(java.lang.String beanIdentifier) {
+		try {
+			_invokableLocalService.invokeMethod(_methodName30,
+				_methodParameterTypes30,
+				new Object[] { ClpSerializer.translateInput(beanIdentifier) });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+	}
+
+	@Override
+	public com.liferay.wsrp.model.WSRPProducer updateWSRPProducer(
+		com.liferay.wsrp.model.WSRPProducer wsrpProducer) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName31,
+					_methodParameterTypes31,
+					new Object[] { ClpSerializer.translateInput(wsrpProducer) });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.wsrp.model.WSRPProducer)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public com.liferay.wsrp.model.WSRPProducer updateWSRPProducer(
+		long wsrpProducerId, java.lang.String name, java.lang.String version,
+		java.lang.String portletIds)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName32,
+					_methodParameterTypes32,
 					new Object[] {
 						wsrpProducerId,
 						
@@ -1066,10 +1081,6 @@ public class WSRPProducerLocalServiceClp implements WSRPProducerLocalService {
 
 			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
 				throw (com.liferay.portal.kernel.exception.PortalException)t;
-			}
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
 			}
 
 			if (t instanceof RuntimeException) {
@@ -1129,6 +1140,8 @@ public class WSRPProducerLocalServiceClp implements WSRPProducerLocalService {
 	private String[] _methodParameterTypes20;
 	private String _methodName21;
 	private String[] _methodParameterTypes21;
+	private String _methodName22;
+	private String[] _methodParameterTypes22;
 	private String _methodName23;
 	private String[] _methodParameterTypes23;
 	private String _methodName24;
@@ -1141,4 +1154,10 @@ public class WSRPProducerLocalServiceClp implements WSRPProducerLocalService {
 	private String[] _methodParameterTypes27;
 	private String _methodName28;
 	private String[] _methodParameterTypes28;
+	private String _methodName30;
+	private String[] _methodParameterTypes30;
+	private String _methodName31;
+	private String[] _methodParameterTypes31;
+	private String _methodName32;
+	private String[] _methodParameterTypes32;
 }

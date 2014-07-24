@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -20,107 +20,124 @@
 <%@ include file="/init.jsp" %>
 
 <%
+List<Long> groupIds = new ArrayList<Long>();
+
 Group group = GroupLocalServiceUtil.getGroup(layout.getGroupId());
 
-List<Group> groups = new ArrayList<Group>();
+boolean regularSite = group.isRegularSite();
 
-if (group.isRegularSite()) {
-	groups.add(group);
+if (regularSite) {
+	groupIds.add(group.getGroupId());
 }
 else if (group.isUser() && themeDisplay.isSignedIn()) {
-	groups.addAll(user.getMySites());
+	for (Group mySite : user.getMySites()) {
+		groupIds.add(mySite.getGroupId());
+	}
 }
 else {
-	groups.add(GroupLocalServiceUtil.getGroup(themeDisplay.getCompanyId(), GroupConstants.GUEST));
+	Group guestGroup = GroupLocalServiceUtil.getGroup(themeDisplay.getCompanyId(), GroupConstants.GUEST);
+
+	groupIds.add(guestGroup.getGroupId());
 }
 
-List<CalEvent> events = new ArrayList<CalEvent>();
+Calendar displayStartTimeJCalendar = (Calendar)jCalendar.clone();
 
-Calendar curCal = (Calendar)cal.clone();
+displayStartTimeJCalendar.set(Calendar.HOUR_OF_DAY, 0);
+displayStartTimeJCalendar.set(Calendar.MINUTE, 0);
+displayStartTimeJCalendar.set(Calendar.SECOND, 0);
+displayStartTimeJCalendar.set(Calendar.MILLISECOND, 0);
 
-for (int i = 0; i < maxDaysDisplayed; i++) {
-	for (Group curGroup : groups) {
-		events.addAll(CalEventServiceUtil.getEvents(curGroup.getGroupId(), curCal, StringPool.BLANK));
+long displayEndTime = jCalendar.getTimeInMillis() + (Time.DAY * maxDaysDisplayed);
+
+List<Long> calendarResourceIds = new ArrayList<Long>();
+
+if (!regularSite) {
+	for (long groupId : groupIds) {
+		long classNameId = PortalUtil.getClassNameId(Group.class);
+
+		if (group.isUser()) {
+			classNameId = PortalUtil.getClassNameId(User.class);
+		}
+
+		CalendarResource calendarResource = CalendarResourceLocalServiceUtil.fetchCalendarResource(classNameId, groupId);
+
+		if (calendarResource != null) {
+			calendarResourceIds.add(calendarResource.getCalendarResourceId());
+		}
+	}
+}
+
+int[] statuses = {WorkflowConstants.STATUS_APPROVED};
+
+List<CalendarBooking> calendarBookings = CalendarBookingServiceUtil.search(themeDisplay.getCompanyId(), ArrayUtil.toLongArray(groupIds), null, ArrayUtil.toLongArray(calendarResourceIds), -1, null, displayStartTimeJCalendar.getTimeInMillis(), displayEndTime, true, statuses, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+
+if (calendarBookings.size() > 1) {
+	ListUtil.sort(calendarBookings, new CalendarBookingTimeComparator(locale));
+}
+
+List<CalendarBooking> todayBookings = new ArrayList<CalendarBooking>();
+List<CalendarBooking> upcomingBookings = new ArrayList<CalendarBooking>();
+
+for (CalendarBooking calendarBooking : calendarBookings) {
+	if (Validator.isNull(calendarBooking.getTitle())) {
+		continue;
 	}
 
-	curCal.add(Calendar.DATE, 1);
-}
+	if (!calendarBooking.isAllDay() && (calendarBooking.getEndTime() < jCalendar.getTimeInMillis())) {
+		continue;
+	}
 
-if (events.size() > 1) {
-	ClassLoader classLoader = PortalClassLoaderUtil.getClassLoader();
+	Calendar startTimeJCalendar = Calendar.getInstance(timeZone, locale);
 
-	Class<?> classObj = classLoader.loadClass("com.liferay.portlet.calendar.util.comparator.EventTimeComparator");
+	long startTime = calendarBooking.getStartTime();
 
-	Constructor<?> constructor = classObj.getConstructor(TimeZone.class, Locale.class);
+	if (calendarBooking.isAllDay()) {
+		startTime -= timeZone.getRawOffset();
 
-	ListUtil.sort(events, (Comparator)constructor.newInstance(timeZone, locale));
-}
-
-List<CalEvent> todayEvents = new ArrayList<CalEvent>();
-List<CalEvent> upcomingEvents = new ArrayList<CalEvent>();
-
-for (CalEvent event : events) {
-	Calendar startDateCal = Calendar.getInstance(timeZone, locale);
-
-	startDateCal.setTime(event.getStartDate());
-
-	if (event.isAllDay()) {
-		if (startDateCal.get(Calendar.DAY_OF_MONTH) == cal.get(Calendar.DAY_OF_MONTH)) {
-			todayEvents.add(event);
+		if (timeZone.inDaylightTime(new Date(startTime))) {
+			startTime -= timeZone.getDSTSavings();
 		}
-		else {
-			upcomingEvents.add(event);
-		}
+	}
+
+	startTimeJCalendar.setTimeInMillis(startTime);
+
+	if ((startTimeJCalendar.get(Calendar.DAY_OF_YEAR) <= jCalendar.get(Calendar.DAY_OF_YEAR)) && (startTimeJCalendar.get(Calendar.YEAR) <= jCalendar.get(Calendar.YEAR))) {
+		todayBookings.add(calendarBooking);
 	}
 	else {
-		Date endDate = new Date(event.getStartDate().getTime() + (Time.HOUR * event.getDurationHour()) + (Time.MINUTE * event.getDurationMinute()));
-
-		if (endDate.compareTo(cal.getTime()) < 0) {
-			continue;
-		}
-
-		Calendar endDateCal = Calendar.getInstance(timeZone, locale);
-
-		endDateCal.setTime(endDate);
-
-		if ((startDateCal.get(Calendar.DAY_OF_MONTH) <= cal.get(Calendar.DAY_OF_MONTH)) && (endDateCal.get(Calendar.DAY_OF_MONTH) >= cal.get(Calendar.DAY_OF_MONTH))) {
-			todayEvents.add(event);
-		}
-		else {
-			upcomingEvents.add(event);
-		}
+		upcomingBookings.add(calendarBooking);
 	}
 }
 %>
 
 <c:choose>
-	<c:when test="<%= todayEvents.isEmpty() && upcomingEvents.isEmpty() %>">
+	<c:when test="<%= todayBookings.isEmpty() && upcomingBookings.isEmpty() %>">
 		<liferay-ui:message key="there-are-no-more-events-today" />
 	</c:when>
 	<c:otherwise>
-		<c:if test="<%= !todayEvents.isEmpty() %>">
-			<h2><liferay-ui:message key="todays-events" /></h2>
-
+		<c:if test="<%= !todayBookings.isEmpty() %>">
 			<div class="today-events">
 
 				<%
-				request.setAttribute("view.jsp-events", todayEvents);
+				request.setAttribute("view.jsp-calendarBookings", todayBookings);
 				%>
 
-				<liferay-util:include page="/view_events.jsp" servletContext="<%= application %>" />
+				<liferay-util:include page="/view_events.jsp" servletContext="<%= application %>">
+					<liferay-util:param name="searchContainerName" value="todays-events" />
+				</liferay-util:include>
 			</div>
 		</c:if>
 
-		<c:if test="<%= !upcomingEvents.isEmpty() %>">
-			<h2><liferay-ui:message key="upcoming-events" /></h2>
-
+		<c:if test="<%= !upcomingBookings.isEmpty() %>">
 			<div class="upcoming-events">
 
 				<%
-				request.setAttribute("view.jsp-events", upcomingEvents);
+				request.setAttribute("view.jsp-calendarBookings", upcomingBookings);
 				%>
 
-				<liferay-util:include page="/view_events.jsp" servletContext="<%= application %>" />
+				<liferay-util:include page="/view_events.jsp" servletContext="<%= application %>">
+					<liferay-util:param name="searchContainerName" value="upcoming-events" />
+				</liferay-util:include>
 			</div>
 		</c:if>
 	</c:otherwise>

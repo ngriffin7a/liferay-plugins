@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -24,7 +24,7 @@ CalendarResource calendarResource = (CalendarResource)request.getAttribute(WebKe
 
 <liferay-ui:header
 	backURL="<%= redirect %>"
-	title='<%= LanguageUtil.format(pageContext, "x-calendars", calendarResource.getName(locale)) %>'
+	title='<%= LanguageUtil.format(request, "x-calendars", calendarResource.getName(locale), false) %>'
 />
 
 <c:if test="<%= CalendarResourcePermission.contains(permissionChecker, calendarResource, ActionKeys.ADD_CALENDAR) %>">
@@ -32,6 +32,7 @@ CalendarResource calendarResource = (CalendarResource)request.getAttribute(WebKe
 		<liferay-portlet:renderURL var="editCalendarURL">
 			<liferay-portlet:param name="mvcPath" value="/edit_calendar.jsp" />
 			<liferay-portlet:param name="redirect" value="<%= currentURL %>" />
+			<liferay-portlet:param name="backURL" value="<%= currentURL %>" />
 			<liferay-portlet:param name="calendarResourceId" value="<%= String.valueOf(calendarResource.getCalendarResourceId()) %>" />
 		</liferay-portlet:renderURL>
 
@@ -42,10 +43,10 @@ CalendarResource calendarResource = (CalendarResource)request.getAttribute(WebKe
 <liferay-ui:search-container
 	emptyResultsMessage="there-are-no-calendars-for-the-selected-resource"
 	iteratorURL="<%= renderResponse.createRenderURL() %>"
+	total="<%= CalendarServiceUtil.searchCount(themeDisplay.getCompanyId(), new long[] {calendarResource.getGroupId()}, new long[] {calendarResource.getCalendarResourceId()}, null, false) %>"
 >
 	<liferay-ui:search-container-results
 		results="<%= CalendarServiceUtil.search(themeDisplay.getCompanyId(), new long[] {calendarResource.getGroupId()}, new long[] {calendarResource.getCalendarResourceId()}, null, false, QueryUtil.ALL_POS, QueryUtil.ALL_POS, new CalendarNameComparator(true)) %>"
-		total="<%= CalendarServiceUtil.searchCount(themeDisplay.getCompanyId(), new long[] {calendarResource.getGroupId()}, new long[] {calendarResource.getCalendarResourceId()}, null, false) %>"
 	/>
 
 	<liferay-ui:search-container-row
@@ -55,12 +56,12 @@ CalendarResource calendarResource = (CalendarResource)request.getAttribute(WebKe
 	>
 		<liferay-ui:search-container-column-text
 			name="name"
-			value="<%= calendar.getName(locale) %>"
+			value="<%= HtmlUtil.escape(calendar.getName(locale)) %>"
 		/>
 
 		<liferay-ui:search-container-column-text
 			name="description"
-			value="<%= StringUtil.shorten(calendar.getDescription(locale)) %>"
+			value="<%= HtmlUtil.escape(StringUtil.shorten(calendar.getDescription(locale))) %>"
 		/>
 
 		<liferay-ui:search-container-column-text
@@ -83,6 +84,7 @@ CalendarResource calendarResource = (CalendarResource)request.getAttribute(WebKe
 
 		<liferay-ui:search-container-column-jsp
 			align="right"
+			cssClass="entry-action"
 			path="/calendar_action.jsp"
 		/>
 
@@ -91,14 +93,14 @@ CalendarResource calendarResource = (CalendarResource)request.getAttribute(WebKe
 	<liferay-ui:search-iterator />
 </liferay-ui:search-container>
 
-<div class="hide calendar-portlet-import-container" id="<portlet:namespace />importCalendarContainer">
+<div class="calendar-portlet-import-container hide" id="<portlet:namespace />importCalendarContainer">
 	<div class="hide portlet-msg-error" id="<portlet:namespace />portletErrorMessage"></div>
 
 	<div class="hide portlet-msg-success" id="<portlet:namespace />portletSuccessMessage">
 		<liferay-ui:message key="your-request-completed-successfully" />
 	</div>
 
-	<aui:form enctype="multipart/form-data" method="post" name="fm">
+	<aui:form enctype="multipart/form-data" method="post" name="importFm">
 		<aui:input id="file" name="file" type="file" />
 		<div class="portlet-msg-help">
 			<liferay-ui:message key="choose-the-file-that-contains-your-events.this-calendar-can-import-event-information-in-ical-format" />
@@ -116,35 +118,37 @@ CalendarResource calendarResource = (CalendarResource)request.getAttribute(WebKe
 			var A = AUI();
 
 			if (!<portlet:namespace />importDialog) {
-				var form = A.one('#<portlet:namespace />fm');
-
 				var importCalendarContainer = A.one('#<portlet:namespace />importCalendarContainer');
-
-				var portletErrorMessage = A.one('#<portlet:namespace />portletErrorMessage');
-
-				var portletSuccessMessage = A.one('#<portlet:namespace />portletSuccessMessage');
 
 				var buttons = [
 					{
+						label: Liferay.Language.get('import'),
 						on: {
 							click: function() {
 								A.io.request(
 									url,
 									{
-										dataType: 'json',
+										dataType: 'JSON',
 										form: {
-											id: form,
+											id: '<portlet:namespace />importFm',
 											upload: true
 										},
-										method: 'post',
+										method: 'POST',
 										on: {
 											complete: function() {
 												var responseData = this.get('responseData');
 
+												var portletErrorMessage = A.one('#<portlet:namespace />portletErrorMessage');
+
+												var portletSuccessMessage = A.one('#<portlet:namespace />portletSuccessMessage');
+
 												var error = responseData && responseData.error;
 
 												if (error) {
-													portletErrorMessage.html(error).show();
+													portletErrorMessage.show();
+													portletSuccessMessage.hide();
+
+													portletErrorMessage.html(error);
 												}
 												else {
 													portletErrorMessage.hide();
@@ -155,8 +159,20 @@ CalendarResource calendarResource = (CalendarResource)request.getAttribute(WebKe
 									}
 								);
 							}
-						},
-						label: Liferay.Language.get('import')
+						}
+					}
+				];
+
+				var buttonClose = [
+					{
+						cssClass: 'close',
+						label: '\u00D7',
+						render: true,
+						on: {
+							click: function() {
+								<portlet:namespace />importDialog.hide();
+							}
+						}
 					}
 				];
 
@@ -165,19 +181,15 @@ CalendarResource calendarResource = (CalendarResource)request.getAttribute(WebKe
 						dialog: {
 							bodyContent: importCalendarContainer.html(),
 							toolbars: {
-								footer: buttons
-							}
-						},
-						on: {
-							visibleChange: function(event) {
-								if (event.newVal) {
-									importCalendarContainer.show();
-								}
-								else {
-									form.reset();
-
-									portletSuccessMessage.hide();
-									portletErrorMessage.hide();
+								footer: buttons,
+								header: buttonClose
+							},
+							modal: true,
+							on: {
+								visibleChange: function(event) {
+									A.one('#<portlet:namespace />importFm').reset();
+									A.one('#<portlet:namespace />portletErrorMessage').hide();
+									A.one('#<portlet:namespace />portletSuccessMessage').hide();
 								}
 							}
 						},

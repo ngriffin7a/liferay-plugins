@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -17,8 +17,6 @@ package com.liferay.akismet.service.impl;
 import com.liferay.akismet.model.AkismetData;
 import com.liferay.akismet.service.base.AkismetDataLocalServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.util.PortalUtil;
 
 import java.util.Date;
 
@@ -29,32 +27,29 @@ import java.util.Date;
 public class AkismetDataLocalServiceImpl
 	extends AkismetDataLocalServiceBaseImpl {
 
-	public void deleteAkismetData(Date modifiedDate) throws SystemException {
+	public void deleteAkismetData(Date modifiedDate) {
 		akismetDataPersistence.removeByLtModifiedDate(modifiedDate);
 	}
 
 	public void deleteAkismetData(String className, long classPK)
-		throws PortalException, SystemException {
+		throws PortalException {
 
-		long classNameId = PortalUtil.getClassNameId(className);
+		long classNameId = classNameLocalService.getClassNameId(className);
 
 		akismetDataPersistence.removeByC_C(classNameId, classPK);
 	}
 
-	public AkismetData fetchAkismetData(String className, long classPK)
-		throws SystemException {
-
-		long classNameId = PortalUtil.getClassNameId(className);
+	public AkismetData fetchAkismetData(String className, long classPK) {
+		long classNameId = classNameLocalService.getClassNameId(className);
 
 		return akismetDataPersistence.fetchByC_C(classNameId, classPK);
 	}
 
 	public AkismetData updateAkismetData(
-			String className, long classPK, String type, String permalink,
-			String referrer, String userAgent, String userIP, String userURL)
-		throws SystemException {
+		String className, long classPK, String type, String permalink,
+		String referrer, String userAgent, String userIP, String userURL) {
 
-		long classNameId = PortalUtil.getClassNameId(className);
+		long classNameId = classNameLocalService.getClassNameId(className);
 
 		AkismetData akismetData = akismetDataPersistence.fetchByC_C(
 			classNameId, classPK);

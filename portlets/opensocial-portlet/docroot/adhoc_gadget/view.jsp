@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -22,7 +22,7 @@ Gadget gadget = (Gadget)renderRequest.getAttribute(WebKeys.GADGET);
 
 <c:choose>
 	<c:when test="<%= gadget == null %>">
-		<div class="portlet-configuration portlet-msg-info">
+		<div class="portlet-configuration alert alert-info">
 			<a href="<%= portletDisplay.getURLConfiguration() %>" onClick="<%= portletDisplay.getURLConfigurationJS() %>">
 				<liferay-ui:message key="configure-a-gadget-to-be-displayed-in-this-portlet" />
 			</a>
@@ -30,7 +30,7 @@ Gadget gadget = (Gadget)renderRequest.getAttribute(WebKeys.GADGET);
 
 		<liferay-ui:icon
 			cssClass="portlet-configuration"
-			image="configuration"
+			iconCssClass="icon-cog"
 			message="configure-gadget"
 			method="get"
 			onClick="<%= portletDisplay.getURLConfigurationJS() %>"

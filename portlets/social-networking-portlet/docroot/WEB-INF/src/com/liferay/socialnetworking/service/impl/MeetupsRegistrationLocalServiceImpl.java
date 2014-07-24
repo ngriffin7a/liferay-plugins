@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,7 +15,6 @@
 package com.liferay.socialnetworking.service.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.User;
 import com.liferay.socialnetworking.model.MeetupsRegistration;
 import com.liferay.socialnetworking.service.base.MeetupsRegistrationLocalServiceBaseImpl;
@@ -31,30 +30,27 @@ public class MeetupsRegistrationLocalServiceImpl
 
 	public MeetupsRegistration getMeetupsRegistration(
 			long userId, long meetupsEntryId)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		return meetupsRegistrationPersistence.findByU_ME(
 			userId, meetupsEntryId);
 	}
 
 	public List<MeetupsRegistration> getMeetupsRegistrations(
-			long meetupsEntryId, int status, int start, int end)
-		throws SystemException {
+		long meetupsEntryId, int status, int start, int end) {
 
 		return meetupsRegistrationPersistence.findByME_S(
 			meetupsEntryId, status, start, end);
 	}
 
-	public int getMeetupsRegistrationsCount(long meetupsEntryId, int status)
-		throws SystemException {
-
+	public int getMeetupsRegistrationsCount(long meetupsEntryId, int status) {
 		return meetupsRegistrationPersistence.countByME_S(
 			meetupsEntryId, status);
 	}
 
 	public MeetupsRegistration updateMeetupsRegistration(
 			long userId, long meetupsEntryId, int status, String comments)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		User user = userLocalService.getUserById(userId);
 		Date now = new Date();

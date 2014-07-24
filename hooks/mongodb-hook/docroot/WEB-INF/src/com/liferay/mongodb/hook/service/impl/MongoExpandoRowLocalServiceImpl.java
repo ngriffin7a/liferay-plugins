@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -57,9 +57,7 @@ public class MongoExpandoRowLocalServiceImpl
 	}
 
 	@Override
-	public void deleteRow(long tableId, long classPK)
-		throws PortalException, SystemException {
-
+	public void deleteRow(long tableId, long classPK) throws PortalException {
 		ExpandoTable expandoTable = ExpandoTableLocalServiceUtil.getTable(
 			tableId);
 
@@ -75,7 +73,7 @@ public class MongoExpandoRowLocalServiceImpl
 
 	@Override
 	public ExpandoRow getRow(long tableId, long classPK)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		ExpandoTable expandoTable = ExpandoTableLocalServiceUtil.getTable(
 			tableId);
@@ -85,8 +83,7 @@ public class MongoExpandoRowLocalServiceImpl
 
 	@Override
 	public ExpandoRow getRow(
-			long companyId, long classNameId, String tableName, long classPK)
-		throws SystemException {
+		long companyId, long classNameId, String tableName, long classPK) {
 
 		try {
 			ExpandoTable expandoTable = ExpandoTableLocalServiceUtil.getTable(
@@ -100,9 +97,7 @@ public class MongoExpandoRowLocalServiceImpl
 	}
 
 	@Override
-	public List<ExpandoRow> getRows(long tableId, int start, int end)
-		throws SystemException {
-
+	public List<ExpandoRow> getRows(long tableId, int start, int end) {
 		try {
 			ExpandoTable expandoTable = ExpandoTableLocalServiceUtil.getTable(
 				tableId);
@@ -116,9 +111,8 @@ public class MongoExpandoRowLocalServiceImpl
 
 	@Override
 	public List<ExpandoRow> getRows(
-			long companyId, long classNameId, String tableName, int start,
-			int end)
-		throws SystemException {
+		long companyId, long classNameId, String tableName, int start,
+		int end) {
 
 		try {
 			ExpandoTable expandoTable = ExpandoTableLocalServiceUtil.getTable(
@@ -132,7 +126,7 @@ public class MongoExpandoRowLocalServiceImpl
 	}
 
 	@Override
-	public int getRowsCount(long tableId) throws SystemException {
+	public int getRowsCount(long tableId) {
 		try {
 			ExpandoTable expandoTable = ExpandoTableLocalServiceUtil.getTable(
 				tableId);

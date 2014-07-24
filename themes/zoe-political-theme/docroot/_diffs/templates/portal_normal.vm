@@ -2,7 +2,7 @@
 
 #parse ($init)
 
-<html class="#language("lang.dir")" dir="#language("lang.dir")" lang="$w3c_language_id">
+<html class="$root_css_class" dir="#language("lang.dir")" lang="$w3c_language_id">
 
 <head>
 	<title>$the_title - $company_name</title>
@@ -20,26 +20,22 @@ $theme.include($body_top_include)
 	#dockbar()
 #end
 
-<div id="wrapper">
+<div class="container-fluid" id="wrapper">
 	<a href="#main-content" id="skip-to-content">#language("skip-to-content")</a>
 
 	<header id="banner" role="banner">
 		<div id="heading">
 			<h1 class="site-title">
-				<a class="$logo_css_class" href="$site_default_url" title="#language("go-to") $site_name">
+				<a class="$logo_css_class" href="$site_default_url" title="#language_format ("go-to-x", [$site_name])">
 					<img alt="$logo_description" height="$site_logo_height" src="$site_logo" width="$site_logo_width" />
 				</a>
 
 				#if ($show_site_name)
-					<span class="site-name" title="#language("go-to") $site_name">
+					<span class="site-name" title="#language_format ("go-to-x", [$site_name])">
 						$site_name
 					</span>
 				#end
 			</h1>
-
-			<h2 class="page-title">
-				<span>$the_title</span>
-			</h2>
 
 			#if ($theme_settings.display-header-social == true && $header_social)
 				$header_social
@@ -55,11 +51,11 @@ $theme.include($body_top_include)
 		#end
 	</header>
 
-	<div id="content">
+	<section id="content">
+		<h1 class="hide-accessible">$the_title</h1>
+
 		<nav class="site-breadcrumbs" id="breadcrumbs">
-			<h1>
-				<span>#language("breadcrumbs")</span>
-			</h1>
+			<h1 class="hide-accessible">#language ("breadcrumbs")</h1>
 
 			#breadcrumbs()
 		</nav>
@@ -73,7 +69,7 @@ $theme.include($body_top_include)
 
 			$theme.wrapPortlet("portlet.vm", $content_include)
 		#end
-	</div>
+	</section>
 </div>
 
 $theme.include($body_bottom_include)

@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -36,12 +36,12 @@
 				leaveOrganizationURL.setParameter(ActionRequest.ACTION_NAME, "leaveOrganization");
 				leaveOrganizationURL.setParameter("redirect", currentURL);
 
-				String leaveOrganizationHREF = "javascript:if (confirm('" + LanguageUtil.get(pageContext, "are-you-sure-you-want-to-leave-this-organization") + "')) { submitForm(document.hrefFm, '" + leaveOrganizationURL + "'); }";
+				String leaveOrganizationHREF = "javascript:if (confirm('" + LanguageUtil.get(request, "are-you-sure-you-want-to-leave-this-organization") + "')) { submitForm(document.hrefFm, '" + leaveOrganizationURL + "'); }";
 				%>
 
 				<p class="leave-organization">
 					<liferay-ui:icon
-						image="leave"
+						iconCssClass="icon-external-link-sign"
 						label="<%= true %>"
 						message="leave-organization"
 						url="<%= leaveOrganizationHREF %>"
@@ -59,7 +59,7 @@
 
 				<p class="join-organization">
 					<liferay-ui:icon
-						image="join"
+						iconCssClass="icon-group"
 						label="<%= true %>"
 						message="join-organization"
 						url="<%= joinOrganizationURL.toString() %>"

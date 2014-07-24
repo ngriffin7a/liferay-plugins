@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -17,10 +17,15 @@
 
 package com.liferay.contacts.util;
 
+import com.liferay.contacts.model.Entry;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Address;
 import com.liferay.portal.model.Contact;
@@ -38,6 +43,9 @@ import com.liferay.portal.service.ListTypeServiceUtil;
 import com.liferay.portal.service.PhoneLocalServiceUtil;
 import com.liferay.portal.service.RegionServiceUtil;
 import com.liferay.portal.service.WebsiteLocalServiceUtil;
+import com.liferay.portlet.social.model.SocialRequestConstants;
+import com.liferay.portlet.social.service.SocialRelationLocalServiceUtil;
+import com.liferay.portlet.social.service.SocialRequestLocalServiceUtil;
 
 import java.lang.reflect.Field;
 
@@ -48,6 +56,18 @@ import java.util.List;
  * @author Jonathan Lee
  */
 public class ContactsUtil {
+
+	public static JSONObject getEntryJSONObject(Entry entry) {
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		jsonObject.put("emailAddress", entry.getEmailAddress());
+		jsonObject.put("entryId", String.valueOf(entry.getEntryId()));
+		jsonObject.put("comments", entry.getComments());
+		jsonObject.put("fullName", entry.getFullName());
+		jsonObject.put("portalUser", false);
+
+		return jsonObject;
+	}
 
 	public static long getGroupId(String filterBy) {
 		String groupIdString = filterBy.substring(
@@ -79,6 +99,60 @@ public class ContactsUtil {
 			ContactsConstants.FILTER_BY_TYPE.length());
 
 		return GetterUtil.getLong(socialRelationTypeString);
+	}
+
+	public static JSONObject getUserJSONObject(long userId, User user)
+		throws PortalException {
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		boolean block = SocialRelationLocalServiceUtil.hasRelation(
+			userId, user.getUserId(), SocialRelationConstants.TYPE_UNI_ENEMY);
+
+		jsonObject.put("block", block);
+
+		jsonObject.put("contactId", String.valueOf(user.getContactId()));
+		jsonObject.put("emailAddress", user.getEmailAddress());
+		jsonObject.put("firstName", user.getFirstName());
+		jsonObject.put("fullName", user.getFullName());
+		jsonObject.put("jobTitle", user.getJobTitle());
+		jsonObject.put("lastName", user.getLastName());
+		jsonObject.put("portalUser", true);
+		jsonObject.put("portraitId", String.valueOf(user.getPortraitId()));
+		jsonObject.put("userId", String.valueOf(user.getUserId()));
+		jsonObject.put("uuid", user.getUuid());
+
+		if (!SocialRelationLocalServiceUtil.hasRelation(
+				user.getUserId(), userId,
+				SocialRelationConstants.TYPE_UNI_ENEMY) &&
+			!SocialRelationLocalServiceUtil.hasRelation(
+				userId, user.getUserId(),
+				SocialRelationConstants.TYPE_UNI_ENEMY)) {
+
+			boolean connectionRequested =
+				SocialRequestLocalServiceUtil.hasRequest(
+					userId, User.class.getName(), userId,
+					SocialRelationConstants.TYPE_BI_CONNECTION,
+					user.getUserId(), SocialRequestConstants.STATUS_PENDING);
+
+			jsonObject.put("connectionRequested", connectionRequested);
+
+			boolean connected =
+				!connectionRequested &&
+				SocialRelationLocalServiceUtil.hasRelation(
+					userId, user.getUserId(),
+					SocialRelationConstants.TYPE_BI_CONNECTION);
+
+			jsonObject.put("connected", connected);
+
+			boolean following = SocialRelationLocalServiceUtil.hasRelation(
+				userId, user.getUserId(),
+				SocialRelationConstants.TYPE_UNI_FOLLOWER);
+
+			jsonObject.put("following", following);
+		}
+
+		return jsonObject;
 	}
 
 	public static String getVCard(User user) throws Exception {
@@ -121,7 +195,7 @@ public class ContactsUtil {
 
 			ListType listType = address.getType();
 
-			sb.append(listType.getName().toUpperCase());
+			sb.append(StringUtil.toUpperCase(listType.getName()));
 
 			sb.append(StringPool.COLON);
 			sb.append(StringPool.SEMICOLON);
@@ -196,7 +270,7 @@ public class ContactsUtil {
 
 			ListType listType = emailAddress.getType();
 
-			sb.append(listType.getName().toUpperCase());
+			sb.append(StringUtil.toUpperCase(listType.getName()));
 
 			sb.append(StringPool.COLON);
 			sb.append(emailAddress.getAddress());
@@ -316,7 +390,7 @@ public class ContactsUtil {
 
 			ListType listType = phone.getType();
 
-			sb.append(listType.getName().toUpperCase());
+			sb.append(StringUtil.toUpperCase(listType.getName()));
 
 			sb.append(StringPool.COLON);
 			sb.append(phone.getNumber());
@@ -339,7 +413,7 @@ public class ContactsUtil {
 
 			ListType listType = website.getType();
 
-			sb.append(listType.getName().toUpperCase());
+			sb.append(StringUtil.toUpperCase(listType.getName()));
 
 			sb.append(StringPool.COLON);
 

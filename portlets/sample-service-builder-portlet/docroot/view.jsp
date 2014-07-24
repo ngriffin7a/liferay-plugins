@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -18,19 +18,20 @@
 
 <strong><liferay-ui:message key="welcome-to-the-sample-service-builder-portlet" /></strong>
 
-<portlet:renderURL var="editFooURL">
-	<portlet:param name="mvcPath" value="/edit_foo.jsp" />
-	<portlet:param name="redirect" value="<%= currentURL %>" />
-</portlet:renderURL>
-
 <aui:button-row>
+	<portlet:renderURL var="editFooURL">
+		<portlet:param name="mvcPath" value="/edit_foo.jsp" />
+		<portlet:param name="redirect" value="<%= currentURL %>" />
+	</portlet:renderURL>
+
 	<aui:button href="<%= editFooURL %>" value="add-foo" />
 </aui:button-row>
 
-<liferay-ui:search-container>
+<liferay-ui:search-container
+	total="<%= FooLocalServiceUtil.getFoosCount() %>"
+>
 	<liferay-ui:search-container-results
 		results="<%= FooLocalServiceUtil.getFoos(searchContainer.getStart(), searchContainer.getEnd(), new FooField4Comparator()) %>"
-		total="<%= FooLocalServiceUtil.getFoosCount() %>"
 	/>
 
 	<liferay-ui:search-container-row
@@ -90,6 +91,7 @@
 		/>
 
 		<liferay-ui:search-container-column-jsp
+			cssClass="entry-action"
 			path="/foo_action.jsp"
 			valign="top"
 		/>

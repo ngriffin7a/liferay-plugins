@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,7 +15,6 @@
 package com.liferay.portal.workflow.kaleo.service.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
@@ -45,6 +44,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +61,7 @@ public class KaleoTimerInstanceTokenLocalServiceImpl
 			long kaleoTimerId, String kaleoTimerName,
 			Map<String, Serializable> workflowContext,
 			ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		User user = userPersistence.findByPrimaryKey(
 			serviceContext.getGuestOrUserId());
@@ -119,7 +119,11 @@ public class KaleoTimerInstanceTokenLocalServiceImpl
 			Collection<KaleoTimer> kaleoTimers,
 			Map<String, Serializable> workflowContext,
 			ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
+
+		if (kaleoTimers.isEmpty()) {
+			return Collections.emptyList();
+		}
 
 		List<KaleoTimerInstanceToken> kaleoTimerInstanceTokens =
 			new ArrayList<KaleoTimerInstanceToken>(kaleoTimers.size());
@@ -147,7 +151,7 @@ public class KaleoTimerInstanceTokenLocalServiceImpl
 	@Override
 	public KaleoTimerInstanceToken completeKaleoTimerInstanceToken(
 			long kaleoTimerInstanceTokenId, ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		KaleoTimerInstanceToken kaleoTimerInstanceToken =
 			kaleoTimerInstanceTokenPersistence.findByPrimaryKey(
@@ -168,7 +172,7 @@ public class KaleoTimerInstanceTokenLocalServiceImpl
 	public void completeKaleoTimerInstanceTokens(
 			List<KaleoTimerInstanceToken> kaleoTimerInstanceTokens,
 			ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		for (KaleoTimerInstanceToken kaleoTimerInstanceToken :
 				kaleoTimerInstanceTokens) {
@@ -182,7 +186,7 @@ public class KaleoTimerInstanceTokenLocalServiceImpl
 	@Override
 	public void completeKaleoTimerInstanceTokens(
 			long kaleoInstanceTokenId, ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		List<KaleoTimerInstanceToken> kaleoTimerInstanceTokens =
 			kaleoTimerInstanceTokenPersistence.findByKITI_C(
@@ -195,7 +199,7 @@ public class KaleoTimerInstanceTokenLocalServiceImpl
 	@Override
 	public void deleteKaleoTimerInstanceToken(
 			long kaleoInstanceTokenId, long kaleoTimerId)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		KaleoTimerInstanceToken kaleoTimerInstanceToken =
 			getKaleoTimerInstanceToken(kaleoInstanceTokenId, kaleoTimerId);
@@ -206,9 +210,7 @@ public class KaleoTimerInstanceTokenLocalServiceImpl
 	}
 
 	@Override
-	public void deleteKaleoTimerInstanceTokens(long kaleoInstanceId)
-		throws SystemException {
-
+	public void deleteKaleoTimerInstanceTokens(long kaleoInstanceId) {
 		List<KaleoTimerInstanceToken> kaleoTimerInstanceTokens =
 			kaleoTimerInstanceTokenPersistence.findByKaleoInstanceId(
 				kaleoInstanceId);
@@ -237,7 +239,7 @@ public class KaleoTimerInstanceTokenLocalServiceImpl
 	@Override
 	public KaleoTimerInstanceToken getKaleoTimerInstanceToken(
 			long kaleoInstanceTokenId, long kaleoTimerId)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		return kaleoTimerInstanceTokenPersistence.findByKITI_KTI(
 			kaleoInstanceTokenId, kaleoTimerId);
@@ -245,9 +247,8 @@ public class KaleoTimerInstanceTokenLocalServiceImpl
 
 	@Override
 	public List<KaleoTimerInstanceToken> getKaleoTimerInstanceTokens(
-			long kaleoInstanceTokenId, boolean completed, boolean blocking,
-			ServiceContext serviceContext)
-		throws SystemException {
+		long kaleoInstanceTokenId, boolean completed, boolean blocking,
+		ServiceContext serviceContext) {
 
 		return kaleoTimerInstanceTokenPersistence.findByKITI_C_B(
 			kaleoInstanceTokenId, completed, blocking);
@@ -255,9 +256,8 @@ public class KaleoTimerInstanceTokenLocalServiceImpl
 
 	@Override
 	public int getKaleoTimerInstanceTokensCount(
-			long kaleoInstanceTokenId, boolean completed, boolean blocking,
-			ServiceContext serviceContext)
-		throws SystemException {
+		long kaleoInstanceTokenId, boolean completed, boolean blocking,
+		ServiceContext serviceContext) {
 
 		return kaleoTimerInstanceTokenPersistence.countByKITI_C_B(
 			kaleoInstanceTokenId, completed, blocking);

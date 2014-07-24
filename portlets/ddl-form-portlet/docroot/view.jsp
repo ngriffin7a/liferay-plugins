@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -52,7 +52,7 @@ try {
 				<liferay-ui:error exception="<%= DuplicateSubmissionException.class %>" message="you-may-only-submit-the-form-once" />
 
 				<liferay-ui:error exception="<%= FileSizeException.class %>">
-					<liferay-ui:message arguments="<%= PrefsPropsUtil.getLong(PropsKeys.DL_FILE_MAX_SIZE) / 1024 %>" key="please-enter-a-file-with-a-valid-file-size-no-larger-than-x" />
+					<liferay-ui:message arguments="<%= PrefsPropsUtil.getLong(PropsKeys.DL_FILE_MAX_SIZE) / 1024 %>" key="please-enter-a-file-with-a-valid-file-size-no-larger-than-x" translateArguments="<%= false %>" />
 				</liferay-ui:error>
 
 				<liferay-ui:error exception="<%= StorageFieldRequiredException.class %>" message="please-fill-out-all-required-fields" />
@@ -61,7 +61,7 @@ try {
 					<c:when test="<%= (themeDisplay.isSignedIn() || multipleSubmissions) && permissionChecker.hasPermission(scopeGroupId, DDLRecordSet.class.getName(), recordSetId, ActionKeys.VIEW) %>">
 						<c:choose>
 							<c:when test="<%= !permissionChecker.hasPermission(scopeGroupId, DDLRecordSet.class.getName(), recordSetId, ActionKeys.ADD_RECORD) %>">
-								<div class="portlet-msg-info">
+								<div class="alert alert-info">
 									<liferay-ui:message key="you-do-not-have-the-required-permissions" />
 								</div>
 							</c:when>
@@ -126,7 +126,7 @@ catch (NoSuchRecordSetException nsrse) {
 %>
 
 	<div class="alert alert-error">
-		<%= LanguageUtil.get(pageContext, "the-selected-list-no-longer-exists") %>
+		<%= LanguageUtil.get(request, "the-selected-list-no-longer-exists") %>
 	</div>
 
 <%
@@ -157,7 +157,7 @@ boolean showEditTemplateIcon = (ddmTemplate != null) && (permissionChecker.hasOw
 
 				<liferay-ui:icon
 					cssClass="lfr-icon-action lfr-icon-action-add"
-					image="add_template"
+					iconCssClass="icon-plus"
 					label="<%= true %>"
 					message="add-form"
 					url="<%= addTemplateURL %>"
@@ -176,7 +176,7 @@ boolean showEditTemplateIcon = (ddmTemplate != null) && (permissionChecker.hasOw
 
 				<liferay-ui:icon
 					cssClass="lfr-icon-action lfr-icon-action-edit-template"
-					image="../file_system/small/xml"
+					iconCssClass="icon-edit"
 					label="<%= true %>"
 					message="edit-form"
 					url="<%= editTemplateURL %>"
@@ -186,7 +186,7 @@ boolean showEditTemplateIcon = (ddmTemplate != null) && (permissionChecker.hasOw
 			<c:if test="<%= hasConfigurationPermission %>">
 				<liferay-ui:icon
 					cssClass="lfr-icon-action lfr-icon-action-configuration"
-					image="configuration"
+					iconCssClass="icon-cog"
 					label="<%= true %>"
 					message="select-list"
 					method="get"
@@ -205,7 +205,7 @@ boolean showEditTemplateIcon = (ddmTemplate != null) && (permissionChecker.hasOw
 
 				<liferay-ui:icon
 					cssClass="lfr-icon-action lfr-icon-action-add"
-					image="add_article"
+					iconCssClass="icon-plus"
 					label="<%= true %>"
 					message="add-list"
 					url="<%= addListURL %>"

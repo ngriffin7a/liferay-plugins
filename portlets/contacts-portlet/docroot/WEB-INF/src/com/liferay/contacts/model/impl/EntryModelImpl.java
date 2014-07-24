@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -16,17 +16,20 @@ package com.liferay.contacts.model.impl;
 
 import com.liferay.contacts.model.Entry;
 import com.liferay.contacts.model.EntryModel;
+import com.liferay.contacts.model.EntrySoap;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.CacheModel;
+import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.BaseModelImpl;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 
 import com.liferay.portlet.expando.model.ExpandoBridge;
 import com.liferay.portlet.expando.util.ExpandoBridgeFactoryUtil;
@@ -35,8 +38,10 @@ import java.io.Serializable;
 
 import java.sql.Types;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,6 +57,7 @@ import java.util.Map;
  * @see com.liferay.contacts.model.EntryModel
  * @generated
  */
+@JSON(strict = true)
 public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
@@ -90,6 +96,54 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 	public static long EMAILADDRESS_COLUMN_BITMASK = 1L;
 	public static long USERID_COLUMN_BITMASK = 2L;
 	public static long FULLNAME_COLUMN_BITMASK = 4L;
+
+	/**
+	 * Converts the soap model instance into a normal model instance.
+	 *
+	 * @param soapModel the soap model instance to convert
+	 * @return the normal model instance
+	 */
+	public static Entry toModel(EntrySoap soapModel) {
+		if (soapModel == null) {
+			return null;
+		}
+
+		Entry model = new EntryImpl();
+
+		model.setEntryId(soapModel.getEntryId());
+		model.setGroupId(soapModel.getGroupId());
+		model.setCompanyId(soapModel.getCompanyId());
+		model.setUserId(soapModel.getUserId());
+		model.setUserName(soapModel.getUserName());
+		model.setCreateDate(soapModel.getCreateDate());
+		model.setModifiedDate(soapModel.getModifiedDate());
+		model.setFullName(soapModel.getFullName());
+		model.setEmailAddress(soapModel.getEmailAddress());
+		model.setComments(soapModel.getComments());
+
+		return model;
+	}
+
+	/**
+	 * Converts the soap model instances into normal model instances.
+	 *
+	 * @param soapModels the soap model instances to convert
+	 * @return the normal model instances
+	 */
+	public static List<Entry> toModels(EntrySoap[] soapModels) {
+		if (soapModels == null) {
+			return null;
+		}
+
+		List<Entry> models = new ArrayList<Entry>(soapModels.length);
+
+		for (EntrySoap soapModel : soapModels) {
+			models.add(toModel(soapModel));
+		}
+
+		return models;
+	}
+
 	public static final long LOCK_EXPIRATION_TIME = GetterUtil.getLong(com.liferay.util.service.ServiceProps.get(
 				"lock.expiration.time.com.liferay.contacts.model.Entry"));
 
@@ -140,6 +194,9 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 		attributes.put("fullName", getFullName());
 		attributes.put("emailAddress", getEmailAddress());
 		attributes.put("comments", getComments());
+
+		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
+		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -207,6 +264,7 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 		}
 	}
 
+	@JSON
 	@Override
 	public long getEntryId() {
 		return _entryId;
@@ -217,6 +275,7 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 		_entryId = entryId;
 	}
 
+	@JSON
 	@Override
 	public long getGroupId() {
 		return _groupId;
@@ -227,6 +286,7 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 		_groupId = groupId;
 	}
 
+	@JSON
 	@Override
 	public long getCompanyId() {
 		return _companyId;
@@ -237,6 +297,7 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 		_companyId = companyId;
 	}
 
+	@JSON
 	@Override
 	public long getUserId() {
 		return _userId;
@@ -256,19 +317,26 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 	}
 
 	@Override
-	public String getUserUuid() throws SystemException {
-		return PortalUtil.getUserValue(getUserId(), "uuid", _userUuid);
+	public String getUserUuid() {
+		try {
+			User user = UserLocalServiceUtil.getUserById(getUserId());
+
+			return user.getUuid();
+		}
+		catch (PortalException pe) {
+			return StringPool.BLANK;
+		}
 	}
 
 	@Override
 	public void setUserUuid(String userUuid) {
-		_userUuid = userUuid;
 	}
 
 	public long getOriginalUserId() {
 		return _originalUserId;
 	}
 
+	@JSON
 	@Override
 	public String getUserName() {
 		if (_userName == null) {
@@ -284,6 +352,7 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 		_userName = userName;
 	}
 
+	@JSON
 	@Override
 	public Date getCreateDate() {
 		return _createDate;
@@ -294,6 +363,7 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 		_createDate = createDate;
 	}
 
+	@JSON
 	@Override
 	public Date getModifiedDate() {
 		return _modifiedDate;
@@ -304,6 +374,7 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 		_modifiedDate = modifiedDate;
 	}
 
+	@JSON
 	@Override
 	public String getFullName() {
 		if (_fullName == null) {
@@ -321,6 +392,7 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 		_fullName = fullName;
 	}
 
+	@JSON
 	@Override
 	public String getEmailAddress() {
 		if (_emailAddress == null) {
@@ -346,6 +418,7 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 		return GetterUtil.getString(_originalEmailAddress);
 	}
 
+	@JSON
 	@Override
 	public String getComments() {
 		if (_comments == null) {
@@ -446,6 +519,16 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	@Override
+	public boolean isEntityCacheEnabled() {
+		return ENTITY_CACHE_ENABLED;
+	}
+
+	@Override
+	public boolean isFinderCacheEnabled() {
+		return FINDER_CACHE_ENABLED;
 	}
 
 	@Override
@@ -615,7 +698,6 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 	private long _groupId;
 	private long _companyId;
 	private long _userId;
-	private String _userUuid;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
 	private String _userName;

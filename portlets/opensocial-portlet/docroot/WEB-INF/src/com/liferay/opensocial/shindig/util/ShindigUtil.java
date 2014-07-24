@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -23,7 +23,6 @@ import com.liferay.opensocial.service.OAuthConsumerLocalServiceUtil;
 import com.liferay.opensocial.util.PortletPropsValues;
 import com.liferay.portal.kernel.concurrent.ConcurrentHashSet;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -39,6 +38,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -145,7 +145,7 @@ public class ShindigUtil {
 	}
 
 	public static String getFileEntryURL(String portalURL, long fileEntryId)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileEntryId);
 
@@ -310,9 +310,7 @@ public class ShindigUtil {
 		return oAuthSpec.getServices();
 	}
 
-	public static String getOwnerId(Layout layout)
-		throws PortalException, SystemException {
-
+	public static String getOwnerId(Layout layout) throws PortalException {
 		Group group = layout.getGroup();
 
 		long classPK = group.getClassPK();
@@ -378,6 +376,15 @@ public class ShindigUtil {
 		}
 
 		return false;
+	}
+
+	public static boolean isValidUser(User user) {
+		if (user.isDefaultUser()) {
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 
 	public static void setHost(String host) {

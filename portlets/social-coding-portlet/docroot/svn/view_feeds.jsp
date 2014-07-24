@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -40,10 +40,10 @@
 	String title = null;
 
 	if (all) {
-		title = LanguageUtil.format(pageContext, "all-commits-on-x", svnURL);
+		title = LanguageUtil.format(request, "all-commits-on-x", svnURL, false);
 	}
 	else {
-		title = LanguageUtil.format(pageContext, "x's-commits-on-x", new Object[] {HtmlUtil.escape(user2.getFullName()), svnURL});
+		title = LanguageUtil.format(request, "x's-commits-on-x", new Object[] {HtmlUtil.escape(user2.getFullName()), svnURL}, false);
 	}
 
 	SyndFeed syndFeed = new SyndFeedImpl();
@@ -63,7 +63,7 @@
 		SyndEntry syndEntry = new SyndEntryImpl();
 
 		syndEntry.setAuthor(HtmlUtil.escape(user2.getFullName()));
-		syndEntry.setTitle(LanguageUtil.get(pageContext, "revision") + StringPool.SPACE + svnRevision.getRevisionNumber());
+		syndEntry.setTitle(LanguageUtil.get(request, "revision") + StringPool.SPACE + svnRevision.getRevisionNumber());
 		syndEntry.setLink(link);
 		syndEntry.setPublishedDate(svnRevision.getCreateDate());
 
@@ -81,19 +81,21 @@
 			sb.append(comments);
 			sb.append("<br />");
 
-			sb.append(jiraIssue.getSummary());
+			sb.append(HtmlUtil.escape(jiraIssue.getSummary()));
 			sb.append("<br />");
 
 			sb.append("<a href=\"");
 			sb.append(link);
 			sb.append("\"><img border=\"0\" src=\"");
-			sb.append(request.getContextPath());
+			sb.append(PortalUtil.getPathContext(request));
 			sb.append("/icons/svn.png\" />SVN</a><br />");
 
-			sb.append("<a href=\"http://issues.liferay.com/browse/");
+			sb.append("<a href=\"");
+			sb.append(PortletPropsValues.JIRA_URL);
+			sb.append("/browse/");
 			sb.append(jiraIssue.getKey());
 			sb.append("\"><img border=\"0\" src=\"");
-			sb.append(request.getContextPath());
+			sb.append(PortalUtil.getPathContext(request));
 			sb.append("/icons/jira.png\" />JIRA</a>");
 
 			comments = sb.toString();

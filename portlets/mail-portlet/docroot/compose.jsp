@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -53,21 +53,21 @@ else {
 
 	if (messageType.equals("reply")) {
 		to = replyMessage.getSender();
-		subject = LanguageUtil.format(pageContext, "re-x", replyMessage.getSubject());
+		subject = LanguageUtil.format(request, "re-x", replyMessage.getSubject(), false);
 	}
 	else if (messageType.equals("reply-all")) {
 		to = replyMessage.getSender() + ", " + replyMessage.getTo();
 		cc = replyMessage.getCc();
-		subject = LanguageUtil.format(pageContext, "re-x", replyMessage.getSubject());
+		subject = LanguageUtil.format(request, "re-x", replyMessage.getSubject(), false);
 	}
 	else if (messageType.equals("forward")) {
-		subject = LanguageUtil.format(pageContext, "fwd-x", replyMessage.getSubject());
+		subject = LanguageUtil.format(request, "fwd-x", replyMessage.getSubject(), false);
 	}
 
 	StringBundler sb = new StringBundler(4);
 
 	sb.append("<br /><br />");
-	sb.append(LanguageUtil.format(pageContext, "on-x-x-wrote", new Object[] {dateFormatDateTime.format(replyMessage.getSentDate()), replyMessage.getSender()}));
+	sb.append(LanguageUtil.format(request, "on-x-x-wrote", new Object[] {dateFormatDateTime.format(replyMessage.getSentDate()), replyMessage.getSender()}, false));
 	sb.append("<br />");
 	sb.append(replyMessage.getBody());
 
@@ -80,34 +80,37 @@ else {
 	<aui:input name="messageId" type="hidden" value="<%= messageId %>" />
 	<aui:input name="attachmentCount" type="hidden" value="0" />
 
-	<aui:layout>
-		<aui:column columnWidth="60" cssClass="recipient-fields">
-			<aui:input name="to" value="<%= to %>" />
+	<aui:fieldset>
+		<div class="row-fluid">
+			<div class="recipient-fields span7">
+				<aui:input name="to" value="<%= to %>" />
 
-			<aui:input name="cc" value="<%= cc %>" />
+				<aui:input name="cc" value="<%= cc %>" />
 
-			<aui:input name="bcc" />
+				<aui:input name="bcc" />
 
-			<aui:input name="subject" value="<%= subject %>" />
-		</aui:column>
-		<aui:column columnWidth="40">
-			<aui:field-wrapper label="attachments">
-				<div class="attachments"></div>
+				<aui:input name="subject" value="<%= subject %>" />
+			</div>
 
-				<div>
-					<a class="add-attachment" href="javascript:;"><liferay-ui:message key="add-attachment" /></a>
-				</div>
+			<div class="span5">
+				<aui:field-wrapper label="attachments">
+					<div class="attachments"></div>
+
+					<div>
+						<a class="add-attachment" href="javascript:;"><liferay-ui:message key="add-attachment" /></a>
+					</div>
+				</aui:field-wrapper>
+			</div>
+		</div>
+
+		<div class="body-editor">
+			<aui:field-wrapper label="body">
+				<liferay-ui:input-editor editorImpl="<%= EDITOR_WYSIWYG_IMPL_KEY %>" toolbarSet="email" width="100%" />
+
+				<aui:input name="body" type="hidden" />
 			</aui:field-wrapper>
-		</aui:column>
-	</aui:layout>
-
-	<div class="body-editor">
-		<aui:field-wrapper label="body">
-			<liferay-ui:input-editor editorImpl="<%= EDITOR_WYSIWYG_IMPL_KEY %>" toolbarSet="email" width="100%" />
-
-			<aui:input name="body" type="hidden" />
-		</aui:field-wrapper>
-	</div>
+		</div>
+	</aui:fieldset>
 
 	<aui:button-row>
 		<aui:button cssClass="send-message" data-messageId="<%= messageId %>" value="send" />
@@ -120,11 +123,11 @@ else {
 
 <aui:script>
 	function <portlet:namespace />initEditor() {
-		return "<%= UnicodeFormatter.toString(body) %>";
+		return '<%= UnicodeFormatter.toString(body) %>';
 	}
 </aui:script>
 
-<aui:script use="aui-base,aui-io,aui-io-upload">
+<aui:script use="aui-base,aui-io-deprecated,aui-io-upload">
 	var form = A.one('#<portlet:namespace />fm');
 
 	form.one('.send-message').on(
@@ -140,9 +143,9 @@ else {
 			A.io.request(
 				themeDisplay.getLayoutURL() + '/-/mail/send_message',
 				{
-					dataType: 'json',
+					dataType: 'JSON',
 					form: {
-						id: form.getDOM(),
+						id: form.getDOMNode(),
 						upload: true
 					},
 					method: 'POST',
@@ -177,9 +180,9 @@ else {
 			A.io.request(
 				themeDisplay.getLayoutURL() + '/-/mail/save_draft',
 				{
-					dataType: 'json',
+					dataType: 'JSON',
 					form: {
-						id: form.getDOM()
+						id: form.getDOMNode()
 					},
 					on: {
 						failure: function(event, id, obj) {
@@ -203,7 +206,7 @@ else {
 
 			var count = parseInt(countNode.val()) + 1;
 
-			form.one('.attachments').append('<div><input name="<portlet:namespace/>attachment' + count + '" size="30" type="file" /></div>');
+			form.one('.attachments').append('<div><input name="<portlet:namespace />attachment' + count + '" size="30" type="file" /></div>');
 
 			countNode.setAttribute('value', count);
 		}

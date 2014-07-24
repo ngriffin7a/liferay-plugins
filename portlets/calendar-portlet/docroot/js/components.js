@@ -32,7 +32,11 @@
 
 			var CSS_SIMPLE_MENU_SEPARATOR = getClassName('simple-menu', 'separator');
 
-			var TPL_SIMPLE_MENU_ITEM = '<li class="{cssClass}" data-id="{id}">{caption}</li>';
+			var DEFAULT_ALIGN_POINTS = [A.WidgetPositionAlign.TL, A.WidgetPositionAlign.BL];
+
+			var TPL_ICON = '<i class="{iconClass}"></i>';
+
+			var TPL_SIMPLE_MENU_ITEM = '<li class="{cssClass}" data-id="{id}">{icon} {caption}</li>';
 
 			var getItemHandler = A.cached(
 				function(id, items) {
@@ -40,7 +44,7 @@
 
 					AArray.some(
 						items,
-						function(item, index, collection) {
+						function(item, index) {
 							if (item.id === id) {
 								found = item;
 
@@ -57,6 +61,10 @@
 				{
 
 					ATTRS: {
+						alignNode: {
+							value: null
+						},
+
 						hiddenItems: {
 							validator: isArray,
 							value: []
@@ -72,7 +80,7 @@
 						}
 					},
 
-					AUGMENTS: [A.WidgetStdMod, A.WidgetPosition, A.WidgetStack, A.WidgetPositionAlign, A.WidgetPositionConstrain],
+					AUGMENTS: [A.WidgetModality, A.WidgetPosition, A.WidgetPositionAlign, A.WidgetPositionConstrain, A.WidgetStack, A.WidgetStdMod],
 
 					NAME: 'simple-menu',
 
@@ -92,14 +100,25 @@
 						bindUI: function() {
 							var instance = this;
 
+							A.Event.defineOutside('touchend');
+
 							var contentBox = instance.get('contentBox');
 
 							contentBox.delegate('click', instance._onClickItems, STR_DOT + CSS_SIMPLE_MENU_ITEM, instance);
 
-							A.getDoc().on('click', instance._onClickDocument, instance);
+							contentBox.on('touchendoutside', instance._closeMenu, instance);
+
+							A.getDoc().on('click', instance._closeMenu, instance);
+
+							A.getWin().on(
+								'resize',
+								A.debounce(instance._positionMenu, 200, instance)
+							);
+
+							instance.after('visibleChange', instance._positionMenu, instance);
 						},
 
-						_onClickDocument: function() {
+						_closeMenu: function() {
 							var instance = this;
 
 							instance.hide();
@@ -107,8 +126,6 @@
 
 						_onClickItems: function(event) {
 							var instance = this;
-
-							event.stopPropagation();
 
 							var items = instance.get('items');
 
@@ -121,6 +138,37 @@
 							}
 						},
 
+						_positionMenu: function() {
+							var instance = this;
+
+							var Util = Liferay.Util;
+
+							var align = {
+								node: instance.get('alignNode'),
+								points: DEFAULT_ALIGN_POINTS
+							};
+
+							var centered = false;
+							var modal = false;
+							var width = 222;
+
+							if (Util.isPhone() || Util.isTablet()) {
+								align = null;
+								centered = true;
+								modal = true;
+								width = '90%';
+							}
+
+							instance.setAttrs(
+								{
+									align: align,
+									centered: centered,
+									modal: modal,
+									width: width
+								}
+							);
+						},
+
 						_renderItems: function(items) {
 							var instance = this;
 
@@ -131,7 +179,7 @@
 
 							AArray.each(
 								items,
-								function(item, index, collection) {
+								function(item, index) {
 									var caption = item.caption;
 
 									if (!owns(item, 'id')) {
@@ -159,10 +207,22 @@
 											TPL_SIMPLE_MENU_ITEM,
 											{
 												cssClass: cssClass,
+												icon: icon,
 												id: id
 											}
 										)
 									);
+
+									if (item.icon) {
+										var icon = Lang.sub(
+											TPL_ICON,
+											{
+												iconClass: item.icon
+											}
+										);
+
+										caption = [icon, caption].join(STR_SPACE);
+									}
 
 									li.setContent(caption);
 
@@ -178,7 +238,7 @@
 
 							if (instance.get('rendered')) {
 								instance.items.each(
-									function(item, index, collection) {
+									function(item, index) {
 										var id = item.attr('data-id');
 
 										item.toggleClass(CSS_SIMPLE_MENU_ITEM_HIDDEN, (AArray.indexOf(val, id) > -1));
@@ -202,7 +262,7 @@
 		},
 		'',
 		{
-			requires: ['aui-base', 'aui-template-deprecated', 'widget-position', 'widget-position-align', 'widget-position-constrain', 'widget-stack', 'widget-stdmod']
+			requires: ['aui-base', 'aui-template-deprecated', 'event-outside', 'event-touch', 'widget-modality', 'widget-position', 'widget-position-align', 'widget-position-constrain', 'widget-stack', 'widget-stdmod']
 		}
 	);
 
@@ -235,14 +295,16 @@
 
 			var CSS_CALENDAR_LIST_ITEM_LABEL = getClassName(STR_CALENDAR_LIST, STR_ITEM, 'label');
 
+			var CSS_ICON_CARET_DOWN = 'icon-caret-down';
+
 			var TPL_CALENDAR_LIST_EMPTY_MESSAGE = '<div class="' + CSS_CALENDAR_LIST_EMPTY_MESSAGE + '">{message}</div>';
 
 			var TPL_CALENDAR_LIST_ITEM = new A.Template(
 				'<tpl for="calendars">',
 					'<div class="', CSS_CALENDAR_LIST_ITEM, '">',
 						'<div class="', CSS_CALENDAR_LIST_ITEM_COLOR, '" {[ parent.calendars[$i].get("visible") ? ', '\'style="background-color:\'', STR_PLUS, 'parent.calendars[$i].get("color")', STR_PLUS, '";border-color:"', STR_PLUS, 'parent.calendars[$i].get("color")', STR_PLUS, '";\\""', ' : \'', STR_BLANK, '\' ]}></div>',
-							'<span class="', CSS_CALENDAR_LIST_ITEM_LABEL, '">{[ parent.calendars[$i].getDisplayName() ]}</span>',
-						'<div href="javascript:;" class="', CSS_CALENDAR_LIST_ITEM_ARROW, '"></div>',
+							'<span class="', CSS_CALENDAR_LIST_ITEM_LABEL, '">{[ Liferay.Util.escapeHTML(parent.calendars[$i].getDisplayName()) ]}</span>',
+						'<div class="', CSS_CALENDAR_LIST_ITEM_ARROW, '"><i class="', CSS_ICON_CARET_DOWN, '"></i></div>',
 					'</div>',
 				'</tpl>'
 			);
@@ -262,7 +324,8 @@
 						simpleMenu: {
 							setter: '_setSimpleMenu',
 							validator: isObject,
-							value: null
+							value: null,
+							zIndex: Liferay.zIndex.MENU
 						},
 
 						strings: {
@@ -425,9 +488,9 @@
 						_onClick: function(event) {
 							var instance = this;
 
-							var target = event.target;
+							var target = event.target.ancestor(STR_DOT + CSS_CALENDAR_LIST_ITEM_ARROW, true, STR_DOT + CSS_CALENDAR_LIST_ITEM);
 
-							if (target.hasClass(CSS_CALENDAR_LIST_ITEM_ARROW)) {
+							if (target) {
 								event.stopPropagation();
 
 								var activeNode = instance.activeNode;
@@ -448,7 +511,7 @@
 
 								simpleMenu.setAttrs(
 									{
-										'align.node': target,
+										alignNode: target,
 										visible: ((simpleMenu.get('align.node') !== target) || !simpleMenu.get('visible'))
 									}
 								);
@@ -457,20 +520,6 @@
 								var calendar = instance.getCalendarByNode(event.currentTarget);
 
 								calendar.set('visible', !calendar.get('visible'));
-							}
-						},
-
-						_onHoverOver: function(event) {
-							var instance = this;
-
-							var currentTarget = event.currentTarget;
-
-							var calendar = instance.getCalendarByNode(currentTarget);
-
-							currentTarget.addClass(CSS_CALENDAR_LIST_ITEM_HOVER);
-
-							if (!calendar.get('visible')) {
-								instance._setCalendarColor(calendar, calendar.get('color'));
 							}
 						},
 
@@ -486,6 +535,20 @@
 							}
 
 							currentTarget.removeClass(CSS_CALENDAR_LIST_ITEM_HOVER);
+						},
+
+						_onHoverOver: function(event) {
+							var instance = this;
+
+							var currentTarget = event.currentTarget;
+
+							var calendar = instance.getCalendarByNode(currentTarget);
+
+							currentTarget.addClass(CSS_CALENDAR_LIST_ITEM_HOVER);
+
+							if (!calendar.get('visible')) {
+								instance._setCalendarColor(calendar, calendar.get('color'));
+							}
 						},
 
 						_onSimpleMenuVisibleChange: function(event) {
@@ -540,7 +603,7 @@
 
 							AArray.each(
 								val,
-								function(item, index, collection) {
+								function(item, index) {
 									var calendar = item;
 
 									if (!A.instanceOf(item, Liferay.SchedulerCalendar)) {
@@ -573,7 +636,7 @@
 									plugins: [ A.Plugin.OverlayAutohide ],
 									visible: false,
 									width: 290,
-									zIndex: 500
+									zIndex: Liferay.zIndex.MENU
 								},
 								val || {}
 							);
@@ -688,7 +751,7 @@
 
 							instance.items.removeClass(CSS_SIMPLE_COLOR_PICKER_ITEM_SELECTED);
 
-							var newNode = instance.items.item(pallete.indexOf(val));
+							var newNode = instance.items.item(AArray.indexOf(pallete, val));
 
 							if (newNode) {
 								newNode.addClass(CSS_SIMPLE_COLOR_PICKER_ITEM_SELECTED);
@@ -723,7 +786,10 @@
 				'<label class="checkbox">' +
 					'<input class="calendar-portlet-reminder-check" id="{portletNamespace}reminder{i}" name="{portletNamespace}reminder{i}" type="checkbox" <tpl if="!disabled">checked="checked"</tpl> />' +
 				'</label>' +
-				'<label class="reminder-type" for="{portletNamespace}reminder{i}">{email}</label>' +
+				'<label class="reminder-type" for="{portletNamespace}reminder{i}">' +
+					'<input id="{portletNamespace}reminderType{i}" name="{portletNamespace}reminderType{i}" type="hidden" value="email" />' +
+					'{email}'+
+				'</label>' +
 				'<input class="input-mini reminder-value" name="{portletNamespace}reminderValue{i}" type="text" size="5" value="{time.value}" <tpl if="disabled">disabled="disabled"</tpl> /> ' +
 				'<select class="reminder-duration span2" name="{portletNamespace}reminderDuration{i}" <tpl if="disabled">disabled="disabled"</tpl>>' +
 					'<option value="60" <tpl if="time.desc == \'minutes\'">selected="selected"</tpl>>{minutes}</option>' +
@@ -742,15 +808,16 @@
 
 						strings: {
 							value: {
-								email: Liferay.Language.get('email'),
-								minutes: Liferay.Language.get('minutes'),
-								hours: Liferay.Language.get('hours'),
 								days: Liferay.Language.get('days'),
+								email: Liferay.Language.get('email'),
+								hours: Liferay.Language.get('hours'),
+								minutes: Liferay.Language.get('minutes'),
 								weeks: Liferay.Language.get('weeks')
 							}
 						},
 
 						values: {
+							validator: Lang.isArray,
 							value: [
 								{
 									interval: 10,
@@ -760,8 +827,7 @@
 									interval: 60,
 									type: Liferay.CalendarUtil.NOTIFICATION_DEFAULT_TYPE
 								}
-							],
-							validator: Lang.isArray
+							]
 						}
 					},
 
@@ -849,39 +915,6 @@
 			var toInt = Lang.toInt;
 
 			Liferay.DatePickerUtil = {
-				linkToSchedulerEvent: function(datePickerContainer, schedulerEvent, dateAttr) {
-					var instance = this;
-
-					var selects = A.one(datePickerContainer).all('select');
-
-					selects.on(
-						'change',
-						function(event) {
-							var currentTarget = event.currentTarget;
-
-							var date = schedulerEvent.get(dateAttr);
-
-							var selectedSetter = selects.indexOf(currentTarget);
-
-							var setters = [date.setMonth, date.setDate, date.setFullYear, date.setHours, date.setMinutes, date.setHours];
-
-							var value = toInt(currentTarget.val());
-
-							if ((selectedSetter === 3) && (date.getHours() > 12)) {
-								value += 12;
-							}
-
-							if (selectedSetter === 5) {
-								value = date.getHours() + ((value === 1) ? 12 : -12);
-							}
-
-							setters[selectedSetter].call(date, value);
-
-							schedulerEvent.get('scheduler').syncEventsUI();
-						}
-					);
-				},
-
 				syncUI: function(form, fieldName, date) {
 					var instance = this;
 
@@ -914,6 +947,39 @@
 					amPmNode.val(amPm);
 					hourNode.val(hours);
 					minuteNode.val(minutes);
+				},
+
+				linkToSchedulerEvent: function(datePickerContainer, schedulerEvent, dateAttr) {
+					var instance = this;
+
+					var selects = A.one(datePickerContainer).all('select');
+
+					selects.on(
+						'change',
+						function(event) {
+							var currentTarget = event.currentTarget;
+
+							var date = schedulerEvent.get(dateAttr);
+
+							var selectedSetter = selects.indexOf(currentTarget);
+
+							var setters = [date.setMonth, date.setDate, date.setFullYear, date.setHours, date.setMinutes, date.setHours];
+
+							var value = toInt(currentTarget.val());
+
+							if ((selectedSetter === 3) && (date.getHours() > 12)) {
+								value += 12;
+							}
+
+							if (selectedSetter === 5) {
+								value = date.getHours() + ((value === 1) ? 12 : -12);
+							}
+
+							setters[selectedSetter].call(date, value);
+
+							schedulerEvent.get('scheduler').syncEventsUI();
+						}
+					);
 				}
 			};
 		},
@@ -929,15 +995,15 @@
 			Liferay.RecurrenceUtil = {
 				FREQUENCY: {
 					DAILY: 'DAILY',
-					WEEKLY: 'WEEKLY',
 					MONTHLY: 'MONTHLY',
+					WEEKLY: 'WEEKLY',
 					YEARLY: 'YEARLY'
 				},
 
 				INTERVAL_LABELS: {
 					DAILY: Liferay.Language.get('days'),
-					WEEKLY: Liferay.Language.get('weeks'),
 					MONTHLY: Liferay.Language.get('months'),
+					WEEKLY: Liferay.Language.get('weeks'),
 					YEARLY: Liferay.Language.get('years')
 				},
 
@@ -955,16 +1021,6 @@
 					Liferay.Language.get('november'),
 					Liferay.Language.get('december')
 				],
-
-				closeConfirmationPanel: function() {
-					var instance = this;
-
-					var confirmationPanel = instance.confirmationPanel;
-
-					if (confirmationPanel) {
-						confirmationPanel.hide();
-					}
-				},
 
 				getSummary: function(recurrence) {
 					var instance = this;
@@ -1018,7 +1074,7 @@
 					return A.Lang.String.capitalize(summary);
 				},
 
-				openConfirmationPanel: function(actionName, masterBooking, onlyThisInstanceFn, allFollowingFn, allEventsInFn, cancelFn) {
+				openConfirmationPanel: function(actionName, onlyThisInstanceFn, allFollowingFn, allEventsInFn, cancelFn) {
 					var instance = this;
 
 					var titleText;
@@ -1033,77 +1089,44 @@
 						changeDeleteText = Liferay.Language.get('would-you-like-to-change-only-this-event-all-events-in-the-series-or-this-and-all-future-events-in-the-series');
 					}
 
-					var content = [changeDeleteText];
-
-					if ((actionName === 'delete') && masterBooking) {
-						content.push(
-							A.Lang.sub(
-								'<br/><br/><b>{0}</b>',
-								[Liferay.Language.get('deleting-this-event-will-cancel-the-meeting-with-your-guests')]
-							)
-						);
-					}
-
-					var confirmationPanel = instance.confirmationPanel;
-
-					if (!confirmationPanel) {
-						var buttons = [
-							{
-								on: {
-
-									click: function(event, buttonItem)  {
-										confirmationPanel.onlyThisInstanceFn.apply(confirmationPanel, arguments);
+					var getButtonConfig = function(label, callback) {
+						return {
+							label: label,
+							on: {
+								click: function(event, buttonItem) {
+									if (callback) {
+										callback.apply(confirmationPanel, arguments);
 									}
-								},
-								label: Liferay.Language.get('only-this-instance')
-							},
-							{
-								on: {
-									click: function(event, buttonItem)  {
-										confirmationPanel.allFollowingFn.apply(confirmationPanel, arguments);
-									}
-								},
-								label: Liferay.Language.get('all-following')
-							},
-							{
-								on: {
-									click: function(event, buttonItem)  {
-										confirmationPanel.allEventsInFn.apply(confirmationPanel, arguments);
-									}
-								},
-								label: Liferay.Language.get('all-events-in-the-series')
-							},
-							{
-								on: {
-									click: function(event, buttonItem)  {
-										confirmationPanel.cancelFn.apply(confirmationPanel, arguments);
-									}
-								},
-								label: Liferay.Language.get('cancel-this-change')
+
+									confirmationPanel.hide();
+								}
 							}
-						];
+						};
+					};
 
-						confirmationPanel = Liferay.Util.Window.getWindow(
-							{
-								dialog:	{
-									bodyContent: content.join(''),
-									toolbars: {
-										footer: buttons
-									},
+					var confirmationPanel = Liferay.Util.Window.getWindow(
+						{
+							dialog:	{
+								bodyContent: changeDeleteText,
+								destroyOnHide: true,
+								height: 250,
+								hideOn: [],
+								resizable: false,
+								toolbars: {
+									footer: [
+										getButtonConfig(Liferay.Language.get('only-this-instance'), onlyThisInstanceFn),
+										getButtonConfig(Liferay.Language.get('all-following'), allFollowingFn),
+										getButtonConfig(Liferay.Language.get('all-events-in-the-series'), allEventsInFn),
+										getButtonConfig(Liferay.Language.get('cancel-this-change'), cancelFn)
+									]
 								},
-								title: titleText
-							}
-						);
+								width: 700
+							},
+							title: titleText
+						}
+					);
 
-						instance.confirmationPanel = confirmationPanel;
-					}
-
-					confirmationPanel.onlyThisInstanceFn = onlyThisInstanceFn;
-					confirmationPanel.allFollowingFn = allFollowingFn;
-					confirmationPanel.allEventsInFn = allEventsInFn;
-					confirmationPanel.cancelFn = cancelFn || confirmationPanel.hide;
-
-					confirmationPanel.render().show();
+					return confirmationPanel.render().show();
 				}
 			};
 		},
@@ -1117,58 +1140,63 @@
 		'liferay-calendar-message-util',
 		function(A) {
 			Liferay.CalendarMessageUtil = {
-				confirmationPanel: null,
 
 				confirm: function(message, yesButtonLabel, noButtonLabel, yesFn, noFn) {
 					var instance = this;
 
-					var confirmationPanel = instance.confirmationPanel;
-
-					if (!confirmationPanel) {
-						var buttons = [
-							{
-								on: {
-									click: function(event, buttonItem) {
-										confirmationPanel.yesFn.apply(confirmationPanel, arguments);
+					var getButtonConfig = function(label, callback) {
+						return {
+							label: label,
+							on: {
+								click: function(event, buttonItem) {
+									if (callback) {
+										callback.apply(confirmationPanel, arguments);
 									}
+
+									confirmationPanel.hide();
+								}
+							}
+						};
+					};
+
+					var confirmationPanel = Liferay.Util.Window.getWindow(
+						{
+							dialog : {
+								bodyContent: message,
+								height: 250,
+								hideOn: [],
+								resizable: false,
+								toolbars: {
+									footer: [
+										getButtonConfig(yesButtonLabel, yesFn),
+										getButtonConfig(noButtonLabel, noFn)
+									]
 								},
-								label: yesButtonLabel
+								width: 700
 							},
-							{
-								on: {
-									click: function(event, buttonItem) {
-										confirmationPanel.noFn.apply(confirmationPanel, arguments);
-									}
-								},
-								label: noButtonLabel
-							}
-						];
-
-						confirmationPanel = Liferay.Util.Window.getWindow(
-							{
-								dialog : {
-									bodyContent: message,
-									toolbars: {
-										footer: buttons
-									},
-								},
-								title: Liferay.Language.get('are-you-sure')
-							}
-						);
-
-						instance.confirmationPanel = confirmationPanel;
-					}
-
-					confirmationPanel.yesFn = yesFn;
-					confirmationPanel.noFn = noFn || confirmationPanel.close;
+							title: Liferay.Language.get('are-you-sure')
+						}
+					);
 
 					return confirmationPanel.render().show();
+				},
+
+				showAlert: function(container, message) {
+					new A.Alert(
+						{
+							animated: true,
+							bodyContent: message,
+							closeable: true,
+							cssClass: 'alert-success',
+							destroyOnHide: true,
+							duration: 1
+						}).render(container);
 				}
 			};
 		},
 		'',
 		{
-			requires: ['liferay-util-window']
+			requires: ['aui-alert', 'liferay-util-window']
 		}
 	);
 }());

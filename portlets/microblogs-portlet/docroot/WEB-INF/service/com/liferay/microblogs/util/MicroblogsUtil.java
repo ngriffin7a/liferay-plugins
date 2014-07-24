@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -21,7 +21,6 @@ import com.liferay.microblogs.model.MicroblogsEntry;
 import com.liferay.portal.NoSuchUserException;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -57,7 +56,7 @@ public class MicroblogsUtil {
 
 	public static JSONArray getJSONRecipients(
 			long userId, ThemeDisplay themeDisplay)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
@@ -89,15 +88,13 @@ public class MicroblogsUtil {
 
 	public static String getTaggedContent(
 			MicroblogsEntry microblogsEntry, ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		String content = HtmlUtil.escape(microblogsEntry.getContent());
 
 		ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
 
-		Pattern pattern = Pattern.compile("\\#\\S*");
-
-		Matcher matcher = pattern.matcher(microblogsEntry.getContent());
+		Matcher matcher = _pattern1.matcher(microblogsEntry.getContent());
 
 		while (matcher.find()) {
 			String result = matcher.group();
@@ -158,9 +155,7 @@ public class MicroblogsUtil {
 			content = StringUtil.replace(content, result, tagLink);
 		}
 
-		pattern = Pattern.compile("\\[\\@\\S*\\]");
-
-		matcher = pattern.matcher(content);
+		matcher = _pattern2.matcher(content);
 
 		while (matcher.find()) {
 			String result = matcher.group();
@@ -200,5 +195,8 @@ public class MicroblogsUtil {
 
 		return content;
 	}
+
+	private static Pattern _pattern1 = Pattern.compile("\\#\\S*");
+	private static Pattern _pattern2 = Pattern.compile("\\[\\@\\S*\\]");
 
 }

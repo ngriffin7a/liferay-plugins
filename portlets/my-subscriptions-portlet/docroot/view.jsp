@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -24,6 +24,7 @@
 	<aui:input name="subscriptionIds" type="hidden" />
 
 	<liferay-ui:error exception="<%= NoSuchSubscriptionException.class %>" message="the-subscription-could-not-be-found" />
+	<liferay-ui:error exception="<%= PrincipalException.class %>" message="you-do-not-have-the-required-permissions" />
 
 	<aui:fieldset>
 		<liferay-portlet:renderURL varImpl="iteratorURL" />
@@ -33,10 +34,10 @@
 			emptyResultsMessage="no-subscriptions-were-found"
 			iteratorURL="<%= iteratorURL %>"
 			rowChecker="<%= new RowChecker(renderResponse) %>"
+			total="<%= SubscriptionLocalServiceUtil.getUserSubscriptionsCount(user.getUserId()) %>"
 		>
 			<liferay-ui:search-container-results
 				results="<%= SubscriptionLocalServiceUtil.getUserSubscriptions(user.getUserId(), searchContainer.getStart(), searchContainer.getEnd(), new SubscriptionClassNameIdComparator(true)) %>"
-				total="<%= SubscriptionLocalServiceUtil.getUserSubscriptionsCount(user.getUserId()) %>"
 			/>
 
 			<%
@@ -97,6 +98,7 @@
 
 				<liferay-ui:search-container-column-jsp
 					align="right"
+					cssClass="entry-action"
 					path="/subscription_action.jsp"
 				/>
 			</liferay-ui:search-container-row>
@@ -117,35 +119,33 @@
 		window,
 		'<portlet:namespace />displayPopup',
 		function(url, title) {
-			var dialog = new A.Dialog(
+			var dialog = Liferay.Util.Window.getWindow(
 				{
-					align: {
-						node: null,
-						points: ['tc', 'tc']
+					dialog: {
+						align: {
+							node: null,
+							points: ['tc', 'tc']
+						},
+						constrain2view: true,
+						cssClass: 'portlet-my-subscription',
+						modal: true,
+						resizable: true,
+						width: 950
 					},
-					constrain2view: true,
-					cssClass: 'portlet-my-subscription',
-					modal: true,
-					resizable: false,
 					title: title,
-					width: 950
-				}
-			).plug(
-				A.Plugin.DialogIframe,
-				{
 					uri: url
 				}
-			).render();
+			)
 		},
-		['aui-dialog', 'aui-dialog-iframe']
+		['liferay-util-window']
 	);
 
 	Liferay.provide(
 		window,
 		'<portlet:namespace />unsubscribe',
 		function() {
-			document.<portlet:namespace />fm.method = "post";
-			document.<portlet:namespace />fm.<portlet:namespace />subscriptionIds.value = Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, "<portlet:namespace />allRowIds");
+			document.<portlet:namespace />fm.method = 'post';
+			document.<portlet:namespace />fm.<portlet:namespace />subscriptionIds.value = Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, '<portlet:namespace />allRowIds');
 
 			submitForm(document.<portlet:namespace />fm);
 		},

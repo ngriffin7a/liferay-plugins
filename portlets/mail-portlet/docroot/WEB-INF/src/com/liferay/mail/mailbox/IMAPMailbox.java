@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -34,7 +34,6 @@ import com.liferay.mail.util.AttachmentHandler;
 import com.liferay.mail.util.DefaultAttachmentHandler;
 import com.liferay.mail.util.MailConstants;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -42,6 +41,7 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.User;
 import com.liferay.util.mail.InternetAddressUtil;
@@ -71,24 +71,18 @@ public class IMAPMailbox extends BaseMailbox {
 		}
 	}
 
-	public Folder addFolder(String displayName)
-		throws PortalException, SystemException {
-
+	public Folder addFolder(String displayName) throws PortalException {
 		String[] names = _imapAccessor.addFolder(displayName);
 
 		return FolderLocalServiceUtil.addFolder(
 			user.getUserId(), account.getAccountId(), names[0], names[1], 0);
 	}
 
-	public void deleteAttachment(long attachmentId)
-		throws PortalException, SystemException {
-
+	public void deleteAttachment(long attachmentId) throws PortalException {
 		AttachmentLocalServiceUtil.deleteAttachment(attachmentId);
 	}
 
-	public void deleteFolder(long folderId)
-		throws PortalException, SystemException {
-
+	public void deleteFolder(long folderId) throws PortalException {
 		if ((account.getDraftFolderId() == folderId) ||
 			(account.getInboxFolderId() == folderId) ||
 			(account.getSentFolderId() == folderId) ||
@@ -103,7 +97,7 @@ public class IMAPMailbox extends BaseMailbox {
 	}
 
 	public void deleteMessages(long folderId, long[] messageIds)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		if ((account.getDraftFolderId() != folderId) &&
 			(account.getTrashFolderId() != folderId)) {
@@ -120,7 +114,7 @@ public class IMAPMailbox extends BaseMailbox {
 	}
 
 	public AttachmentHandler getAttachment(long attachmentId)
-		throws IOException, PortalException, SystemException {
+		throws IOException, PortalException {
 
 		Attachment attachment = AttachmentLocalServiceUtil.getAttachment(
 			attachmentId);
@@ -142,7 +136,7 @@ public class IMAPMailbox extends BaseMailbox {
 	public Message getMessage(
 			long folderId, String keywords, int messageNumber,
 			String orderByField, String orderByType)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		MessagesDisplay messagesDisplay = getMessagesDisplay(
 			folderId, keywords, messageNumber, 1, orderByField, orderByType);
@@ -155,7 +149,7 @@ public class IMAPMailbox extends BaseMailbox {
 	public MessagesDisplay getMessagesDisplay(
 			long folderId, String keywords, int pageNumber, int messagesPerPage,
 			String orderByField, String orderByType)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		if (orderByField.equals(MailConstants.ORDER_BY_ADDRESS)) {
 			orderByField = "sender";
@@ -189,14 +183,12 @@ public class IMAPMailbox extends BaseMailbox {
 			messages, pageNumber, messagesPerPage, messageCount);
 	}
 
-	public boolean hasNewMessages(long folderId)
-		throws PortalException, SystemException {
-
+	public boolean hasNewMessages(long folderId) throws PortalException {
 		return _imapAccessor.hasNewMessages(folderId);
 	}
 
 	public void moveMessages(long folderId, long[] messageIds)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		for (long messageId : messageIds) {
 			Message message = MessageLocalServiceUtil.getMessage(messageId);
@@ -251,7 +243,7 @@ public class IMAPMailbox extends BaseMailbox {
 	}
 
 	public void renameFolder(long folderId, String displayName)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		Folder folder = FolderLocalServiceUtil.getFolder(folderId);
 
@@ -264,7 +256,7 @@ public class IMAPMailbox extends BaseMailbox {
 	public Message saveDraft(
 			long accountId, long messageId, String to, String cc, String bcc,
 			String subject, String body, List<MailFile> mailFiles)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		Account account = AccountLocalServiceUtil.getAccount(accountId);
 
@@ -318,7 +310,7 @@ public class IMAPMailbox extends BaseMailbox {
 	}
 
 	public void sendMessage(long accountId, long messageId)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		Account account = AccountLocalServiceUtil.getAccount(accountId);
 
@@ -357,7 +349,7 @@ public class IMAPMailbox extends BaseMailbox {
 		MessageLocalServiceUtil.deleteMessage(messageId);
 	}
 
-	public void synchronize() throws PortalException, SystemException {
+	public void synchronize() throws PortalException {
 		if (_log.isDebugEnabled()) {
 			_log.debug(
 				"Synchronizing all folders for accountId " +
@@ -384,9 +376,7 @@ public class IMAPMailbox extends BaseMailbox {
 		}
 	}
 
-	public void synchronizeFolder(long folderId)
-		throws PortalException, SystemException {
-
+	public void synchronizeFolder(long folderId) throws PortalException {
 		if (_log.isDebugEnabled()) {
 			_log.debug("Synchronizing folder " + folderId);
 		}
@@ -404,9 +394,7 @@ public class IMAPMailbox extends BaseMailbox {
 		}
 	}
 
-	public void synchronizeMessage(long messageId)
-		throws PortalException, SystemException {
-
+	public void synchronizeMessage(long messageId) throws PortalException {
 		Message message = MessageLocalServiceUtil.getMessage(messageId);
 
 		long remoteMessageId = message.getRemoteMessageId();
@@ -427,7 +415,7 @@ public class IMAPMailbox extends BaseMailbox {
 
 	public void synchronizePage(
 			long folderId, int pageNumber, int messagesPerPage)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		long[] remoteMessageIds = _imapAccessor.getMessageUIDs(
 			folderId, pageNumber, messagesPerPage);
@@ -456,7 +444,7 @@ public class IMAPMailbox extends BaseMailbox {
 
 	public void updateFlags(
 			long folderId, long[] messageIds, int flag, boolean value)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		Folder folder = FolderLocalServiceUtil.getFolder(folderId);
 
@@ -475,7 +463,7 @@ public class IMAPMailbox extends BaseMailbox {
 		}
 	}
 
-	public void updateFolders() throws PortalException, SystemException {
+	public void updateFolders() throws PortalException {
 		if (_log.isDebugEnabled()) {
 			_log.debug("Updating folders");
 		}
@@ -536,13 +524,14 @@ public class IMAPMailbox extends BaseMailbox {
 		imapConnection.testConnection();
 	}
 
-	protected long getFolderId(String type) throws SystemException {
+	protected long getFolderId(String type) {
 		Locale[] locales = LanguageUtil.getAvailableLocales();
 
 		List<String> words = new ArrayList<String>();
 
 		for (Locale locale : locales) {
-			String translation = LanguageUtil.get(locale, type).toLowerCase();
+			String translation = StringUtil.toLowerCase(
+				LanguageUtil.get(locale, type));
 
 			words.addAll(ListUtil.toList(translation.split(StringPool.SPACE)));
 		}
@@ -552,7 +541,8 @@ public class IMAPMailbox extends BaseMailbox {
 
 		for (String word : words) {
 			for (Folder folder : folders) {
-				String folderName = folder.getDisplayName().toLowerCase();
+				String folderName = StringUtil.toLowerCase(
+					folder.getDisplayName());
 
 				if (folderName.contains(word)) {
 					return folder.getFolderId();

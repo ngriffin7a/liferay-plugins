@@ -9,8 +9,10 @@ AUI.add(
 				initializer: function(config) {
 					this._listNode = A.one(config.listNode);
 
-					this._bindUIACBase();
-					this._syncUIACBase();
+					if (this._listNode) {
+						this._bindUIACBase();
+						this._syncUIACBase();
+					}
 				}
 			}
 		);
@@ -25,13 +27,70 @@ AUI.add(
 	}
 );
 
+AUI.add(
+	'liferay-so-user-menu',
+	function(A) {
+		var UserMenu = function(config) {
+			var hideClass = config.hideClass;
+			var hideOn = config.hideOn || 'close-menus';
+			var showClass = config.showClass;
+			var showOn = config.showOn || 'click';
+
+			var node = A.one(config.node);
+
+			var target = A.one(config.target) || node;
+
+			target.on(
+				'clickoutside',
+				function(event) {
+					if (hideClass && !target.hasClass(hideClass)) {
+						target.addClass(hideClass);
+					}
+
+					if (showClass && target.hasClass(showClass)) {
+						target.removeClass(showClass);
+					}
+				}
+			);
+
+			var trigger = A.one(config.trigger) || node;
+
+			trigger.on(
+				showOn,
+				function(event) {
+					if (hideClass && target.hasClass(hideClass)) {
+						setTimeout(
+							function() {
+								target.removeClass(hideClass);
+							},
+							10
+						);
+					}
+
+					if (showClass && !target.hasClass(showClass)) {
+						target.addClass(showClass);
+					}
+				}
+			);
+		}
+
+		Liferay.namespace('SO');
+
+		Liferay.SO.UserMenu = UserMenu;
+	},
+	'',
+	{
+		requires: ['aui-base', 'node-core']
+	}
+);
+
 AUI().use(
 	'aui-base',
-	'aui-dialog',
-	'aui-io-plugin',
+	'aui-io-plugin-deprecated',
 	'datasource-io',
 	'json-parse',
 	'liferay-so-site-list',
+	'liferay-util-window',
 	function(A) {
 		var Lang = A.Lang;
 
@@ -40,6 +99,8 @@ AUI().use(
 		Liferay.SO.Sites = {
 			init: function(config) {
 				var instance = this;
+
+				instance._namespace = config.namespace;
 
 				instance._createSiteList(config);
 				instance._assignEvents();
@@ -55,11 +116,17 @@ AUI().use(
 				}
 			},
 
-			createDataSource: function(url) {
+			createDataSource: function(url, namespace) {
+				var instance = this;
+
+				if (namespace) {
+					instance._namespace = namespace;
+				}
+
 				return new A.DataSource.IO(
 					{
 						ioConfig: {
-							method: "post"
+							method: 'POST'
 						},
 						on: {
 							request: function(event) {
@@ -71,76 +138,22 @@ AUI().use(
 									tabs1 = sitesTabsContainer.one('select').get('value');
 								}
 
+								var eventData = {};
+
 								var data = event.request;
 
-								event.cfg.data = {
-									directory: data.directory || false,
-									end: data.end || 10,
-									keywords: data.keywords || '',
-									searchTab: data.searchTab || tabs1,
-									start: data.start || 0
-								}
+								eventData[instance._namespace + 'directory'] = data[instance._namespace + 'directory'] || false;
+								eventData[instance._namespace + 'end'] = data[instance._namespace + 'end'] || 10;
+								eventData[instance._namespace + 'keywords'] = data[instance._namespace + 'keywords'] || '';
+								eventData[instance._namespace + 'searchTab'] = data[instance._namespace + 'searchTab'] || tabs1;
+								eventData[instance._namespace + 'start'] = data[instance._namespace + 'start'] || 0;
+
+								event.cfg.data = eventData;
 							}
 						},
 						source: url
 					}
 				)
-			},
-
-			disableButton: function(button) {
-				button = button.one('input') || button;
-
-				button.set('disabled', true);
-				button.ancestor('.aui-button').addClass('aui-button-disabled');
-			},
-
-			displayPopup: function(url, title, data) {
-				var instance = this;
-
-				var viewportRegion = A.getBody().get('viewportRegion');
-
-				var popup = instance.getPopup();
-
-				popup.show();
-
-				popup.set('title', title);
-
-				popup.io.set('uri', url);
-				popup.io.set('data', data);
-
-				popup.io.start();
-			},
-
-			enableButton: function(button) {
-				button = button.one('input') || button;
-
-				button.set('disabled', false);
-				button.ancestor('.aui-button').removeClass('aui-button-disabled');
-			},
-
-			getPopup: function() {
-				var instance = this;
-
-				if (!instance._popup) {
-					instance._popup = new A.Dialog(
-						{
-							align: {
-								node: null,
-								points: ['tc', 'tc']
-							},
-							constrain2view: true,
-							cssClass: 'so-portlet-sites-dialog',
-							modal: true,
-							resizable: true,
-							width: 650
-						}
-					).plug(
-						A.Plugin.IO,
-						{autoLoad: false}
-					).render();
-				}
-
-				return instance._popup;
 			},
 
 			createDirectoryList: function(directoryList) {
@@ -149,12 +162,68 @@ AUI().use(
 				instance._directoryList = directoryList;
 			},
 
+			disableButton: function(button) {
+				button.set('disabled', true);
+
+				button.addClass('disabled');
+			},
+
+			displayPopup: function(url, title, data) {
+				var instance = this;
+
+				var popup = instance.getPopup();
+
+				popup.titleNode.html(title);
+
+				popup.show();
+
+				popup.io.set('uri', url);
+				popup.io.set('data', data);
+
+				popup.io.start();
+			},
+
+			enableButton: function(button) {
+				button.set('disabled', false);
+
+				button.removeClass('disabled');
+			},
+
+			getPopup: function() {
+				var instance = this;
+
+				if (!instance._popup) {
+					instance._popup = Liferay.Util.Window.getWindow(
+						{
+							dialog: {
+								align: {
+									node: null,
+									points: ['tc', 'tc']
+								},
+								constrain2view: true,
+								cssClass: 'so-portlet-sites-dialog',
+								modal: true,
+								resizable: true,
+								width: 650
+							}
+						}
+					).plug(
+						A.Plugin.IO,
+						{
+							autoLoad: false
+						}
+					).render();
+				}
+
+				return instance._popup;
+			},
+
 			setTitle: function(title) {
 				var instance = this;
 
 				var popup = instance.getPopup();
 
-				popup.set('title', title);
+				popup.titleNode.html(title);
 			},
 
 			updateSites: function(showSuccessMessage, keywordsInput, requestTemplate) {
@@ -215,9 +284,11 @@ AUI().use(
 						listNode: siteList,
 						minQueryLength: 0,
 						requestTemplate: function(query) {
-							return {
-								keywords: query
-							}
+							var data = {};
+
+							data[instance._namespace + 'keywords'] = query;
+
+							return data;
 						},
 						resultTextLocator: function(response) {
 							var result = '';
@@ -252,6 +323,24 @@ AUI().use(
 
 				var buffer = [];
 
+				var getSiteActionHtml = function(actionClassNames, actionLinkClassName, actionTitle, actionURL) {
+					var siteActionTemplate =
+						'<span class="{actionClassNames}" title="{actionTitle}">' +
+							'<a class="{actionLinkClassName}" href="{actionURL}">' +
+							'</a>' +
+						'</span>';
+
+					return	A.Lang.sub(
+						siteActionTemplate,
+						{
+							actionClassNames: actionClassNames,
+							actionLinkClassName: actionLinkClassName,
+							actionTitle: actionTitle,
+							actionURL: actionURL
+						}
+					);
+				};
+
 				if (results.length == 0) {
 					buffer.push(
 						'<li class="empty">' + Liferay.Language.get('there-are-no-results') + '</li>'
@@ -260,7 +349,7 @@ AUI().use(
 				else {
 					var siteTemplate =
 						'<li class="{classNames}">' +
-							'{favoriteHtml}' +
+							'{favoriteHTML}' +
 							'<span class="name">{siteName}</span>' +
 						'</li>';
 
@@ -274,8 +363,22 @@ AUI().use(
 									classNames.push('social-office-enabled');
 								}
 
-								if (!result.joinUrl) {
+								if (!result.joinURL) {
 									classNames.push('member');
+								}
+
+								var favoriteHTML;
+
+								if (result.favoriteURL == '') {
+									favoriteHTML = getSiteActionHtml('favorite', 'disabled', Liferay.Language.get('you-must-be-a-member-of-the-site-to-add-to-favorites'), '#');
+								}
+								else {
+									if (result.favoriteURL) {
+										favoriteHTML = getSiteActionHtml('action favorite', '', Liferay.Language.get('add-to-favorites'), result.favoriteURL);
+									}
+									else {
+										favoriteHTML = getSiteActionHtml('action unfavorite', '', Liferay.Language.get('remove-from-favorites'), result.unfavoriteURL);
+									}
 								}
 
 								var name = result.name;
@@ -284,7 +387,7 @@ AUI().use(
 									name = '<a href="' + result.publicLayoutsURL + '">' + name + '</a>';
 
 									if (result.privateLayoutsURL) {
-										name += '<a class="private-pages" href="' + result.privateLayoutsURL + '"> (' + Liferay.Language.get("private-pages") + ')</a>';
+										name += '<a class="private-pages" href="' + result.privateLayoutsURL + '"> (' + Liferay.Language.get('private-pages') + ')</a>';
 									}
 								}
 								else if (!result.publicLayoutsURL && result.privateLayoutsURL) {
@@ -295,7 +398,7 @@ AUI().use(
 									siteTemplate,
 									{
 										classNames: classNames.join(' '),
-										favoriteHtml: (result.favoriteURL ? '<span class="action favorite"><a href="' + result.favoriteURL + '">' + Liferay.Language.get('favorite') + '</a></span>' : '<span class="action unfavorite"><a href="' + result.unfavoriteURL + '">' + Liferay.Language.get('unfavorite') + '</a></span>'),
+										favoriteHTML: favoriteHTML,
 										siteName: name
 									}
 								);
@@ -312,7 +415,9 @@ AUI().use(
 					}
 				}
 
-				instance._listNode.html(buffer.join(''));
+				if (instance._listNode) {
+					instance._listNode.html(buffer.join(''));
+				}
 			}
 		};
 

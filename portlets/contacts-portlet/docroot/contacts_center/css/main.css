@@ -1,8 +1,8 @@
 @import "compass";
+@import "mixins";
 
-$border-color: #EBEBEB;
+$border-color: #C9C9C9;
 $section-header-bg: #CCE6F7;
-$toolbar-bg: #DCE3EA;
 
 #wrapper .contacts-portlet .panel-page-body {
 	padding: 0;
@@ -13,53 +13,50 @@ $toolbar-bg: #DCE3EA;
 		clear: both;
 	}
 
-	.aui-column-content, .aui-column-content-center {
+	.alert {
+		display: block;
+	}
+
+	.btn-hidden {
+		display: none;
+	}
+
+	.column-content, .column-content-center {
 		padding: 0;
 	}
 
-	.toolbar-content {
-		.filter-container {
-			float: left;
-		}
+	#_1_WAR_contactsportlet_fm,
+	.portlet .portlet-content .control-group {
+		margin-bottom: 0;
+	}
+
+	.toolbar-content .filter-container {
+		float: left;
 	}
 
 	.contact-group-filter {
 		font-size: 14px;
 		min-height: 31px;
 
-		.contact-group-filter-select select {
-			width: 223px;
+		.contact-group-filter-select {
+			width: 224px;
 		}
 
 		.contact-group-filter-content {
 			padding: 5px;
 		}
 
-		select {
-			height: 26px;
+		input[type="checkbox"] {
+			margin: 0;
 		}
-	}
 
-	.contacts-search {
-		.contacts-search-content {
-			height: 28px;
-			padding: 5px 0;
-			position: relative;
-
-			.aui-field-label {
-				display: none;
-			}
-
-			.search-input {
-				left: 5px;
-				position: absolute;
-				right: 5px;
-			}
+		.control-group, select {
+			margin-bottom: 0;
 		}
 	}
 
 	.lfr-contact {
-		border-bottom: 1px solid #CCC;
+		border-bottom: 1px solid $border-color;
 
 		.lfr-contact-checkbox {
 			float: left;
@@ -70,6 +67,10 @@ $toolbar-bg: #DCE3EA;
 	.lfr-contact-grid-item, .lfr-detail-info {
 		display: block;
 		overflow: hidden;
+
+		.comments {
+			margin-left: 10px;
+		}
 
 		.lfr-contact-thumb {
 			float: left;
@@ -133,10 +134,14 @@ $toolbar-bg: #DCE3EA;
 			}
 		}
 
-		.portlet-msg-success {
+		.alert.alert-success {
 			border-width: 0 0 1px;
 			margin: 0;
 		}
+	}
+
+	.toggle-user {
+		display: none;
 	}
 
 	.contacts-result, .my-contacts {
@@ -189,14 +194,16 @@ $toolbar-bg: #DCE3EA;
 			padding-left: 10px;
 		}
 
-		.lfr-contact-grid-item:hover, .more-results {
+		.lfr-contact-grid-item:hover, .more-results a {
 			background-color: #E8EFF4;
 		}
 
 		.empty {
-			background: url(@theme_image_path@/messages/alert.png) no-repeat 0 50%;
 			margin: 5px;
-			padding-left: 25px;
+
+			.icon-warning-sign {
+				margin-right: 10px
+			}
 		}
 
 		.last-name-anchor a {
@@ -231,6 +238,10 @@ $toolbar-bg: #DCE3EA;
 	.contacts-profile {
 		.lfr-detail-info {
 			border-bottom-width: 0;
+			width: 100%;
+		}
+
+		.lfr-contact-thumb, .lfr-contact-info {
 			padding: 10px 10px 5px;
 		}
 
@@ -253,21 +264,21 @@ $toolbar-bg: #DCE3EA;
 			font-weight: bold;
 		}
 
-		.aui-column-content {
+		.column-content {
 			padding: 10px;
 		}
 
-		.aui-column:before {
+		.column:before {
 			border-width: 0;
 		}
 
 		.social-relations .lfr-asset-metadata {
 			display: none;
 		}
-	}
 
-	.contacts-result-container .contacts-container {
-		min-height: 600px;
+		.field-group .icon-edit {
+			display: none;
+		}
 	}
 
 	.contacts-result-container-content {
@@ -282,78 +293,51 @@ $toolbar-bg: #DCE3EA;
 			width: 250px;
 
 			.contacts-search {
-				background: $toolbar-bg;
-				border-bottom: 1px solid #C9C9C9;
-				padding: 5px;
+				border-bottom: 1px solid $border-color;
+				height: 31px;
+				padding: 4px 5px;
 
-				.aui-field-input {
+				.search-input {
+					padding-right: 25px;
 					width: 208px;
+				}
+
+				.icon-search {
+					color: $border-color;
+					position: absolute;
+					right: 11px;
+					top: 11px;
 				}
 			}
 		}
 
 		.contacts-container {
 			float: none;
+			min-height: 600px;
 			width: 100%;
 
+			.contacts-container-content {
+				border-left: 1px solid $border-color;
+			}
+
 			.lfr-button-column {
-				background-color: #E9E8E8;
+				border-bottom: 1px solid $border-color;
 				overflow: hidden;
-				padding: 4px 6px;
+				padding: 4px 6px 5px;
 
 				.edit-toolbar {
 					margin: 0;
 					overflow: visible;
 				}
-
-				.aui-icon-remove-coworker {
-					background-image: url(@theme_image_path@/social/remove_coworker.png);
-				}
-
-				.aui-icon-add-coworker {
-					background-image: url(@theme_image_path@/social/add_coworker.png);
-				}
-
-				.aui-icon-back {
-					background-image: url(@theme_image_path@/common/back.png);
-				}
-
-				.aui-icon-block {
-					background-image: url(@theme_image_path@/social/block.png);
-				}
-
-				.aui-icon-delete {
-					background-image: url(@theme_image_path@/common/delete.png);
-				}
-
-				.aui-icon-edit {
-					background-image: url(@theme_image_path@/common/edit.png);
-				}
-
-				.aui-icon-export {
-					background-image: url(@theme_image_path@/common/export.png);
-				}
-
-				.aui-icon-follow {
-					background-image: url(@theme_image_path@/social/follow.png);
-				}
-
-				.aui-icon-send-message {
-					background-image: url(@theme_image_path@/mail/compose.png);
-				}
-
-				.aui-icon-unblock {
-					background-image: url(@theme_image_path@/social/unblock.png);
-				}
-
-				.aui-icon-unfollow {
-					background-image: url(@theme_image_path@/social/unfollow.png);
-				}
-
-				.aui-icon-user {
-					background-image: url(@theme_image_path@/common/user_icon.png);
-				}
 			}
+
+			.view-more-button {
+				display: none;
+			}
+		}
+
+		.contacts-action-content .action {
+			padding: 5px 4px;
 		}
 
 		.contacts-profile .lfr-contact-info {
@@ -366,6 +350,7 @@ $toolbar-bg: #DCE3EA;
 
 		a {
 			display: inline-block;
+			margin: 4px 0;
 			padding: 3px 4px;
 
 			&:hover {
@@ -374,12 +359,11 @@ $toolbar-bg: #DCE3EA;
 		}
 	}
 
-	.contacts-action-content span {
-		display: inline-block;
-		padding: 3px 4px 0px;
+	.contacts-action-content {
+		margin-left: 10px;
 
-		&:first-child {
-			padding-left: 10px;
+		.action {
+			display: inline-block;
 		}
 	}
 
@@ -390,7 +374,9 @@ $toolbar-bg: #DCE3EA;
 	.section {
 		border-bottom: 1px solid #E7E7E7;
 		clear: both;
+		float: none;
 		padding: 10px;
+		width: auto;
 		zoom: 1;
 
 		&:after {
@@ -403,6 +389,7 @@ $toolbar-bg: #DCE3EA;
 			color: #B4BEC8;
 			float: left;
 			font-size: 1em;
+			line-height: 20px;
 			margin: 0;
 			text-align: right;
 			width: 100px;
@@ -414,23 +401,23 @@ $toolbar-bg: #DCE3EA;
 		}
 	}
 
-	.toolbar {
-		background-color: $toolbar-bg;
+	.layout.toolbar {
+		border-bottom: 1px solid $border-color;
 		min-height: 31px;
 
 		.add-contact {
 			float: right;
 			margin: 5px;
-
-			.aui-icon-add {
-				background-image: url(@theme_image_path@/common/add.png);
-			}
 		}
 	}
 
-	.portlet-content {
+	.portlet .portlet-content {
+		padding: 0;
+
 		.portlet-body {
-			border: 1px solid #C9C9C9;
+			form {
+				margin: 0;
+			}
 
 			.lfr-app-column-view {
 				border-width: 0;
@@ -501,18 +488,6 @@ $toolbar-bg: #DCE3EA;
 		.lfr-asset-coworker, .lfr-asset-follower, .lfr-asset-following {
 			padding: 0 20px
 		}
-
-		.lfr-asset-coworker {
-			background: url(@theme_image_path@/social/coworker.png) no-repeat;
-		}
-
-		.lfr-asset-follower {
-			background: url(@theme_image_path@/social/follower.png) no-repeat;
-		}
-
-		.lfr-asset-following {
-			background: url(@theme_image_path@/social/following.png) no-repeat;
-		}
 	}
 
 	.members-container {
@@ -570,9 +545,27 @@ $toolbar-bg: #DCE3EA;
 		margin-top: 1em;
 	}
 
-	.my-profile .field-group:hover {
-		background: #E9E8E8 url(@theme_image_path@/common/edit.png) no-repeat right 5px;
-		cursor: pointer;
+	.contacts-profile {
+		overflow: hidden;
+	}
+
+	.my-profile .field-group {
+		position: relative;
+
+		.icon-edit {
+			position: absolute;
+			right: 5px;
+			top: 5px;
+		}
+
+		&:hover {
+			background: #E9E8E8;
+			cursor: pointer;
+
+			.icon-edit {
+				display: block;
+			}
+		}
 	}
 
 	.profile-actions {
@@ -581,7 +574,7 @@ $toolbar-bg: #DCE3EA;
 		margin: 20px 65px;
 		padding: 4px 4px 0;
 
-		.portlet-msg-info {
+		.alert.alert-info {
 			background-color: transparent;
 			border-width: 0;
 			margin: 0;
@@ -616,10 +609,8 @@ $toolbar-bg: #DCE3EA;
 			}
 
 			.action-field {
-				background: url(@theme_image_path@/common/add.png) no-repeat 2px 50%;
 				float: left;
 				margin: 2px;
-				padding-left: 21px;
 			}
 
 			.lfr-token {
@@ -645,7 +636,7 @@ $toolbar-bg: #DCE3EA;
 		width: 90%;
 	}
 
-	.aui-field-text {
+	.field-text {
 		display: block;
 		margin-bottom: 10px;
 	}
@@ -656,16 +647,16 @@ $toolbar-bg: #DCE3EA;
 		padding: 5px 1px;
 	}
 
-	.addresses .aui-field {
+	.addresses .field {
 		float: none;
 		width: auto;
 	}
 
-	.aui-field.primary-ctrl {
+	.field.primary-ctrl {
 		margin: 1.8em 0;
 	}
 
-	.aui-field-select .aui-field-content {
+	.field-select .field-content {
 		margin: 10px 0;
 	}
 
@@ -682,7 +673,7 @@ $toolbar-bg: #DCE3EA;
 		clear: both;
 		overflow: hidden;
 
-		.aui-field {
+		.field {
 			float: left;
 		}
 
@@ -701,10 +692,21 @@ $toolbar-bg: #DCE3EA;
 	}
 }
 
+.portlet-configuration .contacts-portlet {
+	.lfr-user-profile-preferences, .toggler-content {
+		overflow: hidden;
+		margin: 0;
+	}
+
+	.lfr-user-profile-preferences .column {
+		margin-right: 1em;
+	}
+}
+
 /* ---------- Extras ---------- */
 
 .contacts-portlet {
-	.contacts-container .portlet-msg-success {
+	.contacts-container .alert.alert-success {
 		@include border-radius(0);
 	}
 
@@ -720,5 +722,147 @@ $toolbar-bg: #DCE3EA;
 
 	.message-body {
 		width: 90%;
+	}
+}
+
+/* ---------- Responsive ---------- */
+
+@include respond-to(phone) {
+	.contacts-portlet {
+		.layout .toolbar-content {
+			.filter-container {
+				width: 58%;
+
+				.contact-group-filter-content {
+					padding: 7px 7px 8px;
+
+					> .control-group {
+						margin-left: 4px;
+						width: 85%;
+					}
+				}
+
+				.contact-group-filter-select {
+					height: 31px;
+					width: 100%;
+				}
+			}
+
+			.add-contact {
+				font-size: 14px;
+				margin: 4px 2%;
+				max-width: 38%;
+				padding: 8px 10px;
+			}
+		}
+
+		.contacts-result-container-content {
+			overflow: hidden;
+			padding-left: 100%;
+
+			.contacts-list, .contacts-result, .contacts-result-content {
+				width: 100%;
+			}
+
+			.contacts-list .contacts-search .search-input {
+				margin: 0;
+				padding-left: 0;
+				padding-right: 0;
+				text-indent: 5px;
+				width: 100%;
+			}
+		}
+
+		.form {
+			left: 0;
+			position: relative;
+
+			@include transition-duration(.3s);
+			@include transition-property(left);
+
+			z-index: 1;
+		}
+
+		.contacts-list {
+			background: #FFF;
+			margin-left: 0;
+
+			@include transition-duration(.3s);
+			@include transition-property(margin-left);
+
+			z-index: 1;
+		}
+
+		&.show-user {
+			.form {
+				left: -100%;
+				position: absolute;
+				width: 100%;
+				z-index: 1;
+			}
+
+			.contacts-result-container-content {
+				overflow: visible;
+				padding-left: 0;
+
+				.contacts-list {
+					margin-left: -100%;
+					top: 47px;
+				}
+			}
+
+			.toggle-user {
+				background-color: #EEE;
+				background-color: rgba(0,0,0, 0.4);
+
+				@include border-radius(0 8px 8px 0);
+
+				cursor: pointer;
+				display: inline-block;
+				left: 100%;
+				position: absolute;
+				top: -43px;
+
+				i {
+					color: #FFF;
+					display: block;
+					font-size: 2em;
+					padding: 16px 11px;
+				}
+			}
+
+			.contacts-container {
+				.lfr-button-column {
+					padding-bottom: 0;
+					padding-left: 3.2em;
+				}
+
+				.view-more-button {
+					display: block;
+					margin-right: 0;
+				}
+			}
+
+			.edit-toolbar {
+				float: left;
+				width: auto;
+
+				&.hide-more-buttons .more {
+					display: none;
+				}
+			}
+		}
+
+		.contacts-container .btn {
+			float: left;
+			font-size: 14px;
+			margin: 0 5px 4px 0;
+			padding: 10px;
+			width: auto;
+
+			i {
+				display: block;
+			}
+		}
 	}
 }

@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -31,7 +31,7 @@
 		renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.TRUE);
 		%>
 
-		<div class="portlet-msg-info">
+		<div class="alert alert-info">
 			<liferay-ui:message key="please-configure-this-portlet-to-make-it-visible-to-all-users" />
 		</div>
 	</c:otherwise>

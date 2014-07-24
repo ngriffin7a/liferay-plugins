@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -17,38 +17,27 @@
  */
 --%>
 
-<aui:nav-bar>
-	<aui:nav cssClass="controls">
-		<aui:nav-item>
-			<aui:input cssClass="check-all" inline="<%= true %>" label="" name="checkAllMessages" title='<%= LanguageUtil.get(pageContext, "check-all-messages") %>' type="checkbox" />
-		</aui:nav-item>
+<aui:button-row cssClass="controls">
+	<c:if test="<%= UserThreadLocalServiceUtil.getUserUserThreadCount(themeDisplay.getUserId(), false) > 0 %>">
+		<aui:input cssClass="check-all" inline="<%= true %>" label="" name="checkAllMessages" title='<%= LanguageUtil.get(request, "check-all-messages") %>' type="checkbox" />
+	</c:if>
 
-		<aui:nav-item id="markMessagesAsUnread" label="mark-as-unread" />
+	<aui:button cssClass="hide" name="markMessagesAsUnread" value="mark-as-unread" />
 
-		<aui:nav-item id="markMessagesAsRead" label="mark-as-read" />
+	<aui:button cssClass="hide" name="markMessagesAsRead" value="mark-as-read" />
 
-		<aui:nav-item id="deleteMessages" label="delete" />
-	</aui:nav>
+	<aui:button cssClass="hide" name="deleteMessages" value="delete" />
 
-	<aui:nav cssClass="pull-right">
-		<aui:nav-item id="newMessage" label="new-message" />
-	</aui:nav>
-</aui:nav-bar>
+	<aui:button cssClass="pull-right" name="newMessage" primary="<%= true %>" value="new-message" />
+</aui:button-row>
 
 <liferay-ui:search-container
 	emptyResultsMessage="no-messages-found"
+	total="<%= UserThreadLocalServiceUtil.getUserUserThreadCount(themeDisplay.getUserId(), false) %>"
 >
-	<liferay-ui:search-container-results>
-
-		<%
-		results = UserThreadLocalServiceUtil.getUserUserThreads(themeDisplay.getUserId(), false, searchContainer.getStart(), searchContainer.getEnd());
-		total = UserThreadLocalServiceUtil.getUserUserThreadCount(themeDisplay.getUserId(), false);
-
-		pageContext.setAttribute("results", results);
-		pageContext.setAttribute("total", total);
-		%>
-
-	</liferay-ui:search-container-results>
+	<liferay-ui:search-container-results
+		results="<%= UserThreadLocalServiceUtil.getUserUserThreads(themeDisplay.getUserId(), false, searchContainer.getStart(), searchContainer.getEnd()) %>"
+	/>
 
 	<liferay-ui:search-container-row
 		className="com.liferay.privatemessaging.model.UserThread"
@@ -70,11 +59,11 @@
 			<%
 			long userId = PrivateMessagingUtil.getThreadRepresentativeUserId(user.getUserId(), userThread.getMbThreadId());
 
-			MBMessage mbMessage = PrivateMessagingUtil.getLastThreadMessage(user.getUserId(), userThread.getMbThreadId());
+			MBMessage mbMessage = UserThreadServiceUtil.getLastThreadMessage(userThread.getMbThreadId());
 			%>
 
 			<liferay-ui:user-display
-				displayStyle="<%= 2 %>"
+				displayStyle="2"
 				userId="<%= userId %>"
 			/>
 
@@ -97,20 +86,18 @@
 						User curUser = users.get(i);
 					%>
 
-						<c:choose>
-							<c:when test="<%= curUser.isActive() %>">
-								<span class="author-sender"><%= HtmlUtil.escape(curUser.getFullName()) %></span>
-							</c:when>
-							<c:otherwise>
-								<liferay-ui:icon-help message="deleted-user">
-									<span class="author-sender line-through"><%= HtmlUtil.escape(curUser.getFullName()) %></span>
-								</liferay-ui:icon-help>
-							</c:otherwise>
-						</c:choose>
+						<span class="author-sender">
+							<span class="<%= !curUser.isActive() ? "line-through" : StringPool.BLANK %>"><%= HtmlUtil.escape(curUser.getFullName()) %></span>
 
-						<c:if test="<%= i != users.size() - 1 %>">
-							,
-						</c:if>
+							<c:if test="<%= !curUser.isActive() %>">
+								<liferay-ui:icon
+									image="../aui/question-sign"
+									message="deleted-user"
+								/>
+							</c:if>
+
+							<%= ((i + 1) < users.size()) ? StringPool.COMMA : StringPool.BLANK %>
+						</span>
 
 					<%
 					}
@@ -126,9 +113,7 @@
 
 					<div class="body">
 						<c:if test="<%= user.getUserId() == mbMessage.getUserId() %>">
-							<liferay-ui:icon
-								src="/html/themes/classic/images/mail/replied.png"
-							/>
+							<i class="icon-reply"></i>
 						</c:if>
 
 						<%= HtmlUtil.escape(StringUtil.shorten(mbMessage.getBody(), 100)) %>

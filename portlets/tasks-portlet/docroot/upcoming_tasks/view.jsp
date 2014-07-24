@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -23,20 +23,19 @@
 	<ul class="tasks-entries">
 
 		<%
-		List<TasksEntry> taskEntries = TasksEntryLocalServiceUtil.getTasksEntries(0, 0, user.getUserId(), 0, TasksEntryConstants.STATUS_OPEN, new long[0], new long[0], 0, 10);
+		List<TasksEntry> taskEntries = TasksEntryLocalServiceUtil.getTasksEntries(0, user.getUserId(), 0, 0, TasksEntryConstants.STATUS_OPEN, new long[0], new long[0], 0, 10);
 
 		for (TasksEntry tasksEntry : taskEntries) {
 			String taskHREF = null;
 
 			if (TasksEntryPermission.contains(permissionChecker, tasksEntry, ActionKeys.UPDATE)) {
-				PortletURL portletURL = renderResponse.createRenderURL();
+				LiferayPortletURL liferayPortletURL = liferayPortletResponse.createLiferayPortletURL(PortletKeys.TASKS, PortletRequest.RENDER_PHASE);
 
-				portletURL.setWindowState(LiferayWindowState.EXCLUSIVE);
+				liferayPortletURL.setParameter("mvcPath", "/tasks/view_task.jsp");
+				liferayPortletURL.setParameter("tasksEntryId", String.valueOf(tasksEntry.getTasksEntryId()));
+				liferayPortletURL.setWindowState(LiferayWindowState.POP_UP);
 
-				portletURL.setParameter("mvcPath", "/tasks/view_task.jsp");
-				portletURL.setParameter("tasksEntryId", String.valueOf(tasksEntry.getTasksEntryId()));
-
-				taskHREF = portletURL.toString();
+				taskHREF = liferayPortletURL.toString();
 			}
 
 			String cssClass = "tasks-title";
@@ -55,10 +54,18 @@
 			<li class="<%= cssClass %>">
 				<c:choose>
 					<c:when test="<%= Validator.isNotNull(taskHREF) %>">
-						<a href="javascript:;" onClick="Liferay.Tasks.openTask('<%= taskHREF %>');"><%= HtmlUtil.escape(tasksEntry.getTitle()) %></a>
+						<a href="javascript:;" onClick="Liferay.Tasks.openTask('<%= taskHREF %>');">
+							<i class="icon-circle"></i>
+
+							<%= HtmlUtil.escape(tasksEntry.getTitle()) %>
+						</a>
 					</c:when>
 					<c:otherwise>
-						<span><%= HtmlUtil.escape(tasksEntry.getTitle()) %></span>
+						<span>
+							<i class="icon-circle"></i>
+
+							<%= HtmlUtil.escape(tasksEntry.getTitle()) %>
+						</span>
 					</c:otherwise>
 				</c:choose>
 			</li>

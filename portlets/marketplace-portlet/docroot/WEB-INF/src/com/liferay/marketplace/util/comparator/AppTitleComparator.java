@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -16,11 +16,12 @@ package com.liferay.marketplace.util.comparator;
 
 import com.liferay.marketplace.model.App;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.StringUtil;
 
 /**
  * @author Ryan Park
  */
-public class AppTitleComparator extends OrderByComparator {
+public class AppTitleComparator extends OrderByComparator<App> {
 
 	public static final String ORDER_BY_ASC = "title ASC";
 
@@ -37,12 +38,9 @@ public class AppTitleComparator extends OrderByComparator {
 	}
 
 	@Override
-	public int compare(Object obj1, Object obj2) {
-		App app1 = (App)obj1;
-		App app2 = (App)obj2;
-
-		int value = app1.getTitle().toLowerCase().compareTo(
-			app2.getTitle().toLowerCase());
+	public int compare(App app1, App app2) {
+		int value = StringUtil.toLowerCase(app1.getTitle()).compareTo(
+			StringUtil.toLowerCase(app2.getTitle()));
 
 		if (_asc) {
 			return value;

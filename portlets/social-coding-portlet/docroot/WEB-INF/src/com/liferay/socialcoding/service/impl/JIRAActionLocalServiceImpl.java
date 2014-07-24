@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,7 +15,6 @@
 package com.liferay.socialcoding.service.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.socialcoding.model.JIRAAction;
 import com.liferay.socialcoding.service.base.JIRAActionLocalServiceBaseImpl;
 
@@ -25,9 +24,7 @@ import com.liferay.socialcoding.service.base.JIRAActionLocalServiceBaseImpl;
 public class JIRAActionLocalServiceImpl extends JIRAActionLocalServiceBaseImpl {
 
 	@Override
-	public JIRAAction getJIRAAction(long jiraActionId)
-		throws PortalException, SystemException {
-
+	public JIRAAction getJIRAAction(long jiraActionId) throws PortalException {
 		return jiraActionPersistence.findByPrimaryKey(jiraActionId);
 	}
 

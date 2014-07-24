@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -140,6 +140,9 @@ public class WSRPProducerModelImpl extends BaseModelImpl<WSRPProducer>
 		attributes.put("name", getName());
 		attributes.put("version", getVersion());
 		attributes.put("portletIds", getPortletIds());
+
+		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
+		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -435,6 +438,16 @@ public class WSRPProducerModelImpl extends BaseModelImpl<WSRPProducer>
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	@Override
+	public boolean isEntityCacheEnabled() {
+		return ENTITY_CACHE_ENABLED;
+	}
+
+	@Override
+	public boolean isFinderCacheEnabled() {
+		return FINDER_CACHE_ENABLED;
 	}
 
 	@Override

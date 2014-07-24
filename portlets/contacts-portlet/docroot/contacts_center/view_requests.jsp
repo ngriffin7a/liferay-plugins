@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -23,10 +23,10 @@
 
 <liferay-ui:search-container
 	emptyResultsMessage="you-have-no-pending-requests"
+	total="<%= SocialRequestLocalServiceUtil.getReceiverUserRequestsCount(themeDisplay.getUserId(), SocialRequestConstants.STATUS_PENDING) %>"
 >
 	<liferay-ui:search-container-results
 		results="<%= SocialRequestLocalServiceUtil.getReceiverUserRequests(themeDisplay.getUserId(), SocialRequestConstants.STATUS_PENDING, searchContainer.getStart(), searchContainer.getEnd()) %>"
-		total="<%= SocialRequestLocalServiceUtil.getReceiverUserRequestsCount(themeDisplay.getUserId(), SocialRequestConstants.STATUS_PENDING) %>"
 	/>
 
 	<liferay-ui:search-container-row
@@ -40,27 +40,26 @@
 		User user2 = UserLocalServiceUtil.getUser(socialRequest.getUserId());
 		%>
 
-		<liferay-portlet:renderURL varImpl="rowURL">
-			<portlet:param name="mvcPath" value="/contacts_center/view_user.jsp" />
-			<portlet:param name="backURL" value="<%= currentURL %>" />
-			<portlet:param name="userId" value="<%= String.valueOf(user2.getUserId()) %>" />
-		</liferay-portlet:renderURL>
-
 		<liferay-ui:search-container-column-text
 			name="requests"
 		>
+			<liferay-portlet:renderURL varImpl="rowURL">
+				<portlet:param name="mvcPath" value="/contacts_center/view_user.jsp" />
+				<portlet:param name="backURL" value="<%= currentURL %>" />
+				<portlet:param name="userId" value="<%= String.valueOf(user2.getUserId()) %>" />
+			</liferay-portlet:renderURL>
 
 			<%
 			String creatorUserName = "<a href=\"" + rowURL.toString() +"\">" + user2.getFullName() + "</a>";
 			%>
 
 			<div class="lfr-user-portrait">
-				<a href="<%= rowURL %>"><img alt="<liferay-ui:message key="avatar" />" class="avatar" src="<%= user2.getPortraitURL(themeDisplay) %>" /></a>
+				<a href="<%= rowURL %>"><img alt="<liferay-ui:message escapeAttribute="<%= true %>" key="avatar" />" class="avatar" src="<%= user2.getPortraitURL(themeDisplay) %>" /></a>
 			</div>
 
 			<div class="lfr-user-data">
 				<div class="lfr-user-data-title">
-					<liferay-ui:message arguments="<%= creatorUserName %>" key="request-social-networking-summary-add-connection" />
+					<liferay-ui:message arguments="<%= creatorUserName %>" key="request-social-networking-summary-add-connection" translateArguments="<%= false %>" />
 				</div>
 			</div>
 

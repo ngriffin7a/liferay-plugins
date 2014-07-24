@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -85,7 +85,13 @@
 <h3>Servlet Request</h3>
 
 <p>
-	<a href="<%= request.getContextPath() %>/servlet_request/remote_user.jsp">Remote User</a>
+	<a href="<%= PortalUtil.getPathContext(request) %>/servlet_request/remote_user.jsp">Remote User</a><br />
+</p>
+
+<h3>Servlet Session</h3>
+
+<p>
+	<a href="<%= PortalUtil.getPathContext(request) %>/servlet_session/access.jsp">Access</a>
 </p>
 
 <h3>Upload</h3>

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,13 +15,16 @@
 package com.liferay.privatemessaging.model;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.DateUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.BaseModel;
+import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.BaseModelImpl;
-import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 
 import com.liferay.privatemessaging.service.ClpSerializer;
 import com.liferay.privatemessaging.service.UserThreadLocalServiceUtil;
@@ -87,6 +90,9 @@ public class UserThreadClp extends BaseModelImpl<UserThread>
 		attributes.put("read", getRead());
 		attributes.put("deleted", getDeleted());
 
+		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
+		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
+
 		return attributes;
 	}
 
@@ -151,6 +157,9 @@ public class UserThreadClp extends BaseModelImpl<UserThread>
 		if (deleted != null) {
 			setDeleted(deleted);
 		}
+
+		_entityCacheEnabled = GetterUtil.getBoolean("entityCacheEnabled");
+		_finderCacheEnabled = GetterUtil.getBoolean("finderCacheEnabled");
 	}
 
 	@Override
@@ -223,13 +232,19 @@ public class UserThreadClp extends BaseModelImpl<UserThread>
 	}
 
 	@Override
-	public String getUserUuid() throws SystemException {
-		return PortalUtil.getUserValue(getUserId(), "uuid", _userUuid);
+	public String getUserUuid() {
+		try {
+			User user = UserLocalServiceUtil.getUserById(getUserId());
+
+			return user.getUuid();
+		}
+		catch (PortalException pe) {
+			return StringPool.BLANK;
+		}
 	}
 
 	@Override
 	public void setUserUuid(String userUuid) {
-		_userUuid = userUuid;
 	}
 
 	@Override
@@ -453,7 +468,7 @@ public class UserThreadClp extends BaseModelImpl<UserThread>
 	}
 
 	@Override
-	public void persist() throws SystemException {
+	public void persist() {
 		if (this.isNew()) {
 			UserThreadLocalServiceUtil.addUserThread(this);
 		}
@@ -524,9 +539,23 @@ public class UserThreadClp extends BaseModelImpl<UserThread>
 		}
 	}
 
+	public Class<?> getClpSerializerClass() {
+		return _clpSerializerClass;
+	}
+
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	@Override
+	public boolean isEntityCacheEnabled() {
+		return _entityCacheEnabled;
+	}
+
+	@Override
+	public boolean isFinderCacheEnabled() {
+		return _finderCacheEnabled;
 	}
 
 	@Override
@@ -615,7 +644,6 @@ public class UserThreadClp extends BaseModelImpl<UserThread>
 	private long _userThreadId;
 	private long _companyId;
 	private long _userId;
-	private String _userUuid;
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
@@ -624,4 +652,7 @@ public class UserThreadClp extends BaseModelImpl<UserThread>
 	private boolean _read;
 	private boolean _deleted;
 	private BaseModel<?> _userThreadRemoteModel;
+	private Class<?> _clpSerializerClass = com.liferay.privatemessaging.service.ClpSerializer.class;
+	private boolean _entityCacheEnabled;
+	private boolean _finderCacheEnabled;
 }

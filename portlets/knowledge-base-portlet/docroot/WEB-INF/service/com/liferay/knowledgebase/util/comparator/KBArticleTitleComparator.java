@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -16,12 +16,13 @@ package com.liferay.knowledgebase.util.comparator;
 
 import com.liferay.knowledgebase.model.KBArticle;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.StringUtil;
 
 /**
  * @author Peter Shin
  * @author Brian Wing Shun Chan
  */
-public class KBArticleTitleComparator extends OrderByComparator {
+public class KBArticleTitleComparator extends OrderByComparator<KBArticle> {
 
 	public static final String ORDER_BY_ASC = "KBArticle.title ASC";
 
@@ -38,12 +39,9 @@ public class KBArticleTitleComparator extends OrderByComparator {
 	}
 
 	@Override
-	public int compare(Object obj1, Object obj2) {
-		KBArticle kbArticle1 = (KBArticle)obj1;
-		KBArticle kbArticle2 = (KBArticle)obj2;
-
-		int value = kbArticle1.getTitle().toLowerCase().compareTo(
-			kbArticle2.getTitle().toLowerCase());
+	public int compare(KBArticle kbArticle1, KBArticle kbArticle2) {
+		int value = StringUtil.toLowerCase(kbArticle1.getTitle()).compareTo(
+			StringUtil.toLowerCase(kbArticle2.getTitle()));
 
 		if (_ascending) {
 			return value;

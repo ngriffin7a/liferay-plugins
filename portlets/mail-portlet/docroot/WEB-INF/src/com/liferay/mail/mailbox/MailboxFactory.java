@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -16,7 +16,6 @@ package com.liferay.mail.mailbox;
 
 import com.liferay.mail.model.Account;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.User;
 
 /**
@@ -28,6 +27,6 @@ public interface MailboxFactory {
 
 	public Mailbox getMailbox(User user, String protocol);
 
-	public void initialize() throws PortalException, SystemException;
+	public void initialize() throws PortalException;
 
 }

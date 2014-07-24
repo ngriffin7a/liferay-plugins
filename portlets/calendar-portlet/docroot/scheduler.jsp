@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -17,7 +17,7 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String activeView = ParamUtil.getString(request, "activeView", defaultView);
+String activeView = ParamUtil.getString(request, "activeView", sessionClicksDefaultView);
 long date = ParamUtil.getLong(request, "date", System.currentTimeMillis());
 String editCalendarBookingURL = ParamUtil.getString(request, "editCalendarBookingURL");
 String filterCalendarBookings = ParamUtil.getString(request, "filterCalendarBookings", null);
@@ -28,7 +28,7 @@ boolean hideWeekView = ParamUtil.getBoolean(request, "hideWeekView");
 String permissionsCalendarBookingURL = ParamUtil.getString(request, "permissionsCalendarBookingURL");
 boolean preventPersistence = ParamUtil.getBoolean(request, "preventPersistence");
 boolean readOnly = ParamUtil.getBoolean(request, "readOnly");
-boolean showNewEventBtn = ParamUtil.getBoolean(request, "showNewEventBtn");
+boolean showAddEventBtn = ParamUtil.getBoolean(request, "showAddEventBtn");
 String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookingURL");
 %>
 
@@ -38,7 +38,7 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 
 <aui:script use="aui-toggler,liferay-calendar-list,liferay-scheduler,liferay-store,json">
 	Liferay.CalendarUtil.PORTLET_NAMESPACE = '<portlet:namespace />';
-	Liferay.CalendarUtil.USER_TIMEZONE_OFFSET = <%= JCalendarUtil.getTimeZoneOffset(userTimeZone) %>;
+	Liferay.CalendarUtil.USER_TIME_ZONE = '<%= HtmlUtil.escapeJS(userTimeZone.getID()) %>';
 
 	<c:if test="<%= !hideDayView %>">
 		window.<portlet:namespace />dayView = new A.SchedulerDayView(
@@ -58,7 +58,10 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 			{
 				height: 700,
 				isoTime: <%= isoTimeFormat %>,
-				readOnly: <%= readOnly %>
+				readOnly: <%= readOnly %>,
+				strings: {
+					allDay: '<liferay-ui:message key="all-day" />'
+				}
 			}
 		);
 	</c:if>
@@ -67,6 +70,7 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 		window.<portlet:namespace />monthView = new A.SchedulerMonthView(
 			{
 				height: 700,
+				isoTime: <%= isoTimeFormat %>,
 				readOnly: <%= readOnly %>
 			}
 		);
@@ -76,6 +80,7 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 		window.<portlet:namespace />agendaView = new A.SchedulerAgendaView(
 			{
 				height: 700,
+				isoTime: <%= isoTimeFormat %>,
 				readOnly: <%= readOnly %>,
 				strings: {
 					noEvents: '<liferay-ui:message key="no-events" />'
@@ -85,17 +90,19 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 	</c:if>
 
 	<c:if test="<%= !readOnly && (userDefaultCalendar != null) %>">
+		var width = Math.min(Liferay.Util.getWindowWidth(), 550);
+
 		window.<portlet:namespace />eventRecorder = new Liferay.SchedulerEventRecorder(
 			{
-				bodyTemplate: new A.Template(A.one('#<portlet:namespace />eventRecorderBodyTpl').text()),
+				bodyTemplate: new A.Template(A.one('#<portlet:namespace />eventRecorderBodyTpl').html()),
 				calendarId: <%= userDefaultCalendar.getCalendarId() %>,
 				color: '<%= ColorUtil.toHexString(userDefaultCalendar.getColor()) %>',
 				duration: <%= defaultDuration %>,
 				editCalendarBookingURL: '<%= HtmlUtil.escapeJS(editCalendarBookingURL) %>',
-				headerTemplate: new A.Template(A.one('#<portlet:namespace />eventRecorderHeaderTpl').text()),
+				headerTemplate: new A.Template(A.one('#<portlet:namespace />eventRecorderHeaderTpl').html()),
 				permissionsCalendarBookingURL: '<%= HtmlUtil.escapeJS(permissionsCalendarBookingURL) %>',
 				popover: {
-					width: 550
+					width: width
 				},
 				portletNamespace: '<portlet:namespace />',
 				viewCalendarBookingURL: '<%= HtmlUtil.escapeJS(viewCalendarBookingURL) %>'
@@ -103,19 +110,53 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 		);
 	</c:if>
 
+	var views = [];
+
+	<c:if test="<%= !hideDayView %>">
+		views.push(window.<portlet:namespace />dayView);
+	</c:if>
+
+	<c:if test="<%= !hideWeekView %>">
+		views.push(window.<portlet:namespace />weekView);
+	</c:if>
+
+	<c:if test="<%= !hideMonthView %>">
+		views.push(window.<portlet:namespace />monthView);
+	</c:if>
+
+	<c:if test="<%= !hideAgendaView %>">
+		views.push(window.<portlet:namespace />agendaView);
+	</c:if>
+
 	window.<portlet:namespace />scheduler = new Liferay.Scheduler(
 		{
-			activeView: window.<portlet:namespace /><%= activeView %>View,
+			activeView: window['<portlet:namespace /><%= HtmlUtil.escapeJS(activeView) %>View'],
 			boundingBox: '#<portlet:namespace />scheduler',
-			date: new Date(<%= date %>),
+
+			<%
+			java.util.Calendar dateJCalendar = CalendarFactoryUtil.getCalendar(userTimeZone);
+
+			dateJCalendar.setTimeInMillis(date);
+
+			int dateYear = dateJCalendar.get(java.util.Calendar.YEAR);
+			int dateMonth = dateJCalendar.get(java.util.Calendar.MONTH);
+			int dateDay = dateJCalendar.get(java.util.Calendar.DAY_OF_MONTH);
+			%>
+
+			date: new Date(<%= dateYear %>, <%= dateMonth %>, <%= dateDay %>),
+
+			<c:if test="<%= !themeDisplay.isSignedIn() %>">
+				disabled: true,
+			</c:if>
+
 			eventRecorder: window.<portlet:namespace />eventRecorder,
-			filterCalendarBookings: <%= filterCalendarBookings %>,
+			filterCalendarBookings: window['<%= HtmlUtil.escapeJS(filterCalendarBookings) %>'],
 			firstDayOfWeek: <%= weekStartsOn %>,
 			items: A.Object.values(Liferay.CalendarUtil.availableCalendars),
 			portletNamespace: '<portlet:namespace />',
 			preventPersistence: <%= preventPersistence %>,
 			render: true,
-			showNewEventBtn: <%= showNewEventBtn %>,
+			showAddEventBtn: <%= showAddEventBtn %>,
 			strings: {
 				agenda: '<liferay-ui:message key="agenda" />',
 				day: '<liferay-ui:message key="day" />',
@@ -124,23 +165,17 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 				week: '<liferay-ui:message key="week" />',
 				year: '<liferay-ui:message key="year" />'
 			},
-			views: [
-				<c:if test="<%= !hideDayView %>">
-					window.<portlet:namespace />dayView,
-				</c:if>
 
-				<c:if test="<%= !hideWeekView %>">
-					window.<portlet:namespace />weekView,
-				</c:if>
+			<%
+			java.util.Calendar todayJCalendar = CalendarFactoryUtil.getCalendar(userTimeZone);
 
-				<c:if test="<%= !hideMonthView %>">
-					window.<portlet:namespace />monthView,
-				</c:if>
+			int todayYear = todayJCalendar.get(java.util.Calendar.YEAR);
+			int todayMonth = todayJCalendar.get(java.util.Calendar.MONTH);
+			int todayDay = todayJCalendar.get(java.util.Calendar.DAY_OF_MONTH);
+			%>
 
-				<c:if test="<%= !hideAgendaView %>">
-					window.<portlet:namespace />agendaView
-				</c:if>
-			]
+			todayDate: new Date(<%= todayYear %>, <%= todayMonth %>, <%= todayDay %>),
+			views: views
 		}
 	);
 </aui:script>

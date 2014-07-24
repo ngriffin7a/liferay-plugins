@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -35,7 +35,7 @@
 <h3>language-properties</h3>
 
 <p>
-	javax.portlet.title.33=<%= _assertEquals("Blogger", LanguageUtil.get(pageContext, "javax.portlet.title.33")) %>
+	javax.portlet.title.33=<%= _assertEquals("Blogger", LanguageUtil.get(request, "javax.portlet.title.33")) %>
 </p>
 
 <h3>custom-jsp-dir</h3>

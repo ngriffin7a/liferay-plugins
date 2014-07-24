@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -23,12 +23,10 @@
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <%@ page import="com.liferay.portal.kernel.bean.BeanParamUtil" %><%@
-page import="com.liferay.portal.kernel.dao.search.ResultRow" %><%@
 page import="com.liferay.portal.kernel.dao.search.SearchContainer" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
 page import="com.liferay.portal.kernel.servlet.ServletContextPool" %><%@
 page import="com.liferay.portal.kernel.util.GetterUtil" %><%@
-page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.portal.kernel.util.KeyValuePair" %><%@
 page import="com.liferay.portal.kernel.util.KeyValuePairComparator" %><%@
 page import="com.liferay.portal.kernel.util.ListUtil" %><%@
@@ -40,6 +38,7 @@ page import="com.liferay.portal.model.Portlet" %><%@
 page import="com.liferay.portal.model.PortletConstants" %><%@
 page import="com.liferay.portal.service.PortletLocalServiceUtil" %><%@
 page import="com.liferay.portal.util.PortalUtil" %><%@
+page import="com.liferay.taglib.search.ResultRow" %><%@
 page import="com.liferay.wsrp.NoSuchConsumerPortletException" %><%@
 page import="com.liferay.wsrp.NoSuchProducerException" %><%@
 page import="com.liferay.wsrp.WSRPConsumerNameException" %><%@

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -66,16 +66,16 @@ public class ServerManagerServlet extends HttpServlet {
 
 		String method = request.getMethod();
 
-		if (method.equalsIgnoreCase(HttpMethods.DELETE)) {
+		if (StringUtil.equalsIgnoreCase(method, HttpMethods.DELETE)) {
 			executor.executeDelete(request, responseJSONObject, arguments);
 		}
-		else if (method.equalsIgnoreCase(HttpMethods.GET)) {
+		else if (StringUtil.equalsIgnoreCase(method, HttpMethods.GET)) {
 			executor.executeRead(request, responseJSONObject, arguments);
 		}
-		else if (method.equalsIgnoreCase(HttpMethods.POST)) {
+		else if (StringUtil.equalsIgnoreCase(method, HttpMethods.POST)) {
 			executor.executeCreate(request, responseJSONObject, arguments);
 		}
-		else if (method.equalsIgnoreCase(HttpMethods.PUT)) {
+		else if (StringUtil.equalsIgnoreCase(method, HttpMethods.PUT)) {
 			executor.executeUpdate(request, responseJSONObject, arguments);
 		}
 	}
@@ -120,7 +120,7 @@ public class ServerManagerServlet extends HttpServlet {
 
 			String path = request.getPathInfo();
 
-			path = path.toLowerCase();
+			path = StringUtil.toLowerCase(path);
 
 			if (path.startsWith(StringPool.SLASH)) {
 				path = path.substring(1);

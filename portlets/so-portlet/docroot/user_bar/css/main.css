@@ -1,579 +1,485 @@
-@import "compass/css3";
+@import "compass";
+@import "mixins";
 
-$blue: #0E50A9;
-$defaultBorderColor: #C9C9C9;
+$defaultBackgroundColor: #252D31;
 $defaultTextColor: #202020;
 
-@mixin default-border {
-	border: 1px solid $defaultBorderColor;
-}
-
-@mixin clear-both {
-	&:after {
-		clear: both;
-		content: "";
-		display: block;
-	}
-}
-
-@mixin menu-mix {
-	background-color: #FFF;
-
-	@include border-radius(4px);
-	@include box-shadow(0 1px 3px rgba(0,0,0, 0.78));
-}
-
-.portlet-dockbar {
-	overflow: hidden;
-}
-
-#dockbar {
-	margin-top: -31px;
-	opacity: 0;
-	position: relative;
-
+@mixin hover-transition {
 	@include transition-duration(0.5s);
-	@include transition-property(all);
+	@include transition-property(background-color);
+}
 
-	.user-toolbar {
-		display: none;
+@mixin primary-hover-state {
+	background-color: #181B1D;
+	background-color: rgba(0,0,0, 0.48);
+}
+
+.aui {
+	.so-portlet-user-bar, .portlet-dockbar {
+		&, a {
+			font: 14px/1em 'Helvetica Neue', Helvetica, Arial, sans-serif;
+			font-weight: 400;
+		}
 	}
 }
 
-body.show-dockbar, html > body.lfr-dockbar-pinned, body.controls-visible {
-	.portlet-dockbar {
-		overflow: visible;
-	}
-
-	#dockbar {
-		@include opacity(1);
-
-		margin-top: 0;
-	}
-}
-
-html > body.lfr-dockbar-pinned {
-	padding-top: 74px;
-
-	#dockbar {
-		@include box-shadow(0 7px 9px -8px rgba(0, 0, 0, 0.5));
-
-		position: fixed;
-		top: 42px;
-	}
-
-	.so-portlet-user-bar {
-		left: 0;
-		position: fixed;
-		right: 0;
-		top: 0;
-	}
-}
+/* ---------- User bar ---------- */
 
 .so-portlet-user-bar {
-	background: #32363A url(../images/user_bar_default_bg.png) repeat-x;
+	background: $defaultBackgroundColor url(../images/user_bar_default_bg.png) 0 0 repeat-x;
 
-	@include background-image(linear-gradient(bottom, #252D31 0, #32363A 100%));
+	@include background-image(linear-gradient(bottom, $defaultBackgroundColor 0, #32363A 100%));
 
-	font: 13px/1.5em 'Helvetica Neue', Helvetica, Arial, sans-serif;
-	font-weight: 200;
-	padding-right: 30%;
 	position: relative;
-	z-index: 301;
+	width: 100%;
 
-	&, a {
-		&, &:hover, &:visited, &:active {
-			color: #FFF;
-			font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-			font-size: 13px;
-			font-weight: 400;
-			text-decoration: none;
-		}
+	&, .so-logo, > nav {
+		float: left;
 	}
 
 	.so-logo {
-		display: inline-block;
-		margin-bottom: -7px;
-		padding: 6px 3px 6px 8px;
-		vertical-align: middle;
+		@include hover-transition;
 
-		&, &:hover {
-			background-color: transparent;
+		left: 0;
+		padding: .42em .5em .42em .6em;
+		position: absolute;
+		top: 0;
 
-			@include box-shadow(none);
+
+		&:hover {
+			@include primary-hover-state;
 		}
 	}
 
 	.dashboard-nav {
-		position: relative;
-		z-index: 2;
-	}
-
-	a {
-		color: #FFF;
-		background-color: rgba(0,0,0, 0);
-
-		@include border-radius(4px);
-		@include box-shadow(none);
-
-		font-size: 1em;
-		padding: 0.25em 0.8em;
-		text-shadow: 0 1px 2px rgba(0,0,0, 0.75);
-
-		@include transition-duration(0.5s);
-		@include transition-property(background-color);
-	}
-
-	li.selected a, a:hover, .hover a {
-		background-color: rgba(0,0,0, 0.48);
-
-		@include box-shadow(0 1px 2px rgba(0,0,0, 0.75));
-
-		text-decoration: none;
-	}
-
-	ul, li {
-		display: inline-block;
-		list-style: none;
 		margin: 0;
-		padding: 0;
-		vertical-align: middle;
-	}
+		overflow: hidden;
+		padding: 0 25em 0 3.3em;
 
-	li a {
-		display: block;
-	}
-
-	nav {
-		display:inline-block;
-	}
-
-	.has-submenu {
-		position: relative;
-	}
-
-	.user-toolbar {
-		padding: 0.5em;
-		position: absolute;
-		right: 0;
-		top: 0;
-
-		.avatar {
-			display: inline-block;
-			height: 24px;
-			margin: -5px 10px -4px -5px;
-			overflow: hidden;
-			padding: 0;
-			vertical-align: middle;
-			width: 24px;
-
-			img {
-				max-width: 24px;
-				min-height: 24px;
-			}
-		}
-
-		.child-menu {
-			display: none;
-			height: 0;
-			left: auto;
-
-			@include menu-mix;
-
-			min-width: 150px;
-
-			position: absolute;
-			right: 0;
-
-			@include transition-duration(0.5s);
-			@include transition-property(all);
-
-			top: 100%;
-			z-index: 3;
-
-			li {
-				display: block;
-			}
-
-			a {
-				background-color: transparent;
-
-				@include box-shadow(none);
-
-				color: $defaultTextColor;
-				display: block;
-
-				@include text-shadow(none);
-
-				&:hover {
-					background-color: rgba(0, 0, 0, 0.6);
-					color: #FFF;
-				}
-			}
-		}
-
-		.config-icon {
-			padding: 0.25em 6px;
-
-			img {
-				vertical-align: bottom;
-			}
-		}
-	}
-
-	.user-notification-events a, .user-notification-events a:hover {
-		background: transparent;
-		box-shadow: none;
-		color: $blue;
-		font-weight: normal;
-		padding: 0;
-		text-shadow: none;
-	}
-
-	.user-notification-events {
-		color: $defaultTextColor;
-
-		@include clear-both;
-
-		font-size: 1em;
-		right: 0;
-		top: 120%;
-		width: 350px;
-
-		.aui-menu-content {
-			background-image: none;
-
-			@include menu-mix;
-		}
-
-		.user-notification-event-content {
-			border-bottom: 1px solid $defaultBorderColor;
-			border-width: 0 0 1px;
-			cursor: pointer;
-		}
-
-		.user-notification-event-sender {
-			float: left;
-			padding: 0.75em;
-			position: relative;
-
-			.icon, .portlet-icon {
-				bottom: 0;
-				position: absolute;
-				right: 0;
-			}
-		}
-
-		.thumbnail {
-			display: block;
-			height: 45px;
-			overflow: hidden;
-			width: 45px;
-
-			img {
-				max-width: 45px;
-				min-height: 45px;
-			}
-		}
-
-		.notification-entry {
-			color: $defaultTextColor;
-			margin-left: 60px;
-			padding: 0.5em 0.65em;
-
-			.title a {
-				display: inline;
-				font-weight: bold;
-			}
-
-			.datetime {
-				font-size: 0.85em;
-			}
-		}
-
-		.request {
-			text-align: right;
-
-			a {
-				@include border-radius(4px);
-
-				display: inline-block;
-				margin-right: 10px;
-			}
-		}
-
-		.user-notification-event-header{
-			padding: 0.5em;
-		}
-
-		.user-notification-event-footer {
-			border: none;
-
-			a {
-				@include border-radius(0);
-
-				display: block;
-				float: none;
-				text-align: left;
-				width: auto;
-
-				&, &:hover {
-					display: block;
-					padding: 0.5em;
-				}
-			}
-
-			.view-all, .dismiss-notifications {
-				border-width: 0;
-				float: none;
-				width: auto;
-			}
-
-			.dismiss-notifications a {
-				border-bottom: 1px solid $defaultBorderColor;
-			}
-		}
-	}
-
-	.notifications-menu {
-		position: relative;
-
-		.notification-count {
-			background: transparent;
-			color: #202020;
-			margin: 0 -0.1em;
-			padding: 0;
-			text-shadow: none;
-		}
-
-		.user-notification-events-icon {
-			background: rgba(255, 255, 255, 1);
-
-			@include border-radius(20px);
-
-			&:hover {
-				background: rgba(0,0,0, 0.8);
-
-				.notification-count {
-					color: #FFF;
-				}
-			}
-		}
-	}
-
-	.so-portlet-sites {
-		display: block;
-		margin-left: -300px;
-		max-width: 450px;
-		min-width: 350px;
-		position: relative;
-		right: 0;
-		top: 0;
-		vertical-align: middle;
-		width: 350px;
-
-		.portlet {
-			border-width: 0;
-		}
-
-		.portlet-topper, .favorite-msg-info {
-			display: none;
-		}
-
-		.portlet-body {
-			left: 0;
-			margin: -1.675em 0 0;
-
-			@include menu-mix;
-
-			padding: 3.4em 0 0;
-			position: absolute;
-			right: 0;
-			visibility: hidden;
-			z-index: 1;
-
-			a, a:hover, li.has-menu:hover a {
-				background-color: transparent;
-
-				@include border-radius(0);
-				@include box-shadow(none);
-
-				color: $defaultTextColor;
-				font-weight: normal;
-				text-shadow: none;
-			}
-		}
-
-		.search {
-			display: block;
-			float: none;
-			left: 0;
-			margin-bottom: 0;
-			padding: 0 0.75em;
-			position: absolute;
-			right: 0;
-			text-align: right;
-			top: 0.65em;
-			visibility: visible;
-			width: auto;
-
-			.search-input {
-				background: rgba(0,0,0, 0.40);
-				border: 1px solid #1C2125;
-
-				@include border-radius(4px);
-				@include box-shadow(0 1px 2px rgba(0,0,0, 0.4) inset);
-
+		&, a {
+			&, &:hover, &:visited, &:active {
 				color: #FFF;
-				cursor: pointer;
-				display: block;
-				float: right;
-
-				@include transition-duration(0.5s);
-				@include transition-property(width);
-
-				text-align: left;
-				text-indent: 0.5em;
-				text-shadow: 0 1px 2px rgba(0,0,0, 0.75);
-				width: 20%;
-			}
-
-			input[type=image] {
-				display: none;
+				text-decoration: none;
 			}
 		}
 
-		.sites-tabs, .sites-list-container, .control-container {
+		li {
+			display: block;
+			float: left;
+			list-style: none;
+
+			a {
+				display: block;
+
+				@include hover-transition;
+
+				height: 2em;
+				line-height: 2em;
+				padding: .58em .8em;
+
+
+				&:hover, &.selected {
+					@include primary-hover-state;
+				}
+			}
+		}
+	}
+
+	&.portlet-static {
+		display: none;
+	}
+}
+
+/* ---------- Dockbar ---------- */
+
+.aui .portlet-dockbar {
+	z-index: 301;
+
+	.dockbar {
+		.my-sites.dropdown {
 			display: none;
 		}
 
-		.sites-tabs {
-			border-top: 1px solid rgba(0,0,0, 0.1);
-			float: none;
-			padding: 1em;
+		.navbar-inner .container {
+			.collapse .nav-account-controls {
+				border-top-width: 0;
+				margin: 0;
+				position: static;
+				right: 0;
 
-			select {
-				display: block;
-				width: 100%;
-			}
-		}
+				> li {
+					background: $defaultBackgroundColor url(../images/user_bar_default_bg.png) 0 0 repeat-x;
 
-		.site-list-container {
-			.name {
-				position: relative;
+					@include background-image(linear-gradient(bottom, $defaultBackgroundColor 0, #32363A 100%));
 
-				a {
-					background-position: 8px center;
-					background-repeat: no-repeat;
-					border-top: 1px solid $defaultBorderColor;
-					display: block;
-					padding: 0.55em 2.5em;
+					> a {
+						@include hover-transition;
 
-					&:hover {
-						background-color: rgba(0,0,0, 0.1);
+						line-height: 1.7em;
+						margin: 0;
+						padding: .7em;
+
+						> i {
+							background-color: transparent;
+							margin: 3px 0 0;
+							padding: 0;
+						}
+					}
+
+					> a:hover, > a.selected, &.open > a {
+						@include primary-hover-state;
+					}
+
+					&.info-items {
+						background: transparent;
 					}
 				}
-
-				.private-pages {
-					background: #FFF;
-					padding: 0.55em 0.5em;
-					position: absolute;
-					right: 2em;
-					top: 0;
-				}
-			}
-
-			span.action {
-				position: relative;
-				z-index: 1;
-
-				a {
-					font-size: 0;
-					margin-top: 8px;
-					text-indent: -9999em;
-				}
-			}
-
-			ul.site-list {
-				&, li {
-					background-color: transparent;
-					border-width: 0;
-					color: $defaultTextColor;
-					display: block;
-					margin: 0;
-					padding: 0
-				}
-
-				.empty, .empty:hover {
-					border-width: 1px 0 0;
-					padding: 0.5em 1em 0.5em 2em;
-				}
 			}
 		}
 
-		.control-container {
-			.aui-toolbar-content {
-				display: block;
-			}
-
-			button {
-				width: 50%;
-			}
+		.go-to {
+			position: relative;
 		}
-	}
 
-	.search-focus .so-portlet-sites .portlet-body {
-		visibility: visible;
-		z-index: 3;
+		.user-notifications-count {
+			background-color: #FFF;
 
-		.search {
-			width: auto;
+			@include border-radius(50%);
 
-			.search-input {
-				background: #FFF;
-				border: 1px solid $defaultBorderColor;
+			border-width: 0;
+			color: $defaultTextColor;
+			font-size: .86em;
+			font-weight: bold;
+			margin: 0;
+			padding: .33em .66em;
 
-				@include box-shadow(0 1px 2px rgba(0,0,0, 0) inset);
-
-				color: $defaultTextColor;
-				cursor: text;
+			&.alert {
+				background-color: #A20F0F;
+				color: #FFF;
 				text-shadow: none;
-				width: 97%;
 			}
 		}
 
-		.sites-tabs, .sites-list-container, .control-container {
-			display: block;
+		.navbar-inner .container .btn-navbar, .nav .user-avatar .user-avatar-link {
+			.user-avatar-image {
+				@include border-radius(50%);
+				@include box-shadow(none);
+
+				height: 22px;
+				top: 0;
+				vertical-align: middle;
+				width: auto;
+			}
 		}
-	}
 
-	.menu-active {
-		overflow: visible;
+		.nav .user-avatar {
+			.dropdown-menu {
+				left: auto;
+				right: 0;
 
-		.child-menu {
-			display: block;
-			height: auto;
+				&:after {
+					left: auto;
+					right: 12px;
+				}
+
+				&:before {
+					left: auto;
+					right: 11px;
+				}
+			}
 		}
 	}
 }
 
-@media (max-width:860px) {
-	.so-portlet-user-bar {
-		a {
-			padding: 0.25em 0.7em;
+.aui .dockbar-split .portlet-dockbar {
+	position: absolute;
+	right: 0;
+	top: 0;
+
+	.dockbar {
+		height: auto;
+		position: static;
+
+		.navbar-inner {
+			background: none;
+
+			@include box-shadow(none);
+
+			filter: none;
+			width: auto;
+
+			.container {
+				width: auto;
+			}
+		}
+	}
+}
+
+#wrapper {
+	clear: both;
+}
+
+.ie7.aui {
+	.portlet-dockbar {
+		clear: both;
+
+		.navbar-inner .container .collapse .nav-account-controls {
+			bottom: 100%;
+			position: relative;
 		}
 
-		.user-info a {
-			padding: 0;
+		.search-focus .so-portlet-sites .portlet {
+			width: 350px;
+		}
+	}
 
-			.avatar {
-				@include border-radius(4px);
+	.default .portlet-dockbar {
+		height: 0;
+		position: relative;
+	}
+}
 
-				margin: 0;
+/* ---------- Control panel ---------- */
+
+.aui {
+	.so-portlet-user-bar {
+		z-index: 1;
+	}
+
+	.dockbar #_145_navAccountControlsNavbarCollapse {
+		position: absolute;
+		right: 0;
+		top: 0;
+		z-index: 1;
+	}
+
+	.dockbar-split {
+		.so-portlet-user-bar {
+			z-index: auto;
+		}
+
+		.dockbar #_145_navAccountControlsNavbarCollapse {
+			position: relative;
+			right: auto;
+			top: auto;
+		}
+	}
+}
+
+/* ---------- Responsive ---------- */
+
+@include respond-to(phone, tablet) {
+	.aui .so-portlet-user-bar {
+		height: 3.15em;
+		z-index: auto;
+
+		.so-logo {
+			z-index: 302;
+		}
+
+		nav {
+			display: none;
+		}
+	}
+
+	.aui .portlet-dockbar {
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 100%;
+
+		.dockbar {
+			border-top-width: 0;
+			width: 100%;
+
+			&.navbar-static-top {
+				position: absolute;
+			}
+
+			.navbar-inner {
+				background: transparent;
+				.container {
+					z-index: 301;
+
+					.btn-navbar {
+						background-color: transparent;
+						background-image: none;
+						border-width: 0;
+						color: #FFF;
+						float: right;
+						font-size: 1.6em;
+						margin: .17em;
+						padding: .28em .35em;
+
+						&:hover {
+							background-color: #E6E6E6;
+						}
+
+						i {
+							margin-top: 0;
+
+							&:before {
+								padding: 1px;
+							}
+						}
+					}
+
+					#_145_navSiteNavigationNavbarBtn {
+						float: right;
+					}
+
+					.brand {
+						float: right;
+						padding: .75em;
+					}
+
+					.nav-collapse.open {
+						ul {
+							background-color: #DDD;
+							margin-left: 0;
+							min-width: 100%;
+							padding: 0;
+							position: static;
+
+							li {
+								background-color: transparent;
+								border-top: 1px solid #FFF;
+								margin: 0;
+							}
+
+							a {
+								background: transparent;
+
+								@include border-radius(0);
+
+								font-size: 1em;
+								line-height: 2.4em;
+								margin: 0;
+								padding: .4em 1em;
+								text-align: left;
+							}
+
+							i {
+								display: inline;
+								margin: 0;
+							}
+
+							a, .toggle-controls i {
+								color: #555;
+
+								@include hover-transition;
+							}
+
+							.nav-item-label {
+								background: transparent;
+								display: inline;
+								left: 0;
+								margin: 0;
+								padding: 0;
+								position: static;
+							}
+
+							a:hover, li.dropdown.open > .dropdown-toggle {
+								background: rgba(0,0,0,0.2);
+							}
+
+							.dropdown > .dropdown-menu {
+								a {
+									font-size: 1em;
+									font-weight: bold;
+									padding: 5px 15px 5px 30px;
+								}
+
+								ul a {
+									padding: 5px 15px 5px 55px;
+								}
+							}
+						}
+
+						.nav-navigation {
+							display: block;
+						}
+
+						.nav-add-controls a {
+							position: static;
+						}
+					}
+
+					.nav-add-controls i {
+						font-size: 1.8em;
+						padding-right: .5em;
+					}
+
+					.collapse .nav-account-controls > li {
+						background: transparent;
+					}
+
+					.go-to {
+						display: none;
+					}
+
+					.my-sites {
+						display: block;
+					}
+
+					.dockbar-user-notifications {
+						.dropdown-menu {
+							padding: 0;
+							width: 100%;
+
+							> li {
+								text-align: left;
+							}
+						}
+
+						.user-notification-link .user-notifications-count {
+							background-color: #333;
+							color: #FFF;
+							display: inline;
+						}
+
+						.user-notification {
+							background-color: #DDD;
+
+							@include border-radius(0);
+							@include hover-transition;
+
+							margin-bottom: 0;
+							padding-left: 30px;
+
+							&:hover {
+								background-color: rgba(0,0,0,0.2);
+							}
+						}
+					}
+				}
 			}
 		}
 
-		.full-name {
+		#_145_navAccountControlsNavbarCollapse {
+			position: relative;
+			right: auto;
+			top: auto;
+		}
+	}
+
+	html.aui #heading {
+		position: static;
+	}
+}
+
+@include respond-to(phone) {
+	html.aui body {
+		padding: 0;
+	}
+
+	.aui .navbar-static-top {
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	.nav-add-controls {
+		.page-edit-controls, .site-add-controls {
 			display: none;
 		}
 	}

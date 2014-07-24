@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -20,7 +20,6 @@ import com.liferay.calendar.notification.NotificationTemplateType;
 import com.liferay.calendar.notification.NotificationType;
 import com.liferay.calendar.service.CalendarLocalServiceUtil;
 import com.liferay.calendar.service.CalendarNotificationTemplateLocalServiceUtil;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportHelperUtil;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
@@ -44,13 +43,10 @@ public class CalendarNotificationTemplateStagedModelDataHandler
 
 	@Override
 	public void deleteStagedModel(
-			String uuid, long groupId, String className, String extraData)
-		throws SystemException {
+		String uuid, long groupId, String className, String extraData) {
 
 		CalendarNotificationTemplate calendarNotificationTemplate =
-			CalendarNotificationTemplateLocalServiceUtil.
-				fetchCalendarNotificationTemplateByUuidAndGroupId(
-					uuid, groupId);
+			fetchExistingStagedModel(uuid, groupId);
 
 		if (calendarNotificationTemplate != null) {
 			CalendarNotificationTemplateLocalServiceUtil.
@@ -73,26 +69,34 @@ public class CalendarNotificationTemplateStagedModelDataHandler
 		Calendar calendar = CalendarLocalServiceUtil.getCalendar(
 			calendarNotificationTemplate.getCalendarId());
 
-		StagedModelDataHandlerUtil.exportStagedModel(
-			portletDataContext, calendar);
-
-		Element calendarNotificationTemplateElement =
-			portletDataContext.getExportDataElement(
-				calendarNotificationTemplate);
+		StagedModelDataHandlerUtil.exportReferenceStagedModel(
+			portletDataContext, calendarNotificationTemplate, calendar,
+			PortletDataContext.REFERENCE_TYPE_STRONG);
 
 		String body = ExportImportHelperUtil.replaceExportContentReferences(
 			portletDataContext, calendarNotificationTemplate,
-			calendarNotificationTemplateElement,
 			calendarNotificationTemplate.getBody(),
 			portletDataContext.getBooleanParameter(
 				CalendarPortletDataHandler.NAMESPACE, "referenced-content"));
 
 		calendarNotificationTemplate.setBody(body);
 
+		Element calendarNotificationTemplateElement =
+			portletDataContext.getExportDataElement(
+				calendarNotificationTemplate);
+
 		portletDataContext.addClassedModel(
 			calendarNotificationTemplateElement,
 			ExportImportPathUtil.getModelPath(calendarNotificationTemplate),
-			calendarNotificationTemplate, CalendarPortletDataHandler.NAMESPACE);
+			calendarNotificationTemplate);
+	}
+
+	@Override
+	protected CalendarNotificationTemplate doFetchExistingStagedModel(
+		String uuid, long groupId) {
+
+		return CalendarNotificationTemplateLocalServiceUtil.
+			fetchCalendarNotificationTemplateByUuidAndGroupId(uuid, groupId);
 	}
 
 	@Override
@@ -104,15 +108,8 @@ public class CalendarNotificationTemplateStagedModelDataHandler
 		long userId = portletDataContext.getUserId(
 			calendarNotificationTemplate.getUserUuid());
 
-		String calendarPath = ExportImportPathUtil.getModelPath(
-			portletDataContext, Calendar.class.getName(),
-			calendarNotificationTemplate.getCalendarId());
-
-		Calendar calendar = (Calendar)portletDataContext.getZipEntryAsObject(
-			calendarPath);
-
-		StagedModelDataHandlerUtil.importStagedModel(
-			portletDataContext, calendar);
+		StagedModelDataHandlerUtil.importReferenceStagedModels(
+			portletDataContext, calendarNotificationTemplate, Calendar.class);
 
 		Map<Long, Long> calendarIds =
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
@@ -129,17 +126,20 @@ public class CalendarNotificationTemplateStagedModelDataHandler
 				calendarNotificationTemplate.getNotificationTemplateType());
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			calendarNotificationTemplate, CalendarPortletDataHandler.NAMESPACE);
+			calendarNotificationTemplate);
 
 		CalendarNotificationTemplate importedCalendarNotificationTemplate =
 			null;
 
+		String body = ExportImportHelperUtil.replaceImportContentReferences(
+			portletDataContext, calendarNotificationTemplate,
+			calendarNotificationTemplate.getBody());
+
 		if (portletDataContext.isDataStrategyMirror()) {
 			CalendarNotificationTemplate existingCalendarNotificationTemplate =
-				CalendarNotificationTemplateLocalServiceUtil.
-					fetchCalendarNotificationTemplateByUuidAndGroupId(
-						calendarNotificationTemplate.getUuid(),
-						portletDataContext.getScopeGroupId());
+				fetchExistingStagedModel(
+					calendarNotificationTemplate.getUuid(),
+					portletDataContext.getScopeGroupId());
 
 			if (existingCalendarNotificationTemplate == null) {
 				serviceContext.setUuid(calendarNotificationTemplate.getUuid());
@@ -151,8 +151,7 @@ public class CalendarNotificationTemplateStagedModelDataHandler
 							calendarNotificationTemplate.
 								getNotificationTypeSettings(),
 							notificationTemplateType,
-							calendarNotificationTemplate.getSubject(),
-							calendarNotificationTemplate.getBody(),
+							calendarNotificationTemplate.getSubject(), body,
 							serviceContext);
 			}
 			else {
@@ -163,8 +162,7 @@ public class CalendarNotificationTemplateStagedModelDataHandler
 								getCalendarNotificationTemplateId(),
 							calendarNotificationTemplate.
 								getNotificationTypeSettings(),
-							calendarNotificationTemplate.getSubject(),
-							calendarNotificationTemplate.getBody(),
+							calendarNotificationTemplate.getSubject(), body,
 							serviceContext);
 			}
 		}
@@ -176,13 +174,12 @@ public class CalendarNotificationTemplateStagedModelDataHandler
 						calendarNotificationTemplate.
 							getNotificationTypeSettings(),
 						notificationTemplateType,
-						calendarNotificationTemplate.getSubject(),
-						calendarNotificationTemplate.getBody(), serviceContext);
+						calendarNotificationTemplate.getSubject(), body,
+						serviceContext);
 		}
 
 		portletDataContext.importClassedModel(
-			calendarNotificationTemplate, importedCalendarNotificationTemplate,
-			CalendarPortletDataHandler.NAMESPACE);
+			calendarNotificationTemplate, importedCalendarNotificationTemplate);
 	}
 
 }

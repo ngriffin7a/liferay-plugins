@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -14,22 +14,21 @@
 
 package com.liferay.so.activities.hook.social;
 
-import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
-import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.social.model.SocialActivity;
-import com.liferay.portlet.social.model.SocialActivityFeedEntry;
 import com.liferay.portlet.social.model.SocialActivitySet;
 import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
 import com.liferay.portlet.social.service.SocialActivitySetLocalServiceUtil;
+import com.liferay.so.activities.util.SocialActivityKeyConstants;
 import com.liferay.tasks.model.TasksEntry;
 import com.liferay.tasks.service.TasksEntryLocalServiceUtil;
 import com.liferay.tasks.service.permission.TasksEntryPermission;
@@ -55,7 +54,9 @@ public class TasksActivityInterpreter extends SOSocialActivityInterpreter {
 			SocialActivity activity =
 				SocialActivityLocalServiceUtil.getActivity(activityId);
 
-			if (activity.getType() == _ACTIVITY_KEY_UPDATE_ENTRY) {
+			if (activity.getType() ==
+					SocialActivityKeyConstants.TASKS_UPDATE_ENTRY) {
+
 				activitySet =
 					SocialActivitySetLocalServiceUtil.getClassActivitySet(
 						activity.getUserId(), activity.getClassNameId(),
@@ -86,7 +87,9 @@ public class TasksActivityInterpreter extends SOSocialActivityInterpreter {
 			SocialActivitySet activitySet, ServiceContext serviceContext)
 		throws Exception {
 
-		if (activitySet.getType() == _ACTIVITY_KEY_UPDATE_ENTRY) {
+		if (activitySet.getType() ==
+				SocialActivityKeyConstants.TASKS_UPDATE_ENTRY) {
+
 			return getBody(
 				activitySet.getClassName(), activitySet.getClassPK(),
 				serviceContext);
@@ -97,45 +100,16 @@ public class TasksActivityInterpreter extends SOSocialActivityInterpreter {
 		sb.append("<div class=\"grouped-activity-body-container\">");
 		sb.append("<div class=\"grouped-activity-body\">");
 
-		boolean hasViewableActivities = false;
-
-		List<SocialActivity> activities =
-			SocialActivityLocalServiceUtil.getActivitySetActivities(
-				activitySet.getActivitySetId(), QueryUtil.ALL_POS,
-				QueryUtil.ALL_POS);
+		List<SocialActivity> activities = getViewableActivities(
+			activitySet, serviceContext);
 
 		for (SocialActivity activity : activities) {
-			ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
-
-			PermissionChecker permissionChecker =
-				themeDisplay.getPermissionChecker();
-
-			if (!hasPermissions(
-					permissionChecker, activity, ActionKeys.VIEW,
-					serviceContext)) {
-
-				continue;
-			}
-
-			SocialActivityFeedEntry subfeedEntry = getSubfeedEntry(
-				activity, serviceContext);
-
-			if (subfeedEntry == null) {
-				continue;
-			}
-
 			sb.append("<div class=\"activity-subentry tasks\">");
 			sb.append(
 				getBody(
 					activity.getClassName(), activity.getClassPK(),
 					serviceContext));
 			sb.append("</div>");
-
-			hasViewableActivities = true;
-		}
-
-		if (!hasViewableActivities) {
-			return null;
 		}
 
 		sb.append("</div></div>");
@@ -163,17 +137,26 @@ public class TasksActivityInterpreter extends SOSocialActivityInterpreter {
 		sb.append(serviceContext.translate("assigned-to"));
 		sb.append(": </strong>");
 
-		User assigneeUser = UserLocalServiceUtil.fetchUser(
-			tasksEntry.getAssigneeUserId());
+		if (tasksEntry.getAssigneeUserId() > 0) {
+			String assigneeDisplayURL = null;
 
-		String assigneeDisplayURL = assigneeUser.getDisplayURL(
-			serviceContext.getThemeDisplay());
+			User assigneeUser = UserLocalServiceUtil.fetchUser(
+				tasksEntry.getAssigneeUserId());
 
-		String assigneeUserLink = wrapLink(
-			assigneeDisplayURL,
-			HtmlUtil.escape(tasksEntry.getAssigneeFullName()));
+			if (assigneeUser != null) {
+				assigneeDisplayURL = assigneeUser.getDisplayURL(
+					serviceContext.getThemeDisplay());
+			}
 
-		sb.append(assigneeUserLink);
+			String assigneeUserLink = wrapLink(
+				assigneeDisplayURL, tasksEntry.getAssigneeFullName());
+
+			sb.append(assigneeUserLink);
+		}
+		else {
+			sb.append(serviceContext.translate("unassigned"));
+		}
+
 		sb.append("</span><span class=\"tasks-entry-due-date\"><strong>");
 		sb.append(serviceContext.translate("due-date"));
 		sb.append(": </strong>");
@@ -217,16 +200,22 @@ public class TasksActivityInterpreter extends SOSocialActivityInterpreter {
 
 		String titlePattern = null;
 
-		if (activity.getType() == _ACTIVITY_KEY_ADD_ENTRY) {
+		if (activity.getType() == SocialActivityKeyConstants.TASKS_ADD_ENTRY) {
 			titlePattern = "created-a-new-task";
 		}
-		else if (activity.getType() == _ACTIVITY_KEY_REOPEN_ENTRY) {
+		else if (activity.getType() ==
+					SocialActivityKeyConstants.TASKS_REOPEN_ENTRY) {
+
 			titlePattern = "reopened-a-task";
 		}
-		else if (activity.getType() == _ACTIVITY_KEY_RESOLVE_ENTRY) {
+		else if (activity.getType() ==
+					SocialActivityKeyConstants.TASKS_RESOLVE_ENTRY) {
+
 			titlePattern = "resolved-a-task";
 		}
-		else if (activity.getType() == _ACTIVITY_KEY_UPDATE_ENTRY) {
+		else if (activity.getType() ==
+					SocialActivityKeyConstants.TASKS_UPDATE_ENTRY) {
+
 			titlePattern = "updated-a-task";
 		}
 		else {
@@ -246,16 +235,24 @@ public class TasksActivityInterpreter extends SOSocialActivityInterpreter {
 	protected String getTitlePattern(
 		String groupName, SocialActivitySet activitySet) {
 
-		if (activitySet.getType() == _ACTIVITY_KEY_ADD_ENTRY) {
+		if (activitySet.getType() ==
+				SocialActivityKeyConstants.TASKS_ADD_ENTRY) {
+
 			return "created-x-new-tasks";
 		}
-		else if (activitySet.getType() == _ACTIVITY_KEY_REOPEN_ENTRY) {
+		else if (activitySet.getType() ==
+					SocialActivityKeyConstants.TASKS_REOPEN_ENTRY) {
+
 			return "reopened-x-tasks";
 		}
-		else if (activitySet.getType() == _ACTIVITY_KEY_RESOLVE_ENTRY) {
+		else if (activitySet.getType() ==
+					SocialActivityKeyConstants.TASKS_RESOLVE_ENTRY) {
+
 			return "resolved-x-tasks";
 		}
-		else if (activitySet.getType() == _ACTIVITY_KEY_UPDATE_ENTRY) {
+		else if (activitySet.getType() ==
+					SocialActivityKeyConstants.TASKS_UPDATE_ENTRY) {
+
 			return "made-x-updates-to-a-task";
 		}
 
@@ -268,6 +265,12 @@ public class TasksActivityInterpreter extends SOSocialActivityInterpreter {
 			String actionId, ServiceContext serviceContext)
 		throws Exception {
 
+		Group group = GroupLocalServiceUtil.fetchGroup(activity.getGroupId());
+
+		if ((group != null) && group.isUser()) {
+			return false;
+		}
+
 		TasksEntry tasksEntry = TasksEntryLocalServiceUtil.fetchTasksEntry(
 			activity.getClassPK());
 
@@ -278,26 +281,6 @@ public class TasksActivityInterpreter extends SOSocialActivityInterpreter {
 		return TasksEntryPermission.contains(
 			permissionChecker, tasksEntry, ActionKeys.VIEW);
 	}
-
-	/**
-	 * {@link com.liferay.tasks.social.TasksActivityKeys#ADD_ENTRY}
-	 */
-	private static final int _ACTIVITY_KEY_ADD_ENTRY = 1;
-
-	/**
-	 * {@link com.liferay.tasks.social.TasksActivityKeys#REOPEN_ENTRY}
-	 */
-	private static final int _ACTIVITY_KEY_REOPEN_ENTRY = 4;
-
-	/**
-	 * {@link com.liferay.tasks.social.TasksActivityKeys#RESOLVE_ENTRY}
-	 */
-	private static final int _ACTIVITY_KEY_RESOLVE_ENTRY = 3;
-
-	/**
-	 * {@link com.liferay.tasks.social.TasksActivityKeys#UPDATE_ENTRY}
-	 */
-	private static final int _ACTIVITY_KEY_UPDATE_ENTRY = 2;
 
 	private static final String[] _CLASS_NAMES = {TasksEntry.class.getName()};
 

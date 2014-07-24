@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -23,39 +23,31 @@ MailManager mailManager = MailManager.getInstance(request);
 %>
 
 <c:if test="<%= mailManager != null %>">
-	<aui:layout>
+	<aui:nav-bar>
+		<aui:nav>
+			<aui:nav-item iconCssClass="icon-plus" label="add-mail-account" onClick="Liferay.Mail.addAccount();" />
+		</aui:nav>
+	</aui:nav-bar>
 
-		<%
-		List<Account> mailAccounts = mailManager.getAccounts();
-		%>
+	<%
+	List<Account> mailAccounts = mailManager.getAccounts();
+	%>
 
-		<c:if test="<%= !mailAccounts.isEmpty() %>">
-			<aui:column>
+	<c:if test="<%= !mailAccounts.isEmpty() %>">
+		<ul class="nav nav-pills">
 
-				<ul class="aui-tabview-list">
+			<%
+			for (Account mailAccount : mailAccounts) {
+			%>
 
-					<%
-					for (Account mailAccount : mailAccounts) {
-					%>
+				<li class="tab <%= (mailAccount.getAccountId() == accountId) ? "active" : "" %>">
+					<aui:a cssClass="folders-link" data-accountId="<%= mailAccount.getAccountId() %>" data-inboxFolderId="<%= mailAccount.getInboxFolderId() %>" href="javascript:;" label="<%= mailAccount.getAddress() %>" />
+				</li>
 
-						<li class="aui-tab <%= (mailAccount.getAccountId() == accountId) ? "aui-tab-active" : "" %>">
-							<span class="aui-tab-content">
-								<span class="aui-tab-label">
-									<aui:a cssClass="folders-link" data-accountId="<%= mailAccount.getAccountId() %>" data-inboxFolderId="<%= mailAccount.getInboxFolderId() %>" href="javascript:;" label="<%= mailAccount.getAddress() %>" />
-								</span>
-							</span>
-						</li>
+			<%
+			}
+			%>
 
-					<%
-					}
-					%>
-
-				</ul>
-			</aui:column>
-		</c:if>
-
-		<aui:column>
-			<aui:button onClick="Liferay.Mail.addAccount();" value="add-mail-account" />
-		</aui:column>
-	</aui:layout>
+		</ul>
+	</c:if>
 </c:if>

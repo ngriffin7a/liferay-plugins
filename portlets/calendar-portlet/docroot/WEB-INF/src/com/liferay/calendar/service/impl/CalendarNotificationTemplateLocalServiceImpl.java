@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -20,7 +20,8 @@ import com.liferay.calendar.notification.NotificationTemplateType;
 import com.liferay.calendar.notification.NotificationType;
 import com.liferay.calendar.service.base.CalendarNotificationTemplateLocalServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.systemevent.SystemEvent;
+import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 
@@ -40,7 +41,7 @@ public class CalendarNotificationTemplateLocalServiceImpl
 			String notificationTypeSettings,
 			NotificationTemplateType notificationTemplateType, String subject,
 			String body, ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		User user = userPersistence.findByPrimaryKey(userId);
 		Calendar calendar = calendarPersistence.findByPrimaryKey(calendarId);
@@ -76,9 +77,16 @@ public class CalendarNotificationTemplateLocalServiceImpl
 	}
 
 	@Override
-	public void deleteCalendarNotificationTemplates(long calendarId)
-		throws SystemException {
+	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
+	public CalendarNotificationTemplate deleteCalendarNotificationTemplate(
+		CalendarNotificationTemplate calendarNotificationTemplate) {
 
+		return calendarNotificationTemplatePersistence.remove(
+			calendarNotificationTemplate);
+	}
+
+	@Override
+	public void deleteCalendarNotificationTemplates(long calendarId) {
 		List<CalendarNotificationTemplate> calendarNotificationTemplates =
 			calendarNotificationTemplatePersistence.findByCalendarId(
 				calendarId);
@@ -94,9 +102,8 @@ public class CalendarNotificationTemplateLocalServiceImpl
 
 	@Override
 	public CalendarNotificationTemplate fetchCalendarNotificationTemplate(
-			long calendarId, NotificationType notificationType,
-			NotificationTemplateType notificationTemplateType)
-		throws SystemException {
+		long calendarId, NotificationType notificationType,
+		NotificationTemplateType notificationTemplateType) {
 
 		return calendarNotificationTemplatePersistence.fetchByC_NT_NTT(
 			calendarId, notificationType.getValue(),
@@ -108,7 +115,7 @@ public class CalendarNotificationTemplateLocalServiceImpl
 			long calendarNotificationTemplateId,
 			String notificationTypeSettings, String subject, String body,
 			ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		CalendarNotificationTemplate calendarNotificationTemplate =
 			calendarNotificationTemplatePersistence.findByPrimaryKey(

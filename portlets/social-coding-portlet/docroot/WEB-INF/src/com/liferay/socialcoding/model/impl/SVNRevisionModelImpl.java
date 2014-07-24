@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -131,6 +131,9 @@ public class SVNRevisionModelImpl extends BaseModelImpl<SVNRevision>
 		attributes.put("svnRepositoryId", getSvnRepositoryId());
 		attributes.put("revisionNumber", getRevisionNumber());
 		attributes.put("comments", getComments());
+
+		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
+		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -359,6 +362,16 @@ public class SVNRevisionModelImpl extends BaseModelImpl<SVNRevision>
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	@Override
+	public boolean isEntityCacheEnabled() {
+		return ENTITY_CACHE_ENABLED;
+	}
+
+	@Override
+	public boolean isFinderCacheEnabled() {
+		return FINDER_CACHE_ENABLED;
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -19,7 +19,6 @@ import com.liferay.mail.util.MailManager;
 import com.liferay.portal.kernel.events.Action;
 import com.liferay.portal.kernel.events.ActionException;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class LoginPostAction extends Action {
 	}
 
 	protected void initiateSynchronization(HttpServletRequest request)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		MailManager mailManager = MailManager.getInstance(request);
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -16,8 +16,12 @@ package com.liferay.portal.workflow.kaleo.service.base;
 
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.bean.IdentifiableBean;
+import com.liferay.portal.kernel.dao.db.DB;
+import com.liferay.portal.kernel.dao.db.DBFactoryUtil;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdate;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DefaultActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.Projection;
@@ -29,7 +33,9 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.model.PersistedModel;
 import com.liferay.portal.service.BaseLocalServiceImpl;
 import com.liferay.portal.service.PersistedModelLocalServiceRegistryUtil;
+import com.liferay.portal.service.persistence.ClassNamePersistence;
 import com.liferay.portal.service.persistence.UserPersistence;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.workflow.kaleo.model.KaleoTask;
 import com.liferay.portal.workflow.kaleo.service.KaleoTaskLocalService;
 import com.liferay.portal.workflow.kaleo.service.persistence.KaleoActionPersistence;
@@ -81,12 +87,10 @@ public abstract class KaleoTaskLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 *
 	 * @param kaleoTask the kaleo task
 	 * @return the kaleo task that was added
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
-	public KaleoTask addKaleoTask(KaleoTask kaleoTask)
-		throws SystemException {
+	public KaleoTask addKaleoTask(KaleoTask kaleoTask) {
 		kaleoTask.setNew(true);
 
 		return kaleoTaskPersistence.update(kaleoTask);
@@ -109,12 +113,11 @@ public abstract class KaleoTaskLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param kaleoTaskId the primary key of the kaleo task
 	 * @return the kaleo task that was removed
 	 * @throws PortalException if a kaleo task with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public KaleoTask deleteKaleoTask(long kaleoTaskId)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return kaleoTaskPersistence.remove(kaleoTaskId);
 	}
 
@@ -123,12 +126,10 @@ public abstract class KaleoTaskLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 *
 	 * @param kaleoTask the kaleo task
 	 * @return the kaleo task that was removed
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public KaleoTask deleteKaleoTask(KaleoTask kaleoTask)
-		throws SystemException {
+	public KaleoTask deleteKaleoTask(KaleoTask kaleoTask) {
 		return kaleoTaskPersistence.remove(kaleoTask);
 	}
 
@@ -145,12 +146,9 @@ public abstract class KaleoTaskLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 *
 	 * @param dynamicQuery the dynamic query
 	 * @return the matching rows
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public List dynamicQuery(DynamicQuery dynamicQuery)
-		throws SystemException {
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery) {
 		return kaleoTaskPersistence.findWithDynamicQuery(dynamicQuery);
 	}
 
@@ -165,12 +163,10 @@ public abstract class KaleoTaskLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param start the lower bound of the range of model instances
 	 * @param end the upper bound of the range of model instances (not inclusive)
 	 * @return the range of matching rows
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public List dynamicQuery(DynamicQuery dynamicQuery, int start, int end)
-		throws SystemException {
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery, int start,
+		int end) {
 		return kaleoTaskPersistence.findWithDynamicQuery(dynamicQuery, start,
 			end);
 	}
@@ -187,12 +183,10 @@ public abstract class KaleoTaskLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param end the upper bound of the range of model instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching rows
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public List dynamicQuery(DynamicQuery dynamicQuery, int start, int end,
-		OrderByComparator orderByComparator) throws SystemException {
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery, int start,
+		int end, OrderByComparator<T> orderByComparator) {
 		return kaleoTaskPersistence.findWithDynamicQuery(dynamicQuery, start,
 			end, orderByComparator);
 	}
@@ -202,11 +196,9 @@ public abstract class KaleoTaskLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 *
 	 * @param dynamicQuery the dynamic query
 	 * @return the number of rows that match the dynamic query
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public long dynamicQueryCount(DynamicQuery dynamicQuery)
-		throws SystemException {
+	public long dynamicQueryCount(DynamicQuery dynamicQuery) {
 		return kaleoTaskPersistence.countWithDynamicQuery(dynamicQuery);
 	}
 
@@ -216,17 +208,16 @@ public abstract class KaleoTaskLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param dynamicQuery the dynamic query
 	 * @param projection the projection to apply to the query
 	 * @return the number of rows that match the dynamic query
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public long dynamicQueryCount(DynamicQuery dynamicQuery,
-		Projection projection) throws SystemException {
+		Projection projection) {
 		return kaleoTaskPersistence.countWithDynamicQuery(dynamicQuery,
 			projection);
 	}
 
 	@Override
-	public KaleoTask fetchKaleoTask(long kaleoTaskId) throws SystemException {
+	public KaleoTask fetchKaleoTask(long kaleoTaskId) {
 		return kaleoTaskPersistence.fetchByPrimaryKey(kaleoTaskId);
 	}
 
@@ -236,17 +227,46 @@ public abstract class KaleoTaskLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param kaleoTaskId the primary key of the kaleo task
 	 * @return the kaleo task
 	 * @throws PortalException if a kaleo task with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public KaleoTask getKaleoTask(long kaleoTaskId)
-		throws PortalException, SystemException {
+	public KaleoTask getKaleoTask(long kaleoTaskId) throws PortalException {
 		return kaleoTaskPersistence.findByPrimaryKey(kaleoTaskId);
 	}
 
 	@Override
+	public ActionableDynamicQuery getActionableDynamicQuery() {
+		ActionableDynamicQuery actionableDynamicQuery = new DefaultActionableDynamicQuery();
+
+		actionableDynamicQuery.setBaseLocalService(com.liferay.portal.workflow.kaleo.service.KaleoTaskLocalServiceUtil.getService());
+		actionableDynamicQuery.setClass(KaleoTask.class);
+		actionableDynamicQuery.setClassLoader(getClassLoader());
+
+		actionableDynamicQuery.setPrimaryKeyPropertyName("kaleoTaskId");
+
+		return actionableDynamicQuery;
+	}
+
+	protected void initActionableDynamicQuery(
+		ActionableDynamicQuery actionableDynamicQuery) {
+		actionableDynamicQuery.setBaseLocalService(com.liferay.portal.workflow.kaleo.service.KaleoTaskLocalServiceUtil.getService());
+		actionableDynamicQuery.setClass(KaleoTask.class);
+		actionableDynamicQuery.setClassLoader(getClassLoader());
+
+		actionableDynamicQuery.setPrimaryKeyPropertyName("kaleoTaskId");
+	}
+
+	/**
+	 * @throws PortalException
+	 */
+	@Override
+	public PersistedModel deletePersistedModel(PersistedModel persistedModel)
+		throws PortalException {
+		return kaleoTaskLocalService.deleteKaleoTask((KaleoTask)persistedModel);
+	}
+
+	@Override
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return kaleoTaskPersistence.findByPrimaryKey(primaryKeyObj);
 	}
 
@@ -260,11 +280,9 @@ public abstract class KaleoTaskLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param start the lower bound of the range of kaleo tasks
 	 * @param end the upper bound of the range of kaleo tasks (not inclusive)
 	 * @return the range of kaleo tasks
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public List<KaleoTask> getKaleoTasks(int start, int end)
-		throws SystemException {
+	public List<KaleoTask> getKaleoTasks(int start, int end) {
 		return kaleoTaskPersistence.findAll(start, end);
 	}
 
@@ -272,10 +290,9 @@ public abstract class KaleoTaskLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * Returns the number of kaleo tasks.
 	 *
 	 * @return the number of kaleo tasks
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public int getKaleoTasksCount() throws SystemException {
+	public int getKaleoTasksCount() {
 		return kaleoTaskPersistence.countAll();
 	}
 
@@ -284,12 +301,10 @@ public abstract class KaleoTaskLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 *
 	 * @param kaleoTask the kaleo task
 	 * @return the kaleo task that was updated
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
-	public KaleoTask updateKaleoTask(KaleoTask kaleoTask)
-		throws SystemException {
+	public KaleoTask updateKaleoTask(KaleoTask kaleoTask) {
 		return kaleoTaskPersistence.update(kaleoTask);
 	}
 
@@ -958,6 +973,63 @@ public abstract class KaleoTaskLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
+	 * Returns the class name local service.
+	 *
+	 * @return the class name local service
+	 */
+	public com.liferay.portal.service.ClassNameLocalService getClassNameLocalService() {
+		return classNameLocalService;
+	}
+
+	/**
+	 * Sets the class name local service.
+	 *
+	 * @param classNameLocalService the class name local service
+	 */
+	public void setClassNameLocalService(
+		com.liferay.portal.service.ClassNameLocalService classNameLocalService) {
+		this.classNameLocalService = classNameLocalService;
+	}
+
+	/**
+	 * Returns the class name remote service.
+	 *
+	 * @return the class name remote service
+	 */
+	public com.liferay.portal.service.ClassNameService getClassNameService() {
+		return classNameService;
+	}
+
+	/**
+	 * Sets the class name remote service.
+	 *
+	 * @param classNameService the class name remote service
+	 */
+	public void setClassNameService(
+		com.liferay.portal.service.ClassNameService classNameService) {
+		this.classNameService = classNameService;
+	}
+
+	/**
+	 * Returns the class name persistence.
+	 *
+	 * @return the class name persistence
+	 */
+	public ClassNamePersistence getClassNamePersistence() {
+		return classNamePersistence;
+	}
+
+	/**
+	 * Sets the class name persistence.
+	 *
+	 * @param classNamePersistence the class name persistence
+	 */
+	public void setClassNamePersistence(
+		ClassNamePersistence classNamePersistence) {
+		this.classNamePersistence = classNamePersistence;
+	}
+
+	/**
 	 * Returns the resource local service.
 	 *
 	 * @return the resource local service
@@ -1096,13 +1168,18 @@ public abstract class KaleoTaskLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
-	 * Performs an SQL query.
+	 * Performs a SQL query.
 	 *
 	 * @param sql the sql query
 	 */
-	protected void runSQL(String sql) throws SystemException {
+	protected void runSQL(String sql) {
 		try {
 			DataSource dataSource = kaleoTaskPersistence.getDataSource();
+
+			DB db = DBFactoryUtil.getDB();
+
+			sql = db.buildSQL(sql);
+			sql = PortalUtil.transformSQL(sql);
 
 			SqlUpdate sqlUpdate = SqlUpdateFactoryUtil.getSqlUpdate(dataSource,
 					sql, new int[0]);
@@ -1184,6 +1261,12 @@ public abstract class KaleoTaskLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected KaleoTransitionPersistence kaleoTransitionPersistence;
 	@BeanReference(type = com.liferay.counter.service.CounterLocalService.class)
 	protected com.liferay.counter.service.CounterLocalService counterLocalService;
+	@BeanReference(type = com.liferay.portal.service.ClassNameLocalService.class)
+	protected com.liferay.portal.service.ClassNameLocalService classNameLocalService;
+	@BeanReference(type = com.liferay.portal.service.ClassNameService.class)
+	protected com.liferay.portal.service.ClassNameService classNameService;
+	@BeanReference(type = ClassNamePersistence.class)
+	protected ClassNamePersistence classNamePersistence;
 	@BeanReference(type = com.liferay.portal.service.ResourceLocalService.class)
 	protected com.liferay.portal.service.ResourceLocalService resourceLocalService;
 	@BeanReference(type = com.liferay.portal.service.UserLocalService.class)

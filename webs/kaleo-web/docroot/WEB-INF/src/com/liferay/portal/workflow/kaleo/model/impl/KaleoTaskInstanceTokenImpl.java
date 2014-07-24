@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,7 +15,6 @@
 package com.liferay.portal.workflow.kaleo.model.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstanceToken;
 import com.liferay.portal.workflow.kaleo.model.KaleoTask;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignmentInstance;
@@ -34,22 +33,18 @@ public class KaleoTaskInstanceTokenImpl extends KaleoTaskInstanceTokenBaseImpl {
 	}
 
 	@Override
-	public KaleoInstanceToken getKaleoInstanceToken()
-		throws PortalException, SystemException {
-
+	public KaleoInstanceToken getKaleoInstanceToken() throws PortalException {
 		return KaleoInstanceTokenLocalServiceUtil.getKaleoInstanceToken(
 			getKaleoInstanceTokenId());
 	}
 
 	@Override
-	public KaleoTask getKaleoTask() throws PortalException, SystemException {
+	public KaleoTask getKaleoTask() throws PortalException {
 		return KaleoTaskLocalServiceUtil.getKaleoTask(getKaleoTaskId());
 	}
 
 	@Override
-	public List<KaleoTaskAssignmentInstance> getKaleoTaskAssignmentInstances()
-		throws SystemException {
-
+	public List<KaleoTaskAssignmentInstance> getKaleoTaskAssignmentInstances() {
 		return KaleoTaskAssignmentInstanceLocalServiceUtil.
 			getKaleoTaskAssignmentInstances(getKaleoTaskInstanceTokenId());
 	}

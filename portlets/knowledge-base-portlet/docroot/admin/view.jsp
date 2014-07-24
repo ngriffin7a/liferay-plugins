@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -30,7 +30,16 @@ long parentResourcePrimKey = ParamUtil.getLong(request, "parentResourcePrimKey",
 	<liferay-portlet:renderURLParams varImpl="searchURL" />
 	<aui:input name="resourcePrimKeys" type="hidden" />
 
-	<liferay-ui:error exception="<%= KBArticlePriorityException.class %>" message='<%= LanguageUtil.format(pageContext, "please-enter-a-priority-that-is-greater-than-x", "0", false) %>' translateMessage="<%= false %>" />
+	<liferay-ui:error exception="<%= KBArticleImportException.class %>">
+
+		<%
+		KBArticleImportException kbaie = (KBArticleImportException)errorException;
+		%>
+
+		<%= LanguageUtil.format(locale, "an-unexpected-error-occurred-while-importing-articles-x", kbaie.getLocalizedMessage()) %>
+	</liferay-ui:error>
+
+	<liferay-ui:error exception="<%= KBArticlePriorityException.class %>" message='<%= LanguageUtil.format(request, "please-enter-a-priority-that-is-greater-than-x", "0", false) %>' translateMessage="<%= false %>" />
 
 	<aui:fieldset>
 		<liferay-portlet:renderURL varImpl="iteratorURL">
@@ -39,21 +48,16 @@ long parentResourcePrimKey = ParamUtil.getLong(request, "parentResourcePrimKey",
 		</liferay-portlet:renderURL>
 
 		<liferay-ui:search-container
+			id="kbArticlesAdminSearchContainer"
 			rowChecker="<%= AdminPermission.contains(permissionChecker, scopeGroupId, ActionKeys.DELETE_KB_ARTICLES) ? new RowChecker(renderResponse) : null %>"
 			searchContainer="<%= new KBArticleSearch(renderRequest, iteratorURL) %>"
 		>
-			<liferay-ui:search-form
-				page="/admin/article_search.jsp"
-				servletContext="<%= application %>"
-			/>
 
 			<%
 			KBArticleSearchTerms searchTerms = (KBArticleSearchTerms)searchContainer.getSearchTerms();
 			%>
 
-			<liferay-ui:search-container-results>
-				<%@ include file="/admin/article_search_results.jspf" %>
-			</liferay-ui:search-container-results>
+			<%@ include file="/admin/article_search_results.jspf" %>
 
 			<%
 			boolean updateArticlesPriorities = AdminPermission.contains(permissionChecker, scopeGroupId, ActionKeys.UPDATE_KB_ARTICLES_PRIORITIES);
@@ -61,6 +65,7 @@ long parentResourcePrimKey = ParamUtil.getLong(request, "parentResourcePrimKey",
 
 			<liferay-ui:search-container-row
 				className="com.liferay.knowledgebase.model.KBArticle"
+				escapedModel="<%= true %>"
 				keyProperty="resourcePrimKey"
 				modelVar="kbArticle"
 			>
@@ -70,7 +75,7 @@ long parentResourcePrimKey = ParamUtil.getLong(request, "parentResourcePrimKey",
 				</liferay-portlet:renderURL>
 
 				<%
-				if (KBArticleServiceUtil.getSiblingKBArticlesCount(scopeGroupId, kbArticle.getResourcePrimKey(), WorkflowConstants.STATUS_ANY) == 0) {
+				if (KBArticleServiceUtil.getKBArticlesCount(scopeGroupId, kbArticle.getResourcePrimKey(), WorkflowConstants.STATUS_ANY) == 0) {
 					rowURL = null;
 				}
 				%>
@@ -124,7 +129,7 @@ long parentResourcePrimKey = ParamUtil.getLong(request, "parentResourcePrimKey",
 					href="<%= rowURL %>"
 					name="status"
 					orderable="<%= true %>"
-					value='<%= kbArticle.getStatus() + " (" + LanguageUtil.get(pageContext, WorkflowConstants.getStatusLabel(kbArticle.getStatus())) + ")" %>'
+					value='<%= kbArticle.getStatus() + " (" + LanguageUtil.get(request, WorkflowConstants.getStatusLabel(kbArticle.getStatus())) + ")" %>'
 				/>
 
 				<liferay-ui:search-container-column-text
@@ -138,19 +143,29 @@ long parentResourcePrimKey = ParamUtil.getLong(request, "parentResourcePrimKey",
 
 				<liferay-ui:search-container-column-jsp
 					align="right"
+					cssClass="entry-action"
 					path="/admin/article_action.jsp"
 				/>
 			</liferay-ui:search-container-row>
 
-			<c:if test="<%= (AdminPermission.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_KB_ARTICLE) || (AdminPermission.contains(permissionChecker, scopeGroupId, ActionKeys.PERMISSIONS) && GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.PERMISSIONS)) || AdminPermission.contains(permissionChecker, scopeGroupId, ActionKeys.SUBSCRIBE)) %>">
-				<aui:button-row cssClass="float-container">
-					<c:if test="<%= AdminPermission.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_KB_ARTICLE) %>">
-						<liferay-portlet:renderURL var="addKBArticleURL">
-							<portlet:param name="mvcPath" value='<%= templatePath + "edit_article.jsp" %>' />
-							<portlet:param name="redirect" value="<%= redirect %>" />
-						</liferay-portlet:renderURL>
+			<aui:nav-bar>
+				<aui:nav cssClass="navbar-nav">
+					<c:if test="<%= (total > 0) && (AdminPermission.contains(permissionChecker, scopeGroupId, ActionKeys.DELETE_KB_ARTICLES) || AdminPermission.contains(permissionChecker, scopeGroupId, ActionKeys.UPDATE_KB_ARTICLES_PRIORITIES)) %>">
+						<aui:nav-item cssClass="hide" dropdown="<%= true %>" id="actionsButton" label="actions">
+							<c:if test="<%= AdminPermission.contains(permissionChecker, scopeGroupId, ActionKeys.UPDATE_KB_ARTICLES_PRIORITIES) %>">
+								<aui:nav-item iconCssClass="icon-save" id="updateKBArticlesPriorities" label="save" />
+							</c:if>
 
-						<aui:button href="<%= addKBArticleURL %>" value="add-article" />
+							<c:if test="<%= AdminPermission.contains(permissionChecker, scopeGroupId, ActionKeys.DELETE_KB_ARTICLES) %>">
+								<aui:nav-item cssClass="item-remove" iconCssClass="icon-remove" id="deleteKBArticles" label="delete" />
+							</c:if>
+						</aui:nav-item>
+					</c:if>
+
+					<c:if test="<%= AdminPermission.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_KB_ARTICLE) %>">
+						<liferay-util:include page="/admin/common/add_article_button.jsp" servletContext="<%= application %>" />
+
+						<liferay-util:include page="/admin/import_articles_button.jsp" servletContext="<%= application %>" />
 					</c:if>
 
 					<c:if test="<%= AdminPermission.contains(permissionChecker, scopeGroupId, ActionKeys.PERMISSIONS) && GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.PERMISSIONS) %>">
@@ -159,42 +174,52 @@ long parentResourcePrimKey = ParamUtil.getLong(request, "parentResourcePrimKey",
 							modelResourceDescription="<%= HtmlUtil.escape(themeDisplay.getScopeGroupName()) %>"
 							resourcePrimKey="<%= String.valueOf(scopeGroupId) %>"
 							var="permissionsURL"
+							windowState="<%= LiferayWindowState.POP_UP.toString() %>"
 						/>
 
-						<aui:button href="<%= permissionsURL %>" value="permissions" />
+						<aui:nav-item href="<%= permissionsURL %>" label="permissions" useDialog="<%= true %>" />
 					</c:if>
+				</aui:nav>
 
-					<c:if test="<%= AdminPermission.contains(permissionChecker, scopeGroupId, ActionKeys.SUBSCRIBE) %>">
-						<div class="kb-admin-tools">
-							<c:choose>
-								<c:when test="<%= SubscriptionLocalServiceUtil.isSubscribed(user.getCompanyId(), user.getUserId(), KBArticle.class.getName(), scopeGroupId) %>">
-									<liferay-portlet:actionURL name="unsubscribeGroupKBArticles" var="unsubscribeGroupKBArticlesURL">
-										<portlet:param name="redirect" value="<%= redirect %>" />
-									</liferay-portlet:actionURL>
+				<aui:nav-bar-search
+					cssClass="navbar-search-advanced"
+				>
+					<liferay-ui:search-form
+						page="/admin/article_search.jsp"
+						servletContext="<%= application %>"
+					/>
+				</aui:nav-bar-search>
+			</aui:nav-bar>
 
-									<liferay-ui:icon
-										image="unsubscribe"
-										label="<%= true %>"
-										url="<%= unsubscribeGroupKBArticlesURL %>"
-									/>
-								</c:when>
-								<c:otherwise>
-									<liferay-portlet:actionURL name="subscribeGroupKBArticles" var="subscribeGroupKBArticlesURL">
-										<portlet:param name="redirect" value="<%= redirect %>" />
-									</liferay-portlet:actionURL>
+			<c:if test="<%= AdminPermission.contains(permissionChecker, scopeGroupId, ActionKeys.SUBSCRIBE) %>">
+				<div class="kb-admin-tools">
+					<c:choose>
+						<c:when test="<%= SubscriptionLocalServiceUtil.isSubscribed(user.getCompanyId(), user.getUserId(), KBArticle.class.getName(), scopeGroupId) %>">
+							<liferay-portlet:actionURL name="unsubscribeGroupKBArticles" var="unsubscribeGroupKBArticlesURL">
+								<portlet:param name="redirect" value="<%= redirect %>" />
+							</liferay-portlet:actionURL>
 
-									<liferay-ui:icon
-										image="subscribe"
-										label="<%= true %>"
-										url="<%= subscribeGroupKBArticlesURL %>"
-									/>
-								</c:otherwise>
-							</c:choose>
-						</div>
-					</c:if>
-				</aui:button-row>
+							<liferay-ui:icon
+								iconCssClass="icon-remove-sign"
+								label="<%= true %>"
+								message="unsubscribe"
+								url="<%= unsubscribeGroupKBArticlesURL %>"
+							/>
+						</c:when>
+						<c:otherwise>
+							<liferay-portlet:actionURL name="subscribeGroupKBArticles" var="subscribeGroupKBArticlesURL">
+								<portlet:param name="redirect" value="<%= redirect %>" />
+							</liferay-portlet:actionURL>
 
-				<div class="separator"><!-- --></div>
+							<liferay-ui:icon
+								iconCssClass="icon-ok-sign"
+								label="<%= true %>"
+								message="subscribe"
+								url="<%= subscribeGroupKBArticlesURL %>"
+							/>
+						</c:otherwise>
+					</c:choose>
+				</div>
 			</c:if>
 
 			<c:if test="<%= !searchTerms.hasSearchTerms() && (parentResourcePrimKey != KBArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY) %>">
@@ -221,25 +246,13 @@ long parentResourcePrimKey = ParamUtil.getLong(request, "parentResourcePrimKey",
 
 					<c:choose>
 						<c:when test="<%= total > 0 %>">
-							<%= LanguageUtil.format(pageContext, "child-articles-for-x", sb.toString(), false) %>
+							<%= LanguageUtil.format(request, "child-articles-for-x", sb.toString(), false) %>
 						</c:when>
 						<c:otherwise>
-							<%= LanguageUtil.format(pageContext, "there-are-no-child-articles-for-x", sb.toString(), false) %>
+							<%= LanguageUtil.format(request, "there-are-no-child-articles-for-x", sb.toString(), false) %>
 						</c:otherwise>
 					</c:choose>
 				</div>
-			</c:if>
-
-			<c:if test="<%= (total > 0) && (AdminPermission.contains(permissionChecker, scopeGroupId, ActionKeys.DELETE_KB_ARTICLES) || AdminPermission.contains(permissionChecker, scopeGroupId, ActionKeys.UPDATE_KB_ARTICLES_PRIORITIES)) %>">
-				<aui:button-row cssClass="kb-bulk-action-button-holder">
-					<c:if test="<%= AdminPermission.contains(permissionChecker, scopeGroupId, ActionKeys.DELETE_KB_ARTICLES) %>">
-						<aui:button onClick='<%= renderResponse.getNamespace() + "deleteKBArticles();" %>' value="delete" />
-					</c:if>
-
-					<c:if test="<%= AdminPermission.contains(permissionChecker, scopeGroupId, ActionKeys.UPDATE_KB_ARTICLES_PRIORITIES) %>">
-						<aui:button onClick='<%= renderResponse.getNamespace() + "updateKBArticlesPriorities();" %>' value="save" />
-					</c:if>
-				</aui:button-row>
 			</c:if>
 
 			<liferay-ui:search-iterator type='<%= searchTerms.hasSearchTerms() ? "more" : "regular" %>' />
@@ -247,22 +260,47 @@ long parentResourcePrimKey = ParamUtil.getLong(request, "parentResourcePrimKey",
 	</aui:fieldset>
 </aui:form>
 
-<aui:script>
-	function <portlet:namespace />updateKBArticlesPriorities() {
-		document.<portlet:namespace />fm.method = "post";
-		submitForm(document.<portlet:namespace />fm, "<liferay-portlet:actionURL name="updateKBArticlesPriorities"><portlet:param name="mvcPath" value="/admin/view.jsp" /><portlet:param name="redirect" value="<%= redirect %>" /></liferay-portlet:actionURL>");
+<aui:script use="aui-base,liferay-util-list-fields">
+	var updateKBArticlesPriorities = A.one('#<portlet:namespace />updateKBArticlesPriorities');
+
+	if (updateKBArticlesPriorities) {
+		updateKBArticlesPriorities.on(
+			'click',
+			function() {
+				document.<portlet:namespace />fm.method = 'post';
+
+				submitForm(document.<portlet:namespace />fm, '<liferay-portlet:actionURL name="updateKBArticlesPriorities"><portlet:param name="mvcPath" value="/admin/view.jsp" /><portlet:param name="redirect" value="<%= redirect %>" /></liferay-portlet:actionURL>');
+			}
+		);
 	}
 
-	Liferay.provide(
-		window,
-		'<portlet:namespace />deleteKBArticles',
+	var deleteKBArticles = A.one('#<portlet:namespace />deleteKBArticles');
+
+	if (deleteKBArticles) {
+		deleteKBArticles.on(
+			'click',
+			function() {
+				if (confirm('<%= UnicodeLanguageUtil.get(request, "are-you-sure-you-want-to-delete-the-selected-articles") %>')) {
+					document.<portlet:namespace />fm.method = 'post';
+					document.<portlet:namespace />fm.<portlet:namespace />resourcePrimKeys.value = Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, '<portlet:namespace />allRowIds');
+
+					submitForm(document.<portlet:namespace />fm, '<liferay-portlet:actionURL name="deleteKBArticles"><portlet:param name="mvcPath" value="/admin/view.jsp" /><portlet:param name="redirect" value="<%= redirect %>" /></liferay-portlet:actionURL>');
+				}
+			}
+		);
+	}
+
+	A.one('#<portlet:namespace />kbArticlesAdminSearchContainer').delegate(
+		'click',
 		function() {
-			if (confirm('<%= UnicodeLanguageUtil.get(pageContext, "are-you-sure-you-want-to-delete-the-selected-articles") %>')) {
-				document.<portlet:namespace />fm.method = "post";
-				document.<portlet:namespace />fm.<portlet:namespace />resourcePrimKeys.value = Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, "<portlet:namespace />allRowIds");
-				submitForm(document.<portlet:namespace />fm, "<liferay-portlet:actionURL name="deleteKBArticles"><portlet:param name="mvcPath" value="/admin/view.jsp" /><portlet:param name="redirect" value="<%= redirect %>" /></liferay-portlet:actionURL>");
+			var hide = (Liferay.Util.listCheckedExcept(document.<portlet:namespace />fm, '<portlet:namespace /><%= RowChecker.ALL_ROW_IDS %>').length == 0);
+
+			var actionsButton = A.one('#<portlet:namespace />actionsButton');
+
+			if (actionsButton) {
+				actionsButton.toggle(!hide);
 			}
 		},
-		['liferay-util-list-fields']
+		'input[type=checkbox]'
 	);
 </aui:script>

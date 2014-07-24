@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -18,7 +18,6 @@
 package com.liferay.tasks.asset;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.asset.model.AssetRenderer;
@@ -38,7 +37,7 @@ public class TasksEntryAssetRendererFactory extends BaseAssetRendererFactory {
 
 	@Override
 	public AssetRenderer getAssetRenderer(long classPK, int type)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		TasksEntry tasksEntry = TasksEntryLocalServiceUtil.getTasksEntry(
 			classPK);
@@ -49,6 +48,11 @@ public class TasksEntryAssetRendererFactory extends BaseAssetRendererFactory {
 	@Override
 	public String getClassName() {
 		return CLASS_NAME;
+	}
+
+	@Override
+	public String getIconCssClass() {
+		return "icon-tasks";
 	}
 
 	@Override

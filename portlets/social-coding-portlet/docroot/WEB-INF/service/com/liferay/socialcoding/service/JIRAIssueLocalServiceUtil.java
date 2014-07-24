@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -44,11 +44,9 @@ public class JIRAIssueLocalServiceUtil {
 	*
 	* @param jiraIssue the j i r a issue
 	* @return the j i r a issue that was added
-	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.socialcoding.model.JIRAIssue addJIRAIssue(
-		com.liferay.socialcoding.model.JIRAIssue jiraIssue)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.socialcoding.model.JIRAIssue jiraIssue) {
 		return getService().addJIRAIssue(jiraIssue);
 	}
 
@@ -64,31 +62,36 @@ public class JIRAIssueLocalServiceUtil {
 	}
 
 	/**
+	* Deletes the j i r a issue from the database. Also notifies the appropriate model listeners.
+	*
+	* @param jiraIssue the j i r a issue
+	* @return the j i r a issue that was removed
+	*/
+	public static com.liferay.socialcoding.model.JIRAIssue deleteJIRAIssue(
+		com.liferay.socialcoding.model.JIRAIssue jiraIssue) {
+		return getService().deleteJIRAIssue(jiraIssue);
+	}
+
+	/**
 	* Deletes the j i r a issue with the primary key from the database. Also notifies the appropriate model listeners.
 	*
 	* @param jiraIssueId the primary key of the j i r a issue
 	* @return the j i r a issue that was removed
 	* @throws PortalException if a j i r a issue with the primary key could not be found
-	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.socialcoding.model.JIRAIssue deleteJIRAIssue(
 		long jiraIssueId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().deleteJIRAIssue(jiraIssueId);
 	}
 
 	/**
-	* Deletes the j i r a issue from the database. Also notifies the appropriate model listeners.
-	*
-	* @param jiraIssue the j i r a issue
-	* @return the j i r a issue that was removed
-	* @throws SystemException if a system exception occurred
+	* @throws PortalException
 	*/
-	public static com.liferay.socialcoding.model.JIRAIssue deleteJIRAIssue(
-		com.liferay.socialcoding.model.JIRAIssue jiraIssue)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().deleteJIRAIssue(jiraIssue);
+	public static com.liferay.portal.model.PersistedModel deletePersistedModel(
+		com.liferay.portal.model.PersistedModel persistedModel)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().deletePersistedModel(persistedModel);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery() {
@@ -100,12 +103,9 @@ public class JIRAIssueLocalServiceUtil {
 	*
 	* @param dynamicQuery the dynamic query
 	* @return the matching rows
-	* @throws SystemException if a system exception occurred
 	*/
-	@SuppressWarnings("rawtypes")
-	public static java.util.List dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public static <T> java.util.List<T> dynamicQuery(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
 		return getService().dynamicQuery(dynamicQuery);
 	}
 
@@ -120,12 +120,10 @@ public class JIRAIssueLocalServiceUtil {
 	* @param start the lower bound of the range of model instances
 	* @param end the upper bound of the range of model instances (not inclusive)
 	* @return the range of matching rows
-	* @throws SystemException if a system exception occurred
 	*/
-	@SuppressWarnings("rawtypes")
-	public static java.util.List dynamicQuery(
+	public static <T> java.util.List<T> dynamicQuery(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
-		int end) throws com.liferay.portal.kernel.exception.SystemException {
+		int end) {
 		return getService().dynamicQuery(dynamicQuery, start, end);
 	}
 
@@ -141,14 +139,11 @@ public class JIRAIssueLocalServiceUtil {
 	* @param end the upper bound of the range of model instances (not inclusive)
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching rows
-	* @throws SystemException if a system exception occurred
 	*/
-	@SuppressWarnings("rawtypes")
-	public static java.util.List dynamicQuery(
+	public static <T> java.util.List<T> dynamicQuery(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
 		int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.util.OrderByComparator<T> orderByComparator) {
 		return getService()
 				   .dynamicQuery(dynamicQuery, start, end, orderByComparator);
 	}
@@ -158,11 +153,9 @@ public class JIRAIssueLocalServiceUtil {
 	*
 	* @param dynamicQuery the dynamic query
 	* @return the number of rows that match the dynamic query
-	* @throws SystemException if a system exception occurred
 	*/
 	public static long dynamicQueryCount(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
 		return getService().dynamicQueryCount(dynamicQuery);
 	}
 
@@ -172,19 +165,86 @@ public class JIRAIssueLocalServiceUtil {
 	* @param dynamicQuery the dynamic query
 	* @param projection the projection to apply to the query
 	* @return the number of rows that match the dynamic query
-	* @throws SystemException if a system exception occurred
 	*/
 	public static long dynamicQueryCount(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery,
-		com.liferay.portal.kernel.dao.orm.Projection projection)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.dao.orm.Projection projection) {
 		return getService().dynamicQueryCount(dynamicQuery, projection);
 	}
 
 	public static com.liferay.socialcoding.model.JIRAIssue fetchJIRAIssue(
-		long jiraIssueId)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		long jiraIssueId) {
 		return getService().fetchJIRAIssue(jiraIssueId);
+	}
+
+	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
+		return getService().getActionableDynamicQuery();
+	}
+
+	public static java.util.List<com.liferay.socialcoding.model.JIRAIssue> getAssigneeJIRAIssues(
+		java.util.Date modifiedDate, long projectId,
+		java.lang.String assigneeJiraUserId, int start, int end) {
+		return getService()
+				   .getAssigneeJIRAIssues(modifiedDate, projectId,
+			assigneeJiraUserId, start, end);
+	}
+
+	public static java.util.List<com.liferay.socialcoding.model.JIRAIssue> getAssigneeJIRAIssues(
+		long projectId, java.lang.String assigneeJiraUserId, int start, int end) {
+		return getService()
+				   .getAssigneeJIRAIssues(projectId, assigneeJiraUserId, start,
+			end);
+	}
+
+	public static java.util.List<com.liferay.socialcoding.model.JIRAIssue> getAssigneeJIRAIssues(
+		long projectId, java.lang.String assigneeJiraUserId,
+		java.lang.String status, int start, int end) {
+		return getService()
+				   .getAssigneeJIRAIssues(projectId, assigneeJiraUserId,
+			status, start, end);
+	}
+
+	public static int getAssigneeJIRAIssuesCount(java.util.Date modifiedDate,
+		long projectId, java.lang.String assigneeJiraUserId) {
+		return getService()
+				   .getAssigneeJIRAIssuesCount(modifiedDate, projectId,
+			assigneeJiraUserId);
+	}
+
+	public static int getAssigneeJIRAIssuesCount(long projectId,
+		java.lang.String assigneeJiraUserId) {
+		return getService()
+				   .getAssigneeJIRAIssuesCount(projectId, assigneeJiraUserId);
+	}
+
+	public static int getAssigneeJIRAIssuesCount(long projectId,
+		java.lang.String assigneeJiraUserId, java.lang.String status) {
+		return getService()
+				   .getAssigneeJIRAIssuesCount(projectId, assigneeJiraUserId,
+			status);
+	}
+
+	/**
+	* Returns the Spring bean ID for this bean.
+	*
+	* @return the Spring bean ID for this bean
+	*/
+	public static java.lang.String getBeanIdentifier() {
+		return getService().getBeanIdentifier();
+	}
+
+	public static com.liferay.socialcoding.model.JIRAIssue getFirstAssigneeJIRAIssue(
+		long projectId, java.lang.String assigneeJiraUserId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .getFirstAssigneeJIRAIssue(projectId, assigneeJiraUserId);
+	}
+
+	public static com.liferay.socialcoding.model.JIRAIssue getFirstReporterJIRAIssue(
+		long projectId, java.lang.String reporterJiraUserId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .getFirstReporterJIRAIssue(projectId, reporterJiraUserId);
 	}
 
 	/**
@@ -193,20 +253,17 @@ public class JIRAIssueLocalServiceUtil {
 	* @param jiraIssueId the primary key of the j i r a issue
 	* @return the j i r a issue
 	* @throws PortalException if a j i r a issue with the primary key could not be found
-	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.socialcoding.model.JIRAIssue getJIRAIssue(
 		long jiraIssueId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getJIRAIssue(jiraIssueId);
 	}
 
-	public static com.liferay.portal.model.PersistedModel getPersistedModel(
-		java.io.Serializable primaryKeyObj)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().getPersistedModel(primaryKeyObj);
+	public static com.liferay.socialcoding.model.JIRAIssue getJIRAIssue(
+		java.lang.String key)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getJIRAIssue(key);
 	}
 
 	/**
@@ -219,11 +276,9 @@ public class JIRAIssueLocalServiceUtil {
 	* @param start the lower bound of the range of j i r a issues
 	* @param end the upper bound of the range of j i r a issues (not inclusive)
 	* @return the range of j i r a issues
-	* @throws SystemException if a system exception occurred
 	*/
 	public static java.util.List<com.liferay.socialcoding.model.JIRAIssue> getJIRAIssues(
-		int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		int start, int end) {
 		return getService().getJIRAIssues(start, end);
 	}
 
@@ -231,33 +286,78 @@ public class JIRAIssueLocalServiceUtil {
 	* Returns the number of j i r a issues.
 	*
 	* @return the number of j i r a issues
-	* @throws SystemException if a system exception occurred
 	*/
-	public static int getJIRAIssuesCount()
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public static int getJIRAIssuesCount() {
 		return getService().getJIRAIssuesCount();
 	}
 
-	/**
-	* Updates the j i r a issue in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
-	*
-	* @param jiraIssue the j i r a issue
-	* @return the j i r a issue that was updated
-	* @throws SystemException if a system exception occurred
-	*/
-	public static com.liferay.socialcoding.model.JIRAIssue updateJIRAIssue(
-		com.liferay.socialcoding.model.JIRAIssue jiraIssue)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().updateJIRAIssue(jiraIssue);
+	public static com.liferay.socialcoding.model.JIRAIssue getLastAssigneeJIRAIssue(
+		long projectId, java.lang.String assigneeJiraUserId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .getLastAssigneeJIRAIssue(projectId, assigneeJiraUserId);
 	}
 
-	/**
-	* Returns the Spring bean ID for this bean.
-	*
-	* @return the Spring bean ID for this bean
-	*/
-	public static java.lang.String getBeanIdentifier() {
-		return getService().getBeanIdentifier();
+	public static com.liferay.socialcoding.model.JIRAIssue getLastreporterJIRAIssue(
+		long projectId, java.lang.String reporterJiraUserId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .getLastreporterJIRAIssue(projectId, reporterJiraUserId);
+	}
+
+	public static com.liferay.portal.model.PersistedModel getPersistedModel(
+		java.io.Serializable primaryKeyObj)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getPersistedModel(primaryKeyObj);
+	}
+
+	public static java.util.List<com.liferay.socialcoding.model.JIRAIssue> getReporterJIRAIssues(
+		java.util.Date modifiedDate, long projectId,
+		java.lang.String reporterJiraUserId, int start, int end) {
+		return getService()
+				   .getReporterJIRAIssues(modifiedDate, projectId,
+			reporterJiraUserId, start, end);
+	}
+
+	public static java.util.List<com.liferay.socialcoding.model.JIRAIssue> getReporterJIRAIssues(
+		long projectId, java.lang.String reporterJiraUserId, int start, int end) {
+		return getService()
+				   .getReporterJIRAIssues(projectId, reporterJiraUserId, start,
+			end);
+	}
+
+	public static java.util.List<com.liferay.socialcoding.model.JIRAIssue> getReporterJIRAIssues(
+		long projectId, java.lang.String reporterJiraUserId,
+		java.lang.String status, int start, int end) {
+		return getService()
+				   .getReporterJIRAIssues(projectId, reporterJiraUserId,
+			status, start, end);
+	}
+
+	public static int getReporterJIRAIssuesCount(java.util.Date modifiedDate,
+		long projectId, java.lang.String reporterJiraUserId) {
+		return getService()
+				   .getReporterJIRAIssuesCount(modifiedDate, projectId,
+			reporterJiraUserId);
+	}
+
+	public static int getReporterJIRAIssuesCount(long projectId,
+		java.lang.String reporterJiraUserId) {
+		return getService()
+				   .getReporterJIRAIssuesCount(projectId, reporterJiraUserId);
+	}
+
+	public static int getReporterJIRAIssuesCount(long projectId,
+		java.lang.String reporterJiraUserId, java.lang.String status) {
+		return getService()
+				   .getReporterJIRAIssuesCount(projectId, reporterJiraUserId,
+			status);
+	}
+
+	public static java.lang.Object invokeMethod(java.lang.String name,
+		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
+		throws java.lang.Throwable {
+		return getService().invokeMethod(name, parameterTypes, arguments);
 	}
 
 	/**
@@ -269,152 +369,19 @@ public class JIRAIssueLocalServiceUtil {
 		getService().setBeanIdentifier(beanIdentifier);
 	}
 
-	public static java.lang.Object invokeMethod(java.lang.String name,
-		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
-		throws java.lang.Throwable {
-		return getService().invokeMethod(name, parameterTypes, arguments);
-	}
-
-	public static java.util.List<com.liferay.socialcoding.model.JIRAIssue> getAssigneeJIRAIssues(
-		java.util.Date modifiedDate, long projectId,
-		java.lang.String assigneeJiraUserId, int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getAssigneeJIRAIssues(modifiedDate, projectId,
-			assigneeJiraUserId, start, end);
-	}
-
-	public static java.util.List<com.liferay.socialcoding.model.JIRAIssue> getAssigneeJIRAIssues(
-		long projectId, java.lang.String assigneeJiraUserId, int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getAssigneeJIRAIssues(projectId, assigneeJiraUserId, start,
-			end);
-	}
-
-	public static java.util.List<com.liferay.socialcoding.model.JIRAIssue> getAssigneeJIRAIssues(
-		long projectId, java.lang.String assigneeJiraUserId,
-		java.lang.String status, int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getAssigneeJIRAIssues(projectId, assigneeJiraUserId,
-			status, start, end);
-	}
-
-	public static int getAssigneeJIRAIssuesCount(java.util.Date modifiedDate,
-		long projectId, java.lang.String assigneeJiraUserId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getAssigneeJIRAIssuesCount(modifiedDate, projectId,
-			assigneeJiraUserId);
-	}
-
-	public static int getAssigneeJIRAIssuesCount(long projectId,
-		java.lang.String assigneeJiraUserId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getAssigneeJIRAIssuesCount(projectId, assigneeJiraUserId);
-	}
-
-	public static int getAssigneeJIRAIssuesCount(long projectId,
-		java.lang.String assigneeJiraUserId, java.lang.String status)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getAssigneeJIRAIssuesCount(projectId, assigneeJiraUserId,
-			status);
-	}
-
-	public static com.liferay.socialcoding.model.JIRAIssue getFirstAssigneeJIRAIssue(
-		long projectId, java.lang.String assigneeJiraUserId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getFirstAssigneeJIRAIssue(projectId, assigneeJiraUserId);
-	}
-
-	public static com.liferay.socialcoding.model.JIRAIssue getFirstReporterJIRAIssue(
-		long projectId, java.lang.String reporterJiraUserId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getFirstReporterJIRAIssue(projectId, reporterJiraUserId);
-	}
-
-	public static com.liferay.socialcoding.model.JIRAIssue getJIRAIssue(
-		java.lang.String key)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().getJIRAIssue(key);
-	}
-
-	public static com.liferay.socialcoding.model.JIRAIssue getLastAssigneeJIRAIssue(
-		long projectId, java.lang.String assigneeJiraUserId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getLastAssigneeJIRAIssue(projectId, assigneeJiraUserId);
-	}
-
-	public static com.liferay.socialcoding.model.JIRAIssue getLastreporterJIRAIssue(
-		long projectId, java.lang.String reporterJiraUserId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getLastreporterJIRAIssue(projectId, reporterJiraUserId);
-	}
-
-	public static java.util.List<com.liferay.socialcoding.model.JIRAIssue> getReporterJIRAIssues(
-		java.util.Date modifiedDate, long projectId,
-		java.lang.String reporterJiraUserId, int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getReporterJIRAIssues(modifiedDate, projectId,
-			reporterJiraUserId, start, end);
-	}
-
-	public static java.util.List<com.liferay.socialcoding.model.JIRAIssue> getReporterJIRAIssues(
-		long projectId, java.lang.String reporterJiraUserId, int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getReporterJIRAIssues(projectId, reporterJiraUserId, start,
-			end);
-	}
-
-	public static java.util.List<com.liferay.socialcoding.model.JIRAIssue> getReporterJIRAIssues(
-		long projectId, java.lang.String reporterJiraUserId,
-		java.lang.String status, int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getReporterJIRAIssues(projectId, reporterJiraUserId,
-			status, start, end);
-	}
-
-	public static int getReporterJIRAIssuesCount(java.util.Date modifiedDate,
-		long projectId, java.lang.String reporterJiraUserId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getReporterJIRAIssuesCount(modifiedDate, projectId,
-			reporterJiraUserId);
-	}
-
-	public static int getReporterJIRAIssuesCount(long projectId,
-		java.lang.String reporterJiraUserId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getReporterJIRAIssuesCount(projectId, reporterJiraUserId);
-	}
-
-	public static int getReporterJIRAIssuesCount(long projectId,
-		java.lang.String reporterJiraUserId, java.lang.String status)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getReporterJIRAIssuesCount(projectId, reporterJiraUserId,
-			status);
+	/**
+	* Updates the j i r a issue in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	*
+	* @param jiraIssue the j i r a issue
+	* @return the j i r a issue that was updated
+	*/
+	public static com.liferay.socialcoding.model.JIRAIssue updateJIRAIssue(
+		com.liferay.socialcoding.model.JIRAIssue jiraIssue) {
+		return getService().updateJIRAIssue(jiraIssue);
 	}
 
 	public static void updateJIRAIssues(long projectId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		getService().updateJIRAIssues(projectId);
 	}
 
@@ -444,6 +411,7 @@ public class JIRAIssueLocalServiceUtil {
 	/**
 	 * @deprecated As of 6.2.0
 	 */
+	@Deprecated
 	public void setService(JIRAIssueLocalService service) {
 	}
 

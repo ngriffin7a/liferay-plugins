@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,12 +15,15 @@
 package com.liferay.portal.workflow.kaleo.model;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.BaseModel;
+import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.BaseModelImpl;
-import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.workflow.kaleo.service.ClpSerializer;
 import com.liferay.portal.workflow.kaleo.service.KaleoConditionLocalServiceUtil;
 
@@ -86,6 +89,9 @@ public class KaleoConditionClp extends BaseModelImpl<KaleoCondition>
 		attributes.put("script", getScript());
 		attributes.put("scriptLanguage", getScriptLanguage());
 		attributes.put("scriptRequiredContexts", getScriptRequiredContexts());
+
+		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
+		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -164,6 +170,9 @@ public class KaleoConditionClp extends BaseModelImpl<KaleoCondition>
 		if (scriptRequiredContexts != null) {
 			setScriptRequiredContexts(scriptRequiredContexts);
 		}
+
+		_entityCacheEnabled = GetterUtil.getBoolean("entityCacheEnabled");
+		_finderCacheEnabled = GetterUtil.getBoolean("finderCacheEnabled");
 	}
 
 	@Override
@@ -260,13 +269,19 @@ public class KaleoConditionClp extends BaseModelImpl<KaleoCondition>
 	}
 
 	@Override
-	public String getUserUuid() throws SystemException {
-		return PortalUtil.getUserValue(getUserId(), "uuid", _userUuid);
+	public String getUserUuid() {
+		try {
+			User user = UserLocalServiceUtil.getUserById(getUserId());
+
+			return user.getUuid();
+		}
+		catch (PortalException pe) {
+			return StringPool.BLANK;
+		}
 	}
 
 	@Override
 	public void setUserUuid(String userUuid) {
-		_userUuid = userUuid;
 	}
 
 	@Override
@@ -507,7 +522,7 @@ public class KaleoConditionClp extends BaseModelImpl<KaleoCondition>
 	}
 
 	@Override
-	public void persist() throws SystemException {
+	public void persist() {
 		if (this.isNew()) {
 			KaleoConditionLocalServiceUtil.addKaleoCondition(this);
 		}
@@ -586,9 +601,23 @@ public class KaleoConditionClp extends BaseModelImpl<KaleoCondition>
 		}
 	}
 
+	public Class<?> getClpSerializerClass() {
+		return _clpSerializerClass;
+	}
+
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	@Override
+	public boolean isEntityCacheEnabled() {
+		return _entityCacheEnabled;
+	}
+
+	@Override
+	public boolean isFinderCacheEnabled() {
+		return _finderCacheEnabled;
 	}
 
 	@Override
@@ -690,7 +719,6 @@ public class KaleoConditionClp extends BaseModelImpl<KaleoCondition>
 	private long _groupId;
 	private long _companyId;
 	private long _userId;
-	private String _userUuid;
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
@@ -700,4 +728,7 @@ public class KaleoConditionClp extends BaseModelImpl<KaleoCondition>
 	private String _scriptLanguage;
 	private String _scriptRequiredContexts;
 	private BaseModel<?> _kaleoConditionRemoteModel;
+	private Class<?> _clpSerializerClass = com.liferay.portal.workflow.kaleo.service.ClpSerializer.class;
+	private boolean _entityCacheEnabled;
+	private boolean _finderCacheEnabled;
 }

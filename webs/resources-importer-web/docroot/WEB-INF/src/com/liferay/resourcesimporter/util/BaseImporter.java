@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -21,11 +21,13 @@ import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
+import com.liferay.portal.model.LayoutPrototype;
 import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portal.service.LayoutPrototypeLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
@@ -49,6 +51,10 @@ public abstract class BaseImporter implements Importer {
 
 		userId = user.getUserId();
 
+		if (isCompanyGroup()) {
+			return;
+		}
+
 		Group group = null;
 
 		if (targetClassName.equals(LayoutSetPrototype.class.getName())) {
@@ -70,7 +76,10 @@ public abstract class BaseImporter implements Importer {
 			targetClassPK = layoutSetPrototype.getLayoutSetPrototypeId();
 		}
 		else if (targetClassName.equals(Group.class.getName())) {
-			if (targetValue.equals(GroupConstants.GUEST)) {
+			if (targetValue.equals(GroupConstants.GLOBAL)) {
+				group = GroupLocalServiceUtil.getCompanyGroup(companyId);
+			}
+			else if (targetValue.equals(GroupConstants.GUEST)) {
 				group = GroupLocalServiceUtil.getGroup(
 					companyId, GroupConstants.GUEST);
 
@@ -147,6 +156,17 @@ public abstract class BaseImporter implements Importer {
 	}
 
 	@Override
+	public boolean isCompanyGroup() throws Exception {
+		Group group = GroupLocalServiceUtil.fetchGroup(groupId);
+
+		if (group == null) {
+			return false;
+		}
+
+		return group.isCompany();
+	}
+
+	@Override
 	public boolean isExisting() {
 		return existing;
 	}
@@ -154,6 +174,16 @@ public abstract class BaseImporter implements Importer {
 	@Override
 	public void setCompanyId(long companyId) {
 		this.companyId = companyId;
+	}
+
+	@Override
+	public void setDeveloperModeEnabled(boolean developerModeEnabled) {
+		this.developerModeEnabled = developerModeEnabled;
+	}
+
+	@Override
+	public void setGroupId(long groupId) {
+		this.groupId = groupId;
 	}
 
 	@Override
@@ -181,6 +211,27 @@ public abstract class BaseImporter implements Importer {
 		this.targetValue = targetValue;
 	}
 
+	@Override
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	protected LayoutPrototype getLayoutPrototype(long companyId, String name) {
+		Locale locale = LocaleUtil.getDefault();
+
+		List<LayoutPrototype> layoutPrototypes =
+			LayoutPrototypeLocalServiceUtil.search(
+				companyId, null, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+
+		for (LayoutPrototype layoutPrototype : layoutPrototypes) {
+			if (name.equals(layoutPrototype.getName(locale))) {
+				return layoutPrototype;
+			}
+		}
+
+		return null;
+	}
+
 	protected LayoutSetPrototype getLayoutSetPrototype(
 			long companyId, String name)
 		throws Exception {
@@ -201,6 +252,7 @@ public abstract class BaseImporter implements Importer {
 	}
 
 	protected long companyId;
+	protected boolean developerModeEnabled;
 	protected boolean existing;
 	protected long groupId;
 	protected String resourcesDir;
@@ -210,5 +262,6 @@ public abstract class BaseImporter implements Importer {
 	protected long targetClassPK;
 	protected String targetValue;
 	protected long userId;
+	protected String version;
 
 }

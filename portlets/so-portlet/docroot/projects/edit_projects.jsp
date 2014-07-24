@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -49,6 +49,8 @@ if (projectsEntries.isEmpty()) {
 
 	projectsEntriesIndexes = new int[] {0};
 }
+
+String namespace = PortalUtil.getPortletNamespace(PortletKeys.MY_ACCOUNT);
 %>
 
 <liferay-ui:error-marker key="errorSection" value="projects" />
@@ -98,8 +100,8 @@ if (projectsEntries.isEmpty()) {
 						Calendar selDate = startDate;
 						%>
 
-						<div class="aui-field">
-							<label class="aui-field-label" for="<portlet:namespace /><%= fieldParam %>"><liferay-ui:message key="start-date" /></label>
+						<div class="field">
+							<label class="field-label" for="<%= namespace %><%= fieldParam %>"><liferay-ui:message key="start-date" /></label>
 
 							<%@ include file="/projects/select_date.jspf" %>
 						</div>
@@ -112,8 +114,8 @@ if (projectsEntries.isEmpty()) {
 						Calendar selDate = endDate;
 						%>
 
-						<div class="aui-field">
-							<label class="aui-field-label" for="<portlet:namespace /><%= fieldParam %>"><liferay-ui:message key="end-date" /></label>
+						<div class="field">
+							<label class="field-label" for="<%= namespace %><%= fieldParam %>"><liferay-ui:message key="end-date" /></label>
 
 							<%@ include file="/projects/select_date.jspf" %>
 						</div>
@@ -124,8 +126,8 @@ if (projectsEntries.isEmpty()) {
 						String fieldParam = "projectsEntryCurrent" + projectsEntriesIndex;
 						%>
 
-						<div class="aui-field">
-							<label class="aui-field-label" for="<portlet:namespace /><%= fieldParam %>"><liferay-ui:message key="current" /></label>
+						<div class="field project-current">
+							<label class="field-label" for="<%= namespace %><%= fieldParam %>"><liferay-ui:message key="current" /></label>
 
 							<liferay-ui:input-checkbox defaultValue="<%= current %>" param="<%= fieldParam %>" />
 						</div>
@@ -143,14 +145,15 @@ if (projectsEntries.isEmpty()) {
 	<aui:input name="projectsEntriesIndexes" type="hidden" value="<%= StringUtil.merge(projectsEntriesIndexes) %>" />
 </aui:fieldset>
 
-<aui:script use="liferay-auto-fields">
+<aui:script position="inline" use="liferay-auto-fields">
 	Liferay.once(
-		'formNavigator:reveal<portlet:namespace />projects',
+		'formNavigator:reveal<%= namespace %>projects',
 		function() {
 			new Liferay.AutoFields(
 				{
-					contentBox: '#<portlet:namespace />projects > fieldset',
-					fieldIndexes: '<portlet:namespace />projectsEntriesIndexes'
+					contentBox: '#<%= namespace %>projects > fieldset',
+					fieldIndexes: '<%= namespace %>projectsEntriesIndexes',
+					namespace: '<%= namespace %>'
 				}
 			).render();
 		}

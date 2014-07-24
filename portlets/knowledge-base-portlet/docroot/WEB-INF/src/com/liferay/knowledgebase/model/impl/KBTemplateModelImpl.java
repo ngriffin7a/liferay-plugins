@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -19,7 +19,7 @@ import com.liferay.knowledgebase.model.KBTemplateModel;
 import com.liferay.knowledgebase.model.KBTemplateSoap;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.util.DateUtil;
@@ -28,8 +28,10 @@ import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.CacheModel;
+import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.BaseModelImpl;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 
 import com.liferay.portlet.expando.model.ExpandoBridge;
@@ -198,6 +200,9 @@ public class KBTemplateModelImpl extends BaseModelImpl<KBTemplate>
 		attributes.put("title", getTitle());
 		attributes.put("content", getContent());
 
+		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
+		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
+
 		return attributes;
 	}
 
@@ -264,8 +269,8 @@ public class KBTemplateModelImpl extends BaseModelImpl<KBTemplate>
 		}
 	}
 
-	@Override
 	@JSON
+	@Override
 	public String getUuid() {
 		if (_uuid == null) {
 			return StringPool.BLANK;
@@ -288,8 +293,8 @@ public class KBTemplateModelImpl extends BaseModelImpl<KBTemplate>
 		return GetterUtil.getString(_originalUuid);
 	}
 
-	@Override
 	@JSON
+	@Override
 	public long getKbTemplateId() {
 		return _kbTemplateId;
 	}
@@ -299,8 +304,8 @@ public class KBTemplateModelImpl extends BaseModelImpl<KBTemplate>
 		_kbTemplateId = kbTemplateId;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public long getGroupId() {
 		return _groupId;
 	}
@@ -322,8 +327,8 @@ public class KBTemplateModelImpl extends BaseModelImpl<KBTemplate>
 		return _originalGroupId;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public long getCompanyId() {
 		return _companyId;
 	}
@@ -345,8 +350,8 @@ public class KBTemplateModelImpl extends BaseModelImpl<KBTemplate>
 		return _originalCompanyId;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public long getUserId() {
 		return _userId;
 	}
@@ -357,17 +362,23 @@ public class KBTemplateModelImpl extends BaseModelImpl<KBTemplate>
 	}
 
 	@Override
-	public String getUserUuid() throws SystemException {
-		return PortalUtil.getUserValue(getUserId(), "uuid", _userUuid);
+	public String getUserUuid() {
+		try {
+			User user = UserLocalServiceUtil.getUserById(getUserId());
+
+			return user.getUuid();
+		}
+		catch (PortalException pe) {
+			return StringPool.BLANK;
+		}
 	}
 
 	@Override
 	public void setUserUuid(String userUuid) {
-		_userUuid = userUuid;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public String getUserName() {
 		if (_userName == null) {
 			return StringPool.BLANK;
@@ -382,8 +393,8 @@ public class KBTemplateModelImpl extends BaseModelImpl<KBTemplate>
 		_userName = userName;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public Date getCreateDate() {
 		return _createDate;
 	}
@@ -393,8 +404,8 @@ public class KBTemplateModelImpl extends BaseModelImpl<KBTemplate>
 		_createDate = createDate;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public Date getModifiedDate() {
 		return _modifiedDate;
 	}
@@ -406,8 +417,8 @@ public class KBTemplateModelImpl extends BaseModelImpl<KBTemplate>
 		_modifiedDate = modifiedDate;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public String getTitle() {
 		if (_title == null) {
 			return StringPool.BLANK;
@@ -422,8 +433,8 @@ public class KBTemplateModelImpl extends BaseModelImpl<KBTemplate>
 		_title = title;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public String getContent() {
 		if (_content == null) {
 			return StringPool.BLANK;
@@ -532,6 +543,16 @@ public class KBTemplateModelImpl extends BaseModelImpl<KBTemplate>
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	@Override
+	public boolean isEntityCacheEnabled() {
+		return ENTITY_CACHE_ENABLED;
+	}
+
+	@Override
+	public boolean isFinderCacheEnabled() {
+		return FINDER_CACHE_ENABLED;
 	}
 
 	@Override
@@ -713,7 +734,6 @@ public class KBTemplateModelImpl extends BaseModelImpl<KBTemplate>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userUuid;
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;

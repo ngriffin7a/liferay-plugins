@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -70,13 +70,13 @@ boolean ignoreRequestValue = (index != formFieldsIndex);
 
 	<c:choose>
 		<c:when test="<%= !fieldsEditingDisabled %>">
-			<aui:select ignoreRequestValue="<%= ignoreRequestValue %>" label="type" name='<%= "fieldType" + index %>'>
-				<aui:option selected='<%= fieldType.equals("text") %>' value="text"><liferay-ui:message key="text" /></aui:option>
-				<aui:option selected='<%= fieldType.equals("textarea") %>' value="textarea"><liferay-ui:message key="text-box" /></aui:option>
-				<aui:option selected='<%= fieldType.equals("options") %>' value="options"><liferay-ui:message key="options" /></aui:option>
-				<aui:option selected='<%= fieldType.equals("radio") %>' value="radio"><liferay-ui:message key="radio-buttons" /></aui:option>
-				<aui:option selected='<%= fieldType.equals("paragraph") %>' value="paragraph"><liferay-ui:message key="paragraph" /></aui:option>
-				<aui:option selected='<%= fieldType.equals("checkbox") %>' value="checkbox"><liferay-ui:message key="check-box" /></aui:option>
+			<aui:select ignoreRequestValue="<%= ignoreRequestValue %>" label="type" name='<%= "fieldType" + index %>' value="<%= fieldType %>">
+				<aui:option label="text" />
+				<aui:option label="text-box" value="textarea" />
+				<aui:option label="options" />
+				<aui:option label="radio-buttons" value="radio" />
+				<aui:option label="paragraph" />
+				<aui:option label="check-box" value="checkbox" />
 			</aui:select>
 		</c:when>
 		<c:otherwise>
@@ -119,7 +119,7 @@ boolean ignoreRequestValue = (index != formFieldsIndex);
 		</c:when>
 	</c:choose>
 
-	<c:if test="<%= true %>">
+	<c:if test="<%= PortletPropsValues.VALIDATION_SCRIPT_ENABLED %>">
 		<c:choose>
 			<c:when test="<%= !fieldsEditingDisabled %>">
 				<div class="validation">
@@ -131,7 +131,7 @@ boolean ignoreRequestValue = (index != formFieldsIndex);
 						<aui:column columnWidth="50">
 							<aui:input cols="80" cssClass="validation-script" ignoreRequestValue="<%= ignoreRequestValue %>" label="validation-script" name='<%= "fieldValidationScript" + index %>' style="width: 95%" type="textarea" value="<%= fieldValidationScript %>" wrap="off" />
 
-							<aui:input cols="80" cssClass="lfr-input-text-container" ignoreRequestValue="<%= ignoreRequestValue %>" label="validation-error-message" name='<%= "fieldValidationErrorMessage" + index %>' size="80" value="<%= fieldValidationErrorMessage %>" />
+							<aui:input cols="80" ignoreRequestValue="<%= ignoreRequestValue %>" label="validation-error-message" name='<%= "fieldValidationErrorMessage" + index %>' size="80" value="<%= fieldValidationErrorMessage %>" wrapperCssClass="lfr-input-text-container" />
 						</aui:column>
 						<aui:column columnWidth="50">
 							<div class="syntax-help">

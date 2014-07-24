@@ -1,9 +1,14 @@
 @import "compass";
+@import "mixins";
 
 .so-announcements-portlet {
 	.back-link {
 		float: right;
 		font-weight: bold;
+	}
+
+	.alert-error {
+		display: inline-block;
 	}
 
 	.admin-actions {
@@ -13,6 +18,7 @@
 	.entry {
 		margin-bottom: 1.2em;
 		padding-bottom: 0.5em;
+		position: relative;
 
 		&.last {
 			padding-bottom: 0;
@@ -21,12 +27,16 @@
 
 	.user-portrait {
 		float: left;
-		height: 45px;
+		left: 0;
+		margin-bottom: .4em;
+		max-height: 45px;
+		position: absolute;
+		top: 0;
 		width: 45px;
 
 		.avatar {
 			display: block;
-			height: 45px;
+			max-height: 45px;
 			overflow: hidden;
 
 			img {
@@ -35,7 +45,7 @@
 		}
 	}
 
-	.entry-data {
+	.entry-block, .entry-header {
 		margin-left: 55px;
 		overflow: hidden;
 	}
@@ -49,15 +59,23 @@
 	}
 
 	.entry-time {
+		color: #999;
 		float: right;
 		font-size: .9em;
-		line-height: .9em;
 		margin-left: 1em;
+	}
+
+	.entry-action {
+		float: left;
 	}
 
 	.entry-scope {
 		color: #555;
 		display: block;
+	}
+
+	.entry-block {
+		clear: both;
 	}
 
 	.entry-body {
@@ -109,30 +127,32 @@
 	}
 
 	.entry-footer-toolbar {
-		background: #DDD;
+		background: #EAEAEA;
 		padding: 0 1em;
 
 		.action {
 			border-left: 1px solid #2571AD;
 			display: inline-block;
 			height: 16px;
+			line-height: 16px;
 			margin: .5em 0;
-			padding: 0 .6em 0 .5em;
+			padding: 0 .6em 0 .8em;
 			vertical-align: middle;
 
 			&:first-child {
 				border-left-width: 0;
 				padding-left: 0;
 			}
-
-			img {
-				height: 16px;
-			}
 		}
 
 		a {
 			font-size: .9em;
 		}
+	}
+
+	.no-announcements {
+		padding: 5px;
+		text-align: center;
 	}
 
 	.read-entries-container .entries {
@@ -144,18 +164,16 @@
 			padding: .2em .5em;
 		}
 
-		.aui-toggler-header-collapsed {
+		.toggler-header-collapsed {
 			background: url(@theme_image_path@/portlet/maximize.png) no-repeat 99% 50%;
 		}
 
-		.aui-toggler-header-expanded {
+		.toggler-header-expanded {
 			background: url(@theme_image_path@/portlet/minimize.png) no-repeat 99% 50%;
 		}
 
-		.aui-toggler-content-collapsed {
-			display: block;
-			height: 0;
-			overflow: hidden;
+		.toggler-content-collapsed {
+			display: none;
 		}
 
 		.entry {
@@ -191,35 +209,43 @@
 	}
 }
 
-.aui-dialog-iframe-popup .so-announcements-portlet {
+.dialog-iframe-popup .so-announcements-portlet {
 	select {
 		margin: 0;
 	}
 
-	.display-date, .distribution-scope, .expiration-date, .priority, .type, .title, .url {
-		.aui-field-content {
-			display: inline-block;
-		}
-	}
+	.control-group {
+		display: inline-block;
+		margin-right: 1em;
+		position: relative;
 
-	.display-date, .distribution-scope, .title, .type {
-		.aui-field-content {
-			margin-right: 1em;
+		&:last-child {
+			margin-right: 0;
 		}
-	}
 
-	.title, .url {
-		.aui-field-input-text {
+		&.field-wrapper {
+			display: block;
+			margin-right: 0;
+		}
+
+		.title, .url {
 			width: 350px;
 		}
+
+		.form-validator-stack {
+			position: absolute;
+			right: 0;
+			top: 0;
+		}
 	}
 
-	.distribution-scope-container {
-		display: inline;
+	.distribution-scope-container .control-group .form-validator-stack {
+		position: relative;
+	}
 
-		.aui-field-content:after {
-			display: none;
-		}
+	.date-container .control-group {
+		float: left;
+		margin-bottom: 0;
 	}
 
 	#_1_WAR_soannouncementsportlet_ocerSearchContainerSearchContainer td.last {
@@ -233,32 +259,16 @@
 }
 
 .portlet-configuration {
-	.modified-notice {
-		color: #090;
-		font-weight: bold;
+	.accordion-group .accordion-heading .accordion-toggle {
+		display: inline-block;
 	}
 
-	#displaySettingsPanel .aui-field-label {
-		display: inline;
-		margin-right: 1em;
-	}
-
-	#announcementsDisplayedPanel {
-		.customize-announcements-displayed {
-			display: block;
-			margin-bottom: 1em;
-
-			.aui-choice-label {
-				font-weight: bold;
-			}
-		}
-		.aui-tabview-list {
-			margin-top: 1em;
-		}
+	.taglib-move-boxes .control-group {
+		min-width: 200px;
 	}
 }
 
-/* ---------- Internet Explorer ---------- */
+/* ---------- Internet explorer ---------- */
 
 .ie6, .ie7 {
 	.so-announcements-portlet .entry-content-container {
@@ -270,4 +280,25 @@
 
 .so-announcements-portlet .announcement-collapsed .entry-footer-toolbar {
 	@include box-shadow(0 -1px 15px -5px rgba(0, 0, 0, .8));
+}
+
+/* ---------- Responsive ---------- */
+
+@include respond-to(phone) {
+	.so-announcements-portlet {
+		.user-portrait {
+			position: relative;
+		}
+
+		.entry-time {
+			margin: .2em 0 0;
+			width: 100%;
+		}
+
+		.entry-block {
+			float: left;
+			margin-left: 0;
+			width: 100%;
+		}
+	}
 }

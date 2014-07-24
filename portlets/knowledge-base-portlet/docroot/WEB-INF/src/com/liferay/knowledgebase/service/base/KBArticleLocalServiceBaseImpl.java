@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -22,19 +22,35 @@ import com.liferay.knowledgebase.service.persistence.KBTemplatePersistence;
 
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.bean.IdentifiableBean;
+import com.liferay.portal.kernel.dao.db.DB;
+import com.liferay.portal.kernel.dao.db.DBFactoryUtil;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdate;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DefaultActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
+import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.Property;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.lar.ExportImportHelperUtil;
+import com.liferay.portal.kernel.lar.ManifestSummary;
+import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.StagedModelDataHandler;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistryUtil;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.model.PersistedModel;
 import com.liferay.portal.service.BaseLocalServiceImpl;
 import com.liferay.portal.service.PersistedModelLocalServiceRegistryUtil;
+import com.liferay.portal.service.persistence.ClassNamePersistence;
 import com.liferay.portal.service.persistence.CompanyPersistence;
 import com.liferay.portal.service.persistence.GroupPersistence;
 import com.liferay.portal.service.persistence.LayoutPersistence;
@@ -43,8 +59,10 @@ import com.liferay.portal.service.persistence.SubscriptionPersistence;
 import com.liferay.portal.service.persistence.TicketPersistence;
 import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.WorkflowInstanceLinkPersistence;
+import com.liferay.portal.util.PortalUtil;
 
 import com.liferay.portlet.asset.service.persistence.AssetEntryPersistence;
+import com.liferay.portlet.asset.service.persistence.AssetLinkPersistence;
 import com.liferay.portlet.ratings.service.persistence.RatingsStatsPersistence;
 import com.liferay.portlet.social.service.persistence.SocialActivityPersistence;
 
@@ -79,12 +97,10 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 *
 	 * @param kbArticle the k b article
 	 * @return the k b article that was added
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
-	public KBArticle addKBArticle(KBArticle kbArticle)
-		throws SystemException {
+	public KBArticle addKBArticle(KBArticle kbArticle) {
 		kbArticle.setNew(true);
 
 		return kbArticlePersistence.update(kbArticle);
@@ -107,12 +123,11 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param kbArticleId the primary key of the k b article
 	 * @return the k b article that was removed
 	 * @throws PortalException if a k b article with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public KBArticle deleteKBArticle(long kbArticleId)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return kbArticlePersistence.remove(kbArticleId);
 	}
 
@@ -122,12 +137,11 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param kbArticle the k b article
 	 * @return the k b article that was removed
 	 * @throws PortalException
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public KBArticle deleteKBArticle(KBArticle kbArticle)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return kbArticlePersistence.remove(kbArticle);
 	}
 
@@ -144,12 +158,9 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 *
 	 * @param dynamicQuery the dynamic query
 	 * @return the matching rows
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public List dynamicQuery(DynamicQuery dynamicQuery)
-		throws SystemException {
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery) {
 		return kbArticlePersistence.findWithDynamicQuery(dynamicQuery);
 	}
 
@@ -164,12 +175,10 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param start the lower bound of the range of model instances
 	 * @param end the upper bound of the range of model instances (not inclusive)
 	 * @return the range of matching rows
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public List dynamicQuery(DynamicQuery dynamicQuery, int start, int end)
-		throws SystemException {
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery, int start,
+		int end) {
 		return kbArticlePersistence.findWithDynamicQuery(dynamicQuery, start,
 			end);
 	}
@@ -186,12 +195,10 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param end the upper bound of the range of model instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching rows
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public List dynamicQuery(DynamicQuery dynamicQuery, int start, int end,
-		OrderByComparator orderByComparator) throws SystemException {
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery, int start,
+		int end, OrderByComparator<T> orderByComparator) {
 		return kbArticlePersistence.findWithDynamicQuery(dynamicQuery, start,
 			end, orderByComparator);
 	}
@@ -201,11 +208,9 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 *
 	 * @param dynamicQuery the dynamic query
 	 * @return the number of rows that match the dynamic query
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public long dynamicQueryCount(DynamicQuery dynamicQuery)
-		throws SystemException {
+	public long dynamicQueryCount(DynamicQuery dynamicQuery) {
 		return kbArticlePersistence.countWithDynamicQuery(dynamicQuery);
 	}
 
@@ -215,32 +220,17 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param dynamicQuery the dynamic query
 	 * @param projection the projection to apply to the query
 	 * @return the number of rows that match the dynamic query
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public long dynamicQueryCount(DynamicQuery dynamicQuery,
-		Projection projection) throws SystemException {
+		Projection projection) {
 		return kbArticlePersistence.countWithDynamicQuery(dynamicQuery,
 			projection);
 	}
 
 	@Override
-	public KBArticle fetchKBArticle(long kbArticleId) throws SystemException {
+	public KBArticle fetchKBArticle(long kbArticleId) {
 		return kbArticlePersistence.fetchByPrimaryKey(kbArticleId);
-	}
-
-	/**
-	 * Returns the k b article with the matching UUID and company.
-	 *
-	 * @param uuid the k b article's UUID
-	 * @param  companyId the primary key of the company
-	 * @return the matching k b article, or <code>null</code> if a matching k b article could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	@Override
-	public KBArticle fetchKBArticleByUuidAndCompanyId(String uuid,
-		long companyId) throws SystemException {
-		return kbArticlePersistence.fetchByUuid_C_First(uuid, companyId, null);
 	}
 
 	/**
@@ -249,11 +239,9 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param uuid the k b article's UUID
 	 * @param groupId the primary key of the group
 	 * @return the matching k b article, or <code>null</code> if a matching k b article could not be found
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public KBArticle fetchKBArticleByUuidAndGroupId(String uuid, long groupId)
-		throws SystemException {
+	public KBArticle fetchKBArticleByUuidAndGroupId(String uuid, long groupId) {
 		return kbArticlePersistence.fetchByUUID_G(uuid, groupId);
 	}
 
@@ -263,33 +251,130 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param kbArticleId the primary key of the k b article
 	 * @return the k b article
 	 * @throws PortalException if a k b article with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public KBArticle getKBArticle(long kbArticleId)
-		throws PortalException, SystemException {
+	public KBArticle getKBArticle(long kbArticleId) throws PortalException {
 		return kbArticlePersistence.findByPrimaryKey(kbArticleId);
 	}
 
 	@Override
-	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
-		throws PortalException, SystemException {
-		return kbArticlePersistence.findByPrimaryKey(primaryKeyObj);
+	public ActionableDynamicQuery getActionableDynamicQuery() {
+		ActionableDynamicQuery actionableDynamicQuery = new DefaultActionableDynamicQuery();
+
+		actionableDynamicQuery.setBaseLocalService(com.liferay.knowledgebase.service.KBArticleLocalServiceUtil.getService());
+		actionableDynamicQuery.setClass(KBArticle.class);
+		actionableDynamicQuery.setClassLoader(getClassLoader());
+
+		actionableDynamicQuery.setPrimaryKeyPropertyName("kbArticleId");
+
+		return actionableDynamicQuery;
+	}
+
+	protected void initActionableDynamicQuery(
+		ActionableDynamicQuery actionableDynamicQuery) {
+		actionableDynamicQuery.setBaseLocalService(com.liferay.knowledgebase.service.KBArticleLocalServiceUtil.getService());
+		actionableDynamicQuery.setClass(KBArticle.class);
+		actionableDynamicQuery.setClassLoader(getClassLoader());
+
+		actionableDynamicQuery.setPrimaryKeyPropertyName("kbArticleId");
+	}
+
+	@Override
+	public ExportActionableDynamicQuery getExportActionableDynamicQuery(
+		final PortletDataContext portletDataContext) {
+		final ExportActionableDynamicQuery exportActionableDynamicQuery = new ExportActionableDynamicQuery() {
+				@Override
+				public long performCount() throws PortalException {
+					ManifestSummary manifestSummary = portletDataContext.getManifestSummary();
+
+					StagedModelType stagedModelType = getStagedModelType();
+
+					long modelAdditionCount = super.performCount();
+
+					manifestSummary.addModelAdditionCount(stagedModelType.toString(),
+						modelAdditionCount);
+
+					long modelDeletionCount = ExportImportHelperUtil.getModelDeletionCount(portletDataContext,
+							stagedModelType);
+
+					manifestSummary.addModelDeletionCount(stagedModelType.toString(),
+						modelDeletionCount);
+
+					return modelAdditionCount;
+				}
+
+				@Override
+				protected Projection getCountProjection() {
+					return ProjectionFactoryUtil.countDistinct(
+						"resourcePrimKey");
+				}
+			};
+
+		initActionableDynamicQuery(exportActionableDynamicQuery);
+
+		exportActionableDynamicQuery.setAddCriteriaMethod(new ActionableDynamicQuery.AddCriteriaMethod() {
+				@Override
+				public void addCriteria(DynamicQuery dynamicQuery) {
+					portletDataContext.addDateRangeCriteria(dynamicQuery,
+						"modifiedDate");
+
+					StagedModelDataHandler<?> stagedModelDataHandler = StagedModelDataHandlerRegistryUtil.getStagedModelDataHandler(KBArticle.class.getName());
+
+					Property workflowStatusProperty = PropertyFactoryUtil.forName(
+							"status");
+
+					dynamicQuery.add(workflowStatusProperty.in(
+							stagedModelDataHandler.getExportableStatuses()));
+				}
+			});
+
+		exportActionableDynamicQuery.setCompanyId(portletDataContext.getCompanyId());
+
+		exportActionableDynamicQuery.setGroupId(portletDataContext.getScopeGroupId());
+
+		exportActionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod() {
+				@Override
+				public void performAction(Object object)
+					throws PortalException {
+					KBArticle stagedModel = (KBArticle)object;
+
+					StagedModelDataHandlerUtil.exportStagedModel(portletDataContext,
+						stagedModel);
+				}
+			});
+		exportActionableDynamicQuery.setStagedModelType(new StagedModelType(
+				PortalUtil.getClassNameId(KBArticle.class.getName())));
+
+		return exportActionableDynamicQuery;
 	}
 
 	/**
-	 * Returns the k b article with the matching UUID and company.
-	 *
-	 * @param uuid the k b article's UUID
-	 * @param  companyId the primary key of the company
-	 * @return the matching k b article
-	 * @throws PortalException if a matching k b article could not be found
-	 * @throws SystemException if a system exception occurred
+	 * @throws PortalException
 	 */
 	@Override
-	public KBArticle getKBArticleByUuidAndCompanyId(String uuid, long companyId)
-		throws PortalException, SystemException {
-		return kbArticlePersistence.findByUuid_C_First(uuid, companyId, null);
+	public PersistedModel deletePersistedModel(PersistedModel persistedModel)
+		throws PortalException {
+		return kbArticleLocalService.deleteKBArticle((KBArticle)persistedModel);
+	}
+
+	@Override
+	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
+		throws PortalException {
+		return kbArticlePersistence.findByPrimaryKey(primaryKeyObj);
+	}
+
+	@Override
+	public List<KBArticle> getKBArticlesByUuidAndCompanyId(String uuid,
+		long companyId) {
+		return kbArticlePersistence.findByUuid_C(uuid, companyId);
+	}
+
+	@Override
+	public List<KBArticle> getKBArticlesByUuidAndCompanyId(String uuid,
+		long companyId, int start, int end,
+		OrderByComparator<KBArticle> orderByComparator) {
+		return kbArticlePersistence.findByUuid_C(uuid, companyId, start, end,
+			orderByComparator);
 	}
 
 	/**
@@ -299,11 +384,10 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param groupId the primary key of the group
 	 * @return the matching k b article
 	 * @throws PortalException if a matching k b article could not be found
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public KBArticle getKBArticleByUuidAndGroupId(String uuid, long groupId)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return kbArticlePersistence.findByUUID_G(uuid, groupId);
 	}
 
@@ -317,11 +401,9 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * @param start the lower bound of the range of k b articles
 	 * @param end the upper bound of the range of k b articles (not inclusive)
 	 * @return the range of k b articles
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public List<KBArticle> getKBArticles(int start, int end)
-		throws SystemException {
+	public List<KBArticle> getKBArticles(int start, int end) {
 		return kbArticlePersistence.findAll(start, end);
 	}
 
@@ -329,10 +411,9 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 * Returns the number of k b articles.
 	 *
 	 * @return the number of k b articles
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public int getKBArticlesCount() throws SystemException {
+	public int getKBArticlesCount() {
 		return kbArticlePersistence.countAll();
 	}
 
@@ -341,12 +422,10 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 *
 	 * @param kbArticle the k b article
 	 * @return the k b article that was updated
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
-	public KBArticle updateKBArticle(KBArticle kbArticle)
-		throws SystemException {
+	public KBArticle updateKBArticle(KBArticle kbArticle) {
 		return kbArticlePersistence.update(kbArticle);
 	}
 
@@ -538,6 +617,63 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	public void setCounterLocalService(
 		com.liferay.counter.service.CounterLocalService counterLocalService) {
 		this.counterLocalService = counterLocalService;
+	}
+
+	/**
+	 * Returns the class name local service.
+	 *
+	 * @return the class name local service
+	 */
+	public com.liferay.portal.service.ClassNameLocalService getClassNameLocalService() {
+		return classNameLocalService;
+	}
+
+	/**
+	 * Sets the class name local service.
+	 *
+	 * @param classNameLocalService the class name local service
+	 */
+	public void setClassNameLocalService(
+		com.liferay.portal.service.ClassNameLocalService classNameLocalService) {
+		this.classNameLocalService = classNameLocalService;
+	}
+
+	/**
+	 * Returns the class name remote service.
+	 *
+	 * @return the class name remote service
+	 */
+	public com.liferay.portal.service.ClassNameService getClassNameService() {
+		return classNameService;
+	}
+
+	/**
+	 * Sets the class name remote service.
+	 *
+	 * @param classNameService the class name remote service
+	 */
+	public void setClassNameService(
+		com.liferay.portal.service.ClassNameService classNameService) {
+		this.classNameService = classNameService;
+	}
+
+	/**
+	 * Returns the class name persistence.
+	 *
+	 * @return the class name persistence
+	 */
+	public ClassNamePersistence getClassNamePersistence() {
+		return classNamePersistence;
+	}
+
+	/**
+	 * Sets the class name persistence.
+	 *
+	 * @param classNamePersistence the class name persistence
+	 */
+	public void setClassNamePersistence(
+		ClassNamePersistence classNamePersistence) {
+		this.classNamePersistence = classNamePersistence;
 	}
 
 	/**
@@ -1011,6 +1147,44 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
+	 * Returns the asset link local service.
+	 *
+	 * @return the asset link local service
+	 */
+	public com.liferay.portlet.asset.service.AssetLinkLocalService getAssetLinkLocalService() {
+		return assetLinkLocalService;
+	}
+
+	/**
+	 * Sets the asset link local service.
+	 *
+	 * @param assetLinkLocalService the asset link local service
+	 */
+	public void setAssetLinkLocalService(
+		com.liferay.portlet.asset.service.AssetLinkLocalService assetLinkLocalService) {
+		this.assetLinkLocalService = assetLinkLocalService;
+	}
+
+	/**
+	 * Returns the asset link persistence.
+	 *
+	 * @return the asset link persistence
+	 */
+	public AssetLinkPersistence getAssetLinkPersistence() {
+		return assetLinkPersistence;
+	}
+
+	/**
+	 * Sets the asset link persistence.
+	 *
+	 * @param assetLinkPersistence the asset link persistence
+	 */
+	public void setAssetLinkPersistence(
+		AssetLinkPersistence assetLinkPersistence) {
+		this.assetLinkPersistence = assetLinkPersistence;
+	}
+
+	/**
 	 * Returns the ratings stats local service.
 	 *
 	 * @return the ratings stats local service
@@ -1065,6 +1239,25 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	public void setSocialActivityLocalService(
 		com.liferay.portlet.social.service.SocialActivityLocalService socialActivityLocalService) {
 		this.socialActivityLocalService = socialActivityLocalService;
+	}
+
+	/**
+	 * Returns the social activity remote service.
+	 *
+	 * @return the social activity remote service
+	 */
+	public com.liferay.portlet.social.service.SocialActivityService getSocialActivityService() {
+		return socialActivityService;
+	}
+
+	/**
+	 * Sets the social activity remote service.
+	 *
+	 * @param socialActivityService the social activity remote service
+	 */
+	public void setSocialActivityService(
+		com.liferay.portlet.social.service.SocialActivityService socialActivityService) {
+		this.socialActivityService = socialActivityService;
 	}
 
 	/**
@@ -1150,13 +1343,18 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
-	 * Performs an SQL query.
+	 * Performs a SQL query.
 	 *
 	 * @param sql the sql query
 	 */
-	protected void runSQL(String sql) throws SystemException {
+	protected void runSQL(String sql) {
 		try {
 			DataSource dataSource = kbArticlePersistence.getDataSource();
+
+			DB db = DBFactoryUtil.getDB();
+
+			sql = db.buildSQL(sql);
+			sql = PortalUtil.transformSQL(sql);
 
 			SqlUpdate sqlUpdate = SqlUpdateFactoryUtil.getSqlUpdate(dataSource,
 					sql, new int[0]);
@@ -1188,6 +1386,12 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected KBTemplatePersistence kbTemplatePersistence;
 	@BeanReference(type = com.liferay.counter.service.CounterLocalService.class)
 	protected com.liferay.counter.service.CounterLocalService counterLocalService;
+	@BeanReference(type = com.liferay.portal.service.ClassNameLocalService.class)
+	protected com.liferay.portal.service.ClassNameLocalService classNameLocalService;
+	@BeanReference(type = com.liferay.portal.service.ClassNameService.class)
+	protected com.liferay.portal.service.ClassNameService classNameService;
+	@BeanReference(type = ClassNamePersistence.class)
+	protected ClassNamePersistence classNamePersistence;
 	@BeanReference(type = com.liferay.portal.service.CompanyLocalService.class)
 	protected com.liferay.portal.service.CompanyLocalService companyLocalService;
 	@BeanReference(type = com.liferay.portal.service.CompanyService.class)
@@ -1238,12 +1442,18 @@ public abstract class KBArticleLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected com.liferay.portlet.asset.service.AssetEntryService assetEntryService;
 	@BeanReference(type = AssetEntryPersistence.class)
 	protected AssetEntryPersistence assetEntryPersistence;
+	@BeanReference(type = com.liferay.portlet.asset.service.AssetLinkLocalService.class)
+	protected com.liferay.portlet.asset.service.AssetLinkLocalService assetLinkLocalService;
+	@BeanReference(type = AssetLinkPersistence.class)
+	protected AssetLinkPersistence assetLinkPersistence;
 	@BeanReference(type = com.liferay.portlet.ratings.service.RatingsStatsLocalService.class)
 	protected com.liferay.portlet.ratings.service.RatingsStatsLocalService ratingsStatsLocalService;
 	@BeanReference(type = RatingsStatsPersistence.class)
 	protected RatingsStatsPersistence ratingsStatsPersistence;
 	@BeanReference(type = com.liferay.portlet.social.service.SocialActivityLocalService.class)
 	protected com.liferay.portlet.social.service.SocialActivityLocalService socialActivityLocalService;
+	@BeanReference(type = com.liferay.portlet.social.service.SocialActivityService.class)
+	protected com.liferay.portlet.social.service.SocialActivityService socialActivityService;
 	@BeanReference(type = SocialActivityPersistence.class)
 	protected SocialActivityPersistence socialActivityPersistence;
 	private String _beanIdentifier;

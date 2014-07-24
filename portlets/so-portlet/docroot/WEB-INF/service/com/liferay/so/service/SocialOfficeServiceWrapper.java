@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -39,14 +39,10 @@ public class SocialOfficeServiceWrapper implements SocialOfficeService,
 		return _socialOfficeService.getBeanIdentifier();
 	}
 
-	/**
-	* Sets the Spring bean ID for this bean.
-	*
-	* @param beanIdentifier the Spring bean ID for this bean
-	*/
 	@Override
-	public void setBeanIdentifier(java.lang.String beanIdentifier) {
-		_socialOfficeService.setBeanIdentifier(beanIdentifier);
+	public long[] getUserSocialOfficeGroupIds()
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _socialOfficeService.getUserSocialOfficeGroupIds();
 	}
 
 	@Override
@@ -57,22 +53,25 @@ public class SocialOfficeServiceWrapper implements SocialOfficeService,
 	}
 
 	@Override
-	public long[] getUserSocialOfficeGroupIds()
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return _socialOfficeService.getUserSocialOfficeGroupIds();
+	public boolean isSocialOfficeGroup(long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _socialOfficeService.isSocialOfficeGroup(groupId);
 	}
 
+	/**
+	* Sets the Spring bean ID for this bean.
+	*
+	* @param beanIdentifier the Spring bean ID for this bean
+	*/
 	@Override
-	public boolean isSocialOfficeGroup(long groupId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return _socialOfficeService.isSocialOfficeGroup(groupId);
+	public void setBeanIdentifier(java.lang.String beanIdentifier) {
+		_socialOfficeService.setBeanIdentifier(beanIdentifier);
 	}
 
 	/**
 	 * @deprecated As of 6.1.0, replaced by {@link #getWrappedService}
 	 */
+	@Deprecated
 	public SocialOfficeService getWrappedSocialOfficeService() {
 		return _socialOfficeService;
 	}
@@ -80,6 +79,7 @@ public class SocialOfficeServiceWrapper implements SocialOfficeService,
 	/**
 	 * @deprecated As of 6.1.0, replaced by {@link #setWrappedService}
 	 */
+	@Deprecated
 	public void setWrappedSocialOfficeService(
 		SocialOfficeService socialOfficeService) {
 		_socialOfficeService = socialOfficeService;

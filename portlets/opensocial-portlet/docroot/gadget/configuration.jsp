@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -24,9 +24,9 @@ String namespace = ShindigUtil.getPortletResourceNamespace(renderRequest, themeD
 JSONObject jsonObject = ExpandoValueServiceUtil.getJSONData(themeDisplay.getCompanyId(), Layout.class.getName(), ShindigUtil.getTableOpenSocial(), ShindigUtil.getColumnUserPrefs(namespace, themeDisplay), themeDisplay.getPlid());
 %>
 
-<liferay-portlet:actionURL portletConfiguration="true" var="configurationURL" />
+<liferay-portlet:actionURL portletConfiguration="true" var="configurationActionURL" />
 
-<aui:form action="<%= configurationURL %>" method="post" name="fm">
+<aui:form action="<%= configurationActionURL %>" method="post" name="fm">
 	<aui:fieldset>
 
 		<%
@@ -45,8 +45,8 @@ JSONObject jsonObject = ExpandoValueServiceUtil.getJSONData(themeDisplay.getComp
 			<c:choose>
 				<c:when test="<%= dataType == UserPref.DataType.BOOL %>">
 					<aui:select label="<%= displayName %>" name="<%= name %>">
-						<aui:option label='<%= LanguageUtil.get(pageContext, "yes") %>' selected="<%= GetterUtil.getBoolean(value) %>" value="true" />
-						<aui:option label='<%= LanguageUtil.get(pageContext, "no") %>' selected="<%= !GetterUtil.getBoolean(value) %>" value="false" />
+						<aui:option label='<%= LanguageUtil.get(request, "yes") %>' selected="<%= GetterUtil.getBoolean(value) %>" value="true" />
+						<aui:option label='<%= LanguageUtil.get(request, "no") %>' selected="<%= !GetterUtil.getBoolean(value) %>" value="false" />
 					</aui:select>
 				</c:when>
 				<c:when test="<%= dataType == UserPref.DataType.ENUM %>">
@@ -69,7 +69,7 @@ JSONObject jsonObject = ExpandoValueServiceUtil.getJSONData(themeDisplay.getComp
 				<c:when test="<%= dataType == UserPref.DataType.HIDDEN %>">
 				</c:when>
 				<c:otherwise>
-					<aui:input cssClass="lfr-input-text-container" label="<%= displayName %>" name="<%= name %>" type="text" value="<%= value %>" />
+					<aui:input label="<%= displayName %>" name="<%= name %>" type="text" value="<%= value %>" wrapperCssClass="lfr-input-text-container" />
 				</c:otherwise>
 			</c:choose>
 

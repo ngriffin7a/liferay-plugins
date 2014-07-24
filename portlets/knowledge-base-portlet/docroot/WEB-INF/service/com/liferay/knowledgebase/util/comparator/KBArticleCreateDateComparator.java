@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -22,7 +22,8 @@ import com.liferay.portal.kernel.util.OrderByComparator;
  * @author Peter Shin
  * @author Brian Wing Shun Chan
  */
-public class KBArticleCreateDateComparator extends OrderByComparator {
+public class KBArticleCreateDateComparator
+	extends OrderByComparator<KBArticle> {
 
 	public static final String ORDER_BY_ASC = "KBArticle.createDate ASC";
 
@@ -39,10 +40,7 @@ public class KBArticleCreateDateComparator extends OrderByComparator {
 	}
 
 	@Override
-	public int compare(Object obj1, Object obj2) {
-		KBArticle kbArticle1 = (KBArticle)obj1;
-		KBArticle kbArticle2 = (KBArticle)obj2;
-
+	public int compare(KBArticle kbArticle1, KBArticle kbArticle2) {
 		int value = DateUtil.compareTo(
 			kbArticle1.getCreateDate(), kbArticle2.getCreateDate());
 

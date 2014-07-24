@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,7 +15,6 @@
 package com.liferay.socialnetworking.util;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
@@ -32,7 +31,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 public class WallUtil {
 
 	public static String getWallLayoutFriendlyURL(User user)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		String wallLayoutFriendlyURL =
 			PortletPropsValues.WALL_LAYOUT_FRIENDLY_URL;

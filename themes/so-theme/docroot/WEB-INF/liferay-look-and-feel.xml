@@ -1,18 +1,17 @@
 <?xml version="1.0"?>
-<!DOCTYPE look-and-feel PUBLIC "-//Liferay//DTD Look and Feel 6.1.0//EN" "http://www.liferay.com/dtd/liferay-look-and-feel_6_1_0.dtd">
+<!DOCTYPE look-and-feel PUBLIC "-//Liferay//DTD Look and Feel 7.0.0//EN" "http://www.liferay.com/dtd/liferay-look-and-feel_7_0_0.dtd">
 
 <look-and-feel>
 	<compatibility>
-		<version>6.1.0+</version>
-		<version>6.2.0+</version>
+		<version>7.0.0+</version>
 	</compatibility>
 	<theme id="so" name="Social Office">
-		<color-scheme id="fluid" name="Fluid Layout">
-			<css-class>so-layout-fluid-ad</css-class>
-		</color-scheme>
-		<color-scheme id="normal" name="Normal">
+		<color-scheme id="01" name="Classic">
 			<default-cs>true</default-cs>
-			<css-class>normal</css-class>
+			<css-class>so-classic</css-class>
+		</color-scheme>
+		<color-scheme id="02" name="Strata">
+			<css-class>so-strata</css-class>
 		</color-scheme>
 	</theme>
 </look-and-feel>

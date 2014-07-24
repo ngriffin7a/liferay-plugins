@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -38,7 +38,6 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.model.MBMessageDisplay;
 import com.liferay.portlet.messageboards.model.MBThread;
@@ -48,6 +47,7 @@ import com.liferay.portlet.messageboards.service.MBMessageServiceUtil;
 import com.liferay.portlet.messageboards.util.comparator.MessageCreateDateComparator;
 import com.liferay.portlet.social.model.SocialActivitySet;
 import com.liferay.portlet.social.service.SocialActivitySetLocalServiceUtil;
+import com.liferay.so.activities.util.ActivitiesUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
 import java.io.IOException;
@@ -78,15 +78,11 @@ public class ActivitiesPortlet extends MVCPortlet {
 
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
-		String className = activitySet.getClassName();
-		long classPK = activitySet.getClassPK();
+		Object[] commentsClassNameAndClassPK =
+			ActivitiesUtil.getCommentsClassNameAndClassPK(activitySet);
 
-		if ((activitySet.getActivityCount() > 1 ) &&
-			className.equals(DLFileEntry.class.getName())) {
-
-			className = SocialActivitySet.class.getName();
-			classPK = activitySet.getActivitySetId();
-		}
+		String className = (String)commentsClassNameAndClassPK[0];
+		long classPK = (Long)commentsClassNameAndClassPK[1];
 
 		MBMessageDisplay mbMessageDisplay =
 			MBMessageLocalServiceUtil.getDiscussionMessageDisplay(
@@ -133,7 +129,7 @@ public class ActivitiesPortlet extends MVCPortlet {
 				getReceiverMicroblogsEntryMicroblogsEntries(
 					MicroblogsEntryConstants.TYPE_REPLY,
 					activitySet.getClassPK(), QueryUtil.ALL_POS,
-					QueryUtil.ALL_POS, null);
+					QueryUtil.ALL_POS);
 
 		for (MicroblogsEntry microblogsEntry : microblogsEntries) {
 			JSONObject microblogsEntryJSONObject = getJSONObject(
@@ -393,7 +389,7 @@ public class ActivitiesPortlet extends MVCPortlet {
 		jsonObject.put("body", HtmlUtil.escape(body));
 
 		if ((userId <= 0) || (userId != themeDisplay.getUserId())) {
-			jsonObject.put("commentControlsClass", "aui-helper-hidden");
+			jsonObject.put("commentControlsClass", "hide");
 		}
 
 		jsonObject.put(

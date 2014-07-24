@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -35,8 +35,9 @@ User user2 = (User)row.getObject();
 		</portlet:actionURL>
 
 		<liferay-ui:icon
-			image="unsubscribe"
+			iconCssClass="icon-remove-sign"
 			label="<%= true %>"
+			message="unsubscribe"
 			url="<%= unsubscribeUsersURL %>"
 		/>
 	</c:when>
@@ -48,8 +49,9 @@ User user2 = (User)row.getObject();
 		</portlet:actionURL>
 
 		<liferay-ui:icon
-			image="subscribe"
+			iconCssClass="icon-ok-sign"
 			label="<%= true %>"
+			message="subscribe"
 			url="<%= subscribeUsersURL %>"
 		/>
 	</c:otherwise>

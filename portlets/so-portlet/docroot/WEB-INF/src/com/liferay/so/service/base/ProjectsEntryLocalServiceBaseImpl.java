@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -16,8 +16,12 @@ package com.liferay.so.service.base;
 
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.bean.IdentifiableBean;
+import com.liferay.portal.kernel.dao.db.DB;
+import com.liferay.portal.kernel.dao.db.DBFactoryUtil;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdate;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DefaultActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.Projection;
@@ -29,7 +33,9 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.model.PersistedModel;
 import com.liferay.portal.service.BaseLocalServiceImpl;
 import com.liferay.portal.service.PersistedModelLocalServiceRegistryUtil;
+import com.liferay.portal.service.persistence.ClassNamePersistence;
 import com.liferay.portal.service.persistence.UserPersistence;
+import com.liferay.portal.util.PortalUtil;
 
 import com.liferay.so.model.ProjectsEntry;
 import com.liferay.so.service.ProjectsEntryLocalService;
@@ -70,12 +76,10 @@ public abstract class ProjectsEntryLocalServiceBaseImpl
 	 *
 	 * @param projectsEntry the projects entry
 	 * @return the projects entry that was added
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
-	public ProjectsEntry addProjectsEntry(ProjectsEntry projectsEntry)
-		throws SystemException {
+	public ProjectsEntry addProjectsEntry(ProjectsEntry projectsEntry) {
 		projectsEntry.setNew(true);
 
 		return projectsEntryPersistence.update(projectsEntry);
@@ -98,12 +102,11 @@ public abstract class ProjectsEntryLocalServiceBaseImpl
 	 * @param projectsEntryId the primary key of the projects entry
 	 * @return the projects entry that was removed
 	 * @throws PortalException if a projects entry with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public ProjectsEntry deleteProjectsEntry(long projectsEntryId)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return projectsEntryPersistence.remove(projectsEntryId);
 	}
 
@@ -112,12 +115,10 @@ public abstract class ProjectsEntryLocalServiceBaseImpl
 	 *
 	 * @param projectsEntry the projects entry
 	 * @return the projects entry that was removed
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public ProjectsEntry deleteProjectsEntry(ProjectsEntry projectsEntry)
-		throws SystemException {
+	public ProjectsEntry deleteProjectsEntry(ProjectsEntry projectsEntry) {
 		return projectsEntryPersistence.remove(projectsEntry);
 	}
 
@@ -134,12 +135,9 @@ public abstract class ProjectsEntryLocalServiceBaseImpl
 	 *
 	 * @param dynamicQuery the dynamic query
 	 * @return the matching rows
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public List dynamicQuery(DynamicQuery dynamicQuery)
-		throws SystemException {
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery) {
 		return projectsEntryPersistence.findWithDynamicQuery(dynamicQuery);
 	}
 
@@ -154,12 +152,10 @@ public abstract class ProjectsEntryLocalServiceBaseImpl
 	 * @param start the lower bound of the range of model instances
 	 * @param end the upper bound of the range of model instances (not inclusive)
 	 * @return the range of matching rows
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public List dynamicQuery(DynamicQuery dynamicQuery, int start, int end)
-		throws SystemException {
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery, int start,
+		int end) {
 		return projectsEntryPersistence.findWithDynamicQuery(dynamicQuery,
 			start, end);
 	}
@@ -176,12 +172,10 @@ public abstract class ProjectsEntryLocalServiceBaseImpl
 	 * @param end the upper bound of the range of model instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching rows
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public List dynamicQuery(DynamicQuery dynamicQuery, int start, int end,
-		OrderByComparator orderByComparator) throws SystemException {
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery, int start,
+		int end, OrderByComparator<T> orderByComparator) {
 		return projectsEntryPersistence.findWithDynamicQuery(dynamicQuery,
 			start, end, orderByComparator);
 	}
@@ -191,11 +185,9 @@ public abstract class ProjectsEntryLocalServiceBaseImpl
 	 *
 	 * @param dynamicQuery the dynamic query
 	 * @return the number of rows that match the dynamic query
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public long dynamicQueryCount(DynamicQuery dynamicQuery)
-		throws SystemException {
+	public long dynamicQueryCount(DynamicQuery dynamicQuery) {
 		return projectsEntryPersistence.countWithDynamicQuery(dynamicQuery);
 	}
 
@@ -205,18 +197,16 @@ public abstract class ProjectsEntryLocalServiceBaseImpl
 	 * @param dynamicQuery the dynamic query
 	 * @param projection the projection to apply to the query
 	 * @return the number of rows that match the dynamic query
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public long dynamicQueryCount(DynamicQuery dynamicQuery,
-		Projection projection) throws SystemException {
+		Projection projection) {
 		return projectsEntryPersistence.countWithDynamicQuery(dynamicQuery,
 			projection);
 	}
 
 	@Override
-	public ProjectsEntry fetchProjectsEntry(long projectsEntryId)
-		throws SystemException {
+	public ProjectsEntry fetchProjectsEntry(long projectsEntryId) {
 		return projectsEntryPersistence.fetchByPrimaryKey(projectsEntryId);
 	}
 
@@ -226,17 +216,47 @@ public abstract class ProjectsEntryLocalServiceBaseImpl
 	 * @param projectsEntryId the primary key of the projects entry
 	 * @return the projects entry
 	 * @throws PortalException if a projects entry with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public ProjectsEntry getProjectsEntry(long projectsEntryId)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return projectsEntryPersistence.findByPrimaryKey(projectsEntryId);
 	}
 
 	@Override
+	public ActionableDynamicQuery getActionableDynamicQuery() {
+		ActionableDynamicQuery actionableDynamicQuery = new DefaultActionableDynamicQuery();
+
+		actionableDynamicQuery.setBaseLocalService(com.liferay.so.service.ProjectsEntryLocalServiceUtil.getService());
+		actionableDynamicQuery.setClass(ProjectsEntry.class);
+		actionableDynamicQuery.setClassLoader(getClassLoader());
+
+		actionableDynamicQuery.setPrimaryKeyPropertyName("projectsEntryId");
+
+		return actionableDynamicQuery;
+	}
+
+	protected void initActionableDynamicQuery(
+		ActionableDynamicQuery actionableDynamicQuery) {
+		actionableDynamicQuery.setBaseLocalService(com.liferay.so.service.ProjectsEntryLocalServiceUtil.getService());
+		actionableDynamicQuery.setClass(ProjectsEntry.class);
+		actionableDynamicQuery.setClassLoader(getClassLoader());
+
+		actionableDynamicQuery.setPrimaryKeyPropertyName("projectsEntryId");
+	}
+
+	/**
+	 * @throws PortalException
+	 */
+	@Override
+	public PersistedModel deletePersistedModel(PersistedModel persistedModel)
+		throws PortalException {
+		return projectsEntryLocalService.deleteProjectsEntry((ProjectsEntry)persistedModel);
+	}
+
+	@Override
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return projectsEntryPersistence.findByPrimaryKey(primaryKeyObj);
 	}
 
@@ -250,11 +270,9 @@ public abstract class ProjectsEntryLocalServiceBaseImpl
 	 * @param start the lower bound of the range of projects entries
 	 * @param end the upper bound of the range of projects entries (not inclusive)
 	 * @return the range of projects entries
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public List<ProjectsEntry> getProjectsEntries(int start, int end)
-		throws SystemException {
+	public List<ProjectsEntry> getProjectsEntries(int start, int end) {
 		return projectsEntryPersistence.findAll(start, end);
 	}
 
@@ -262,10 +280,9 @@ public abstract class ProjectsEntryLocalServiceBaseImpl
 	 * Returns the number of projects entries.
 	 *
 	 * @return the number of projects entries
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public int getProjectsEntriesCount() throws SystemException {
+	public int getProjectsEntriesCount() {
 		return projectsEntryPersistence.countAll();
 	}
 
@@ -274,12 +291,10 @@ public abstract class ProjectsEntryLocalServiceBaseImpl
 	 *
 	 * @param projectsEntry the projects entry
 	 * @return the projects entry that was updated
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
-	public ProjectsEntry updateProjectsEntry(ProjectsEntry projectsEntry)
-		throws SystemException {
+	public ProjectsEntry updateProjectsEntry(ProjectsEntry projectsEntry) {
 		return projectsEntryPersistence.update(projectsEntry);
 	}
 
@@ -454,6 +469,63 @@ public abstract class ProjectsEntryLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the class name local service.
+	 *
+	 * @return the class name local service
+	 */
+	public com.liferay.portal.service.ClassNameLocalService getClassNameLocalService() {
+		return classNameLocalService;
+	}
+
+	/**
+	 * Sets the class name local service.
+	 *
+	 * @param classNameLocalService the class name local service
+	 */
+	public void setClassNameLocalService(
+		com.liferay.portal.service.ClassNameLocalService classNameLocalService) {
+		this.classNameLocalService = classNameLocalService;
+	}
+
+	/**
+	 * Returns the class name remote service.
+	 *
+	 * @return the class name remote service
+	 */
+	public com.liferay.portal.service.ClassNameService getClassNameService() {
+		return classNameService;
+	}
+
+	/**
+	 * Sets the class name remote service.
+	 *
+	 * @param classNameService the class name remote service
+	 */
+	public void setClassNameService(
+		com.liferay.portal.service.ClassNameService classNameService) {
+		this.classNameService = classNameService;
+	}
+
+	/**
+	 * Returns the class name persistence.
+	 *
+	 * @return the class name persistence
+	 */
+	public ClassNamePersistence getClassNamePersistence() {
+		return classNamePersistence;
+	}
+
+	/**
+	 * Sets the class name persistence.
+	 *
+	 * @param classNamePersistence the class name persistence
+	 */
+	public void setClassNamePersistence(
+		ClassNamePersistence classNamePersistence) {
+		this.classNamePersistence = classNamePersistence;
+	}
+
+	/**
 	 * Returns the resource local service.
 	 *
 	 * @return the resource local service
@@ -592,13 +664,18 @@ public abstract class ProjectsEntryLocalServiceBaseImpl
 	}
 
 	/**
-	 * Performs an SQL query.
+	 * Performs a SQL query.
 	 *
 	 * @param sql the sql query
 	 */
-	protected void runSQL(String sql) throws SystemException {
+	protected void runSQL(String sql) {
 		try {
 			DataSource dataSource = projectsEntryPersistence.getDataSource();
+
+			DB db = DBFactoryUtil.getDB();
+
+			sql = db.buildSQL(sql);
+			sql = PortalUtil.transformSQL(sql);
 
 			SqlUpdate sqlUpdate = SqlUpdateFactoryUtil.getSqlUpdate(dataSource,
 					sql, new int[0]);
@@ -628,6 +705,12 @@ public abstract class ProjectsEntryLocalServiceBaseImpl
 	protected com.liferay.so.service.SocialOfficeService socialOfficeService;
 	@BeanReference(type = com.liferay.counter.service.CounterLocalService.class)
 	protected com.liferay.counter.service.CounterLocalService counterLocalService;
+	@BeanReference(type = com.liferay.portal.service.ClassNameLocalService.class)
+	protected com.liferay.portal.service.ClassNameLocalService classNameLocalService;
+	@BeanReference(type = com.liferay.portal.service.ClassNameService.class)
+	protected com.liferay.portal.service.ClassNameService classNameService;
+	@BeanReference(type = ClassNamePersistence.class)
+	protected ClassNamePersistence classNamePersistence;
 	@BeanReference(type = com.liferay.portal.service.ResourceLocalService.class)
 	protected com.liferay.portal.service.ResourceLocalService resourceLocalService;
 	@BeanReference(type = com.liferay.portal.service.UserLocalService.class)

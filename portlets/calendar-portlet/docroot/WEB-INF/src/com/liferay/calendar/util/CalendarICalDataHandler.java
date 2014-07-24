@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -23,6 +23,7 @@ import com.liferay.calendar.recurrence.Recurrence;
 import com.liferay.calendar.service.CalendarBookingLocalServiceUtil;
 import com.liferay.calendar.service.CalendarBookingServiceUtil;
 import com.liferay.calendar.service.CalendarLocalServiceUtil;
+import com.liferay.calendar.workflow.CalendarBookingWorkflowConstants;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringReader;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -31,7 +32,6 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Time;
-import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ModelHintsUtil;
 import com.liferay.portal.model.User;
@@ -93,8 +93,15 @@ public class CalendarICalDataHandler implements CalendarDataHandler {
 
 	@Override
 	public String exportCalendar(long calendarId) throws Exception {
+		int[] statuses = {
+			CalendarBookingWorkflowConstants.STATUS_APPROVED,
+			CalendarBookingWorkflowConstants.STATUS_MAYBE,
+			CalendarBookingWorkflowConstants.STATUS_PENDING
+		};
+
 		List<CalendarBooking> calendarBookings =
-			CalendarBookingLocalServiceUtil.getCalendarBookings(calendarId);
+			CalendarBookingLocalServiceUtil.getCalendarBookings(
+				calendarId, statuses);
 
 		net.fortuna.ical4j.model.Calendar iCalCalendar = toICalCalendar(
 			calendarBookings);
@@ -390,20 +397,13 @@ public class CalendarICalDataHandler implements CalendarDataHandler {
 			calendarBooking =
 				CalendarBookingLocalServiceUtil.fetchCalendarBooking(
 					uuid, calendar.getGroupId());
-
-			if (calendarBooking == null) {
-				uuid = PortalUUIDUtil.generate(uuid.getBytes());
-
-				calendarBooking =
-					CalendarBookingLocalServiceUtil.fetchCalendarBooking(
-						uuid, calendar.getGroupId());
-			}
 		}
 
 		ServiceContext serviceContext = new ServiceContext();
 
 		serviceContext.setAddGroupPermissions(true);
 		serviceContext.setAddGuestPermissions(true);
+		serviceContext.setAttribute("sendNotification", Boolean.FALSE);
 		serviceContext.setScopeGroupId(calendar.getGroupId());
 
 		if (calendarBooking == null) {
@@ -602,6 +602,15 @@ public class CalendarICalDataHandler implements CalendarDataHandler {
 				new Date(calendarBooking.getStartTime()));
 
 			propertyList.add(dtStart);
+
+			java.util.Calendar endJCalendar = JCalendarUtil.getJCalendar(
+				calendarBooking.getEndTime());
+
+			endJCalendar.add(java.util.Calendar.DAY_OF_MONTH, 1);
+
+			DtEnd dtEnd = new DtEnd(new Date(endJCalendar.getTime()));
+
+			propertyList.add(dtEnd);
 		}
 		else {
 			DtStart dtStart = new DtStart(

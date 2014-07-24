@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -35,7 +34,6 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.persistence.UserActionableDynamicQuery;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portlet.PortletPreferencesThreadLocal;
 import com.liferay.portlet.expando.DuplicateColumnNameException;
 import com.liferay.portlet.expando.model.ExpandoBridge;
 import com.liferay.portlet.expando.model.ExpandoColumnConstants;
@@ -53,16 +51,11 @@ public class InstanceUtil implements PortletPropsKeys {
 
 	public static void initInstance(long companyId) {
 		try {
-			PortletPreferencesThreadLocal.setStrict(false);
-
 			_localizeRoleNames(companyId);
 			_localizeUsers(companyId);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
-		}
-		finally {
-			PortletPreferencesThreadLocal.setStrict(true);
 		}
 	}
 
@@ -215,9 +208,7 @@ public class InstanceUtil implements PortletPropsKeys {
 			}
 
 			@Override
-			protected void performAction(Object object)
-				throws PortalException, SystemException {
-
+			protected void performAction(Object object) throws PortalException {
 				User user = (User)object;
 
 				user.setModifiedDate(new Date());

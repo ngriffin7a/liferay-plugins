@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -22,7 +22,7 @@ ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_
 CalendarResource calendarResource = (CalendarResource)row.getObject();
 %>
 
-<liferay-ui:icon-menu>
+<liferay-ui:icon-menu icon="<%= StringPool.BLANK %>" message="<%= StringPool.BLANK %>">
 	<c:if test="<%= CalendarResourcePermission.contains(permissionChecker, calendarResource, ActionKeys.UPDATE) %>">
 		<portlet:renderURL var="editURL">
 			<portlet:param name="mvcPath" value="/edit_calendar_resource.jsp" />
@@ -31,7 +31,8 @@ CalendarResource calendarResource = (CalendarResource)row.getObject();
 		</portlet:renderURL>
 
 		<liferay-ui:icon
-			image="edit"
+			iconCssClass="icon-edit"
+			message="edit"
 			url="<%= editURL %>"
 		/>
 	</c:if>
@@ -43,13 +44,29 @@ CalendarResource calendarResource = (CalendarResource)row.getObject();
 			resourceGroupId="<%= calendarResource.getGroupId() %>"
 			resourcePrimKey="<%= String.valueOf(calendarResource.getCalendarResourceId()) %>"
 			var="permissionsURL"
+			windowState="<%= LiferayWindowState.POP_UP.toString() %>"
 		/>
 
 		<liferay-ui:icon
-			image="permissions"
+			iconCssClass="icon-lock"
+			message="permissions"
+			method="get"
 			url="<%= permissionsURL %>"
+			useDialog="<%= true %>"
 		/>
 	</c:if>
+
+	<portlet:renderURL var="calendarsURL">
+		<portlet:param name="mvcPath" value="/view_calendars.jsp" />
+		<portlet:param name="redirect" value="<%= currentURL %>" />
+		<portlet:param name="calendarResourceId" value="<%= String.valueOf(calendarResource.getCalendarResourceId()) %>" />
+	</portlet:renderURL>
+
+	<liferay-ui:icon
+		iconCssClass="icon-calendar"
+		message="view-calendars"
+		url="<%= calendarsURL %>"
+	/>
 
 	<c:if test="<%= CalendarResourcePermission.contains(permissionChecker, calendarResource, ActionKeys.DELETE) %>">
 		<portlet:actionURL name="deleteCalendarResource" var="deleteURL">
@@ -62,16 +79,4 @@ CalendarResource calendarResource = (CalendarResource)row.getObject();
 			url="<%= deleteURL %>"
 		/>
 	</c:if>
-
-	<portlet:renderURL var="calendarsURL">
-		<portlet:param name="mvcPath" value="/view_calendars.jsp" />
-		<portlet:param name="redirect" value="<%= currentURL %>" />
-		<portlet:param name="calendarResourceId" value="<%= String.valueOf(calendarResource.getCalendarResourceId()) %>" />
-	</portlet:renderURL>
-
-	<liferay-ui:icon
-		image="calendar"
-		message="view-calendars"
-		url="<%= calendarsURL %>"
-	/>
 </liferay-ui:icon-menu>

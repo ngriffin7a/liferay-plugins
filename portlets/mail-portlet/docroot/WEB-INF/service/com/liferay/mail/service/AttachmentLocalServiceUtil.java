@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -44,12 +44,19 @@ public class AttachmentLocalServiceUtil {
 	*
 	* @param attachment the attachment
 	* @return the attachment that was added
-	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.mail.model.Attachment addAttachment(
-		com.liferay.mail.model.Attachment attachment)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.mail.model.Attachment attachment) {
 		return getService().addAttachment(attachment);
+	}
+
+	public static com.liferay.mail.model.Attachment addAttachment(long userId,
+		long messageId, java.lang.String contentPath,
+		java.lang.String fileName, long size, java.io.File file)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addAttachment(userId, messageId, contentPath, fileName,
+			size, file);
 	}
 
 	/**
@@ -64,31 +71,41 @@ public class AttachmentLocalServiceUtil {
 	}
 
 	/**
+	* Deletes the attachment from the database. Also notifies the appropriate model listeners.
+	*
+	* @param attachment the attachment
+	* @return the attachment that was removed
+	*/
+	public static com.liferay.mail.model.Attachment deleteAttachment(
+		com.liferay.mail.model.Attachment attachment) {
+		return getService().deleteAttachment(attachment);
+	}
+
+	/**
 	* Deletes the attachment with the primary key from the database. Also notifies the appropriate model listeners.
 	*
 	* @param attachmentId the primary key of the attachment
 	* @return the attachment that was removed
 	* @throws PortalException if a attachment with the primary key could not be found
-	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.mail.model.Attachment deleteAttachment(
 		long attachmentId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().deleteAttachment(attachmentId);
 	}
 
+	public static void deleteAttachments(long companyId, long messageId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService().deleteAttachments(companyId, messageId);
+	}
+
 	/**
-	* Deletes the attachment from the database. Also notifies the appropriate model listeners.
-	*
-	* @param attachment the attachment
-	* @return the attachment that was removed
-	* @throws SystemException if a system exception occurred
+	* @throws PortalException
 	*/
-	public static com.liferay.mail.model.Attachment deleteAttachment(
-		com.liferay.mail.model.Attachment attachment)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().deleteAttachment(attachment);
+	public static com.liferay.portal.model.PersistedModel deletePersistedModel(
+		com.liferay.portal.model.PersistedModel persistedModel)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().deletePersistedModel(persistedModel);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery() {
@@ -100,12 +117,9 @@ public class AttachmentLocalServiceUtil {
 	*
 	* @param dynamicQuery the dynamic query
 	* @return the matching rows
-	* @throws SystemException if a system exception occurred
 	*/
-	@SuppressWarnings("rawtypes")
-	public static java.util.List dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public static <T> java.util.List<T> dynamicQuery(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
 		return getService().dynamicQuery(dynamicQuery);
 	}
 
@@ -120,12 +134,10 @@ public class AttachmentLocalServiceUtil {
 	* @param start the lower bound of the range of model instances
 	* @param end the upper bound of the range of model instances (not inclusive)
 	* @return the range of matching rows
-	* @throws SystemException if a system exception occurred
 	*/
-	@SuppressWarnings("rawtypes")
-	public static java.util.List dynamicQuery(
+	public static <T> java.util.List<T> dynamicQuery(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
-		int end) throws com.liferay.portal.kernel.exception.SystemException {
+		int end) {
 		return getService().dynamicQuery(dynamicQuery, start, end);
 	}
 
@@ -141,14 +153,11 @@ public class AttachmentLocalServiceUtil {
 	* @param end the upper bound of the range of model instances (not inclusive)
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching rows
-	* @throws SystemException if a system exception occurred
 	*/
-	@SuppressWarnings("rawtypes")
-	public static java.util.List dynamicQuery(
+	public static <T> java.util.List<T> dynamicQuery(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
 		int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.util.OrderByComparator<T> orderByComparator) {
 		return getService()
 				   .dynamicQuery(dynamicQuery, start, end, orderByComparator);
 	}
@@ -158,11 +167,9 @@ public class AttachmentLocalServiceUtil {
 	*
 	* @param dynamicQuery the dynamic query
 	* @return the number of rows that match the dynamic query
-	* @throws SystemException if a system exception occurred
 	*/
 	public static long dynamicQueryCount(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
 		return getService().dynamicQueryCount(dynamicQuery);
 	}
 
@@ -172,19 +179,20 @@ public class AttachmentLocalServiceUtil {
 	* @param dynamicQuery the dynamic query
 	* @param projection the projection to apply to the query
 	* @return the number of rows that match the dynamic query
-	* @throws SystemException if a system exception occurred
 	*/
 	public static long dynamicQueryCount(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery,
-		com.liferay.portal.kernel.dao.orm.Projection projection)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.dao.orm.Projection projection) {
 		return getService().dynamicQueryCount(dynamicQuery, projection);
 	}
 
 	public static com.liferay.mail.model.Attachment fetchAttachment(
-		long attachmentId)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		long attachmentId) {
 		return getService().fetchAttachment(attachmentId);
+	}
+
+	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
+		return getService().getActionableDynamicQuery();
 	}
 
 	/**
@@ -193,20 +201,16 @@ public class AttachmentLocalServiceUtil {
 	* @param attachmentId the primary key of the attachment
 	* @return the attachment
 	* @throws PortalException if a attachment with the primary key could not be found
-	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.mail.model.Attachment getAttachment(
 		long attachmentId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getAttachment(attachmentId);
 	}
 
-	public static com.liferay.portal.model.PersistedModel getPersistedModel(
-		java.io.Serializable primaryKeyObj)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().getPersistedModel(primaryKeyObj);
+	public static java.util.List<com.liferay.mail.model.Attachment> getAttachments(
+		long messageId) {
+		return getService().getAttachments(messageId);
 	}
 
 	/**
@@ -219,11 +223,9 @@ public class AttachmentLocalServiceUtil {
 	* @param start the lower bound of the range of attachments
 	* @param end the upper bound of the range of attachments (not inclusive)
 	* @return the range of attachments
-	* @throws SystemException if a system exception occurred
 	*/
 	public static java.util.List<com.liferay.mail.model.Attachment> getAttachments(
-		int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		int start, int end) {
 		return getService().getAttachments(start, end);
 	}
 
@@ -231,24 +233,9 @@ public class AttachmentLocalServiceUtil {
 	* Returns the number of attachments.
 	*
 	* @return the number of attachments
-	* @throws SystemException if a system exception occurred
 	*/
-	public static int getAttachmentsCount()
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public static int getAttachmentsCount() {
 		return getService().getAttachmentsCount();
-	}
-
-	/**
-	* Updates the attachment in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
-	*
-	* @param attachment the attachment
-	* @return the attachment that was updated
-	* @throws SystemException if a system exception occurred
-	*/
-	public static com.liferay.mail.model.Attachment updateAttachment(
-		com.liferay.mail.model.Attachment attachment)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().updateAttachment(attachment);
 	}
 
 	/**
@@ -260,6 +247,28 @@ public class AttachmentLocalServiceUtil {
 		return getService().getBeanIdentifier();
 	}
 
+	public static java.io.File getFile(long attachmentId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getFile(attachmentId);
+	}
+
+	public static java.io.InputStream getInputStream(long attachmentId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getInputStream(attachmentId);
+	}
+
+	public static com.liferay.portal.model.PersistedModel getPersistedModel(
+		java.io.Serializable primaryKeyObj)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getPersistedModel(primaryKeyObj);
+	}
+
+	public static java.lang.Object invokeMethod(java.lang.String name,
+		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
+		throws java.lang.Throwable {
+		return getService().invokeMethod(name, parameterTypes, arguments);
+	}
+
 	/**
 	* Sets the Spring bean ID for this bean.
 	*
@@ -269,44 +278,15 @@ public class AttachmentLocalServiceUtil {
 		getService().setBeanIdentifier(beanIdentifier);
 	}
 
-	public static java.lang.Object invokeMethod(java.lang.String name,
-		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
-		throws java.lang.Throwable {
-		return getService().invokeMethod(name, parameterTypes, arguments);
-	}
-
-	public static com.liferay.mail.model.Attachment addAttachment(long userId,
-		long messageId, java.lang.String contentPath,
-		java.lang.String fileName, long size, java.io.File file)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .addAttachment(userId, messageId, contentPath, fileName,
-			size, file);
-	}
-
-	public static void deleteAttachments(long companyId, long messageId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		getService().deleteAttachments(companyId, messageId);
-	}
-
-	public static java.util.List<com.liferay.mail.model.Attachment> getAttachments(
-		long messageId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().getAttachments(messageId);
-	}
-
-	public static java.io.File getFile(long attachmentId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().getFile(attachmentId);
-	}
-
-	public static java.io.InputStream getInputStream(long attachmentId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().getInputStream(attachmentId);
+	/**
+	* Updates the attachment in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	*
+	* @param attachment the attachment
+	* @return the attachment that was updated
+	*/
+	public static com.liferay.mail.model.Attachment updateAttachment(
+		com.liferay.mail.model.Attachment attachment) {
+		return getService().updateAttachment(attachment);
 	}
 
 	public static void clearService() {
@@ -335,6 +315,7 @@ public class AttachmentLocalServiceUtil {
 	/**
 	 * @deprecated As of 6.2.0
 	 */
+	@Deprecated
 	public void setService(AttachmentLocalService service) {
 	}
 

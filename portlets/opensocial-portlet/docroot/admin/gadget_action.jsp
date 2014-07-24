@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -31,7 +31,7 @@ catch (Exception e) {
 }
 %>
 
-<liferay-ui:icon-menu>
+<liferay-ui:icon-menu icon="<%= StringPool.BLANK %>" message="<%= StringPool.BLANK %>">
 	<c:if test="<%= GadgetPermission.contains(permissionChecker, themeDisplay.getScopeGroupId(), gadget.getGadgetId(), ActionKeys.UPDATE) %>">
 		<portlet:renderURL var="updateGadgetURL">
 			<portlet:param name="mvcPath" value="/admin/edit_gadget.jsp" />
@@ -39,7 +39,7 @@ catch (Exception e) {
 			<portlet:param name="gadgetId" value="<%= String.valueOf(gadget.getGadgetId()) %>" />
 		</portlet:renderURL>
 
-		<liferay-ui:icon image="edit" url="<%= updateGadgetURL %>" />
+		<liferay-ui:icon iconCssClass="icon-edit" message="edit" url="<%= updateGadgetURL %>" />
 
 		<c:if test="<%= (oAuthServices != null) && (oAuthServices.size() > 0) %>">
 			<portlet:renderURL var="configureOAuthURL">
@@ -48,7 +48,7 @@ catch (Exception e) {
 				<portlet:param name="gadgetId" value="<%= String.valueOf(gadget.getGadgetId()) %>" />
 			</portlet:renderURL>
 
-			<liferay-ui:icon image="portlet" message="manage-oauth" url="<%= configureOAuthURL %>" />
+			<liferay-ui:icon iconCssClass="icon-list-alt" message="manage-oauth" url="<%= configureOAuthURL %>" />
 		</c:if>
 
 		<portlet:actionURL name="refreshGadgets" var="refreshGadgetsURL">
@@ -56,7 +56,7 @@ catch (Exception e) {
 			<portlet:param name="gadgetId" value="<%= String.valueOf(gadget.getGadgetId()) %>" />
 		</portlet:actionURL>
 
-		<liferay-ui:icon image="page" message="refresh" url="<%= refreshGadgetsURL %>" />
+		<liferay-ui:icon iconCssClass="icon-refresh" message="refresh" url="<%= refreshGadgetsURL %>" />
 	</c:if>
 
 	<c:if test="<%= GadgetPermission.contains(permissionChecker, themeDisplay.getScopeGroupId(), gadget.getGadgetId(), ActionKeys.PERMISSIONS) %>">
@@ -65,9 +65,16 @@ catch (Exception e) {
 			modelResourceDescription="<%= gadget.getName() %>"
 			resourcePrimKey="<%= String.valueOf(gadget.getGadgetId()) %>"
 			var="permissionsURL"
+			windowState="<%= LiferayWindowState.POP_UP.toString() %>"
 		/>
 
-		<liferay-ui:icon image="permissions" url="<%= permissionsURL %>" />
+		<liferay-ui:icon
+			iconCssClass="icon-lock"
+			message="permissions"
+			method="get"
+			url="<%= permissionsURL %>"
+			useDialog="<%= true %>"
+		/>
 	</c:if>
 
 	<c:if test="<%= GadgetPermission.contains(permissionChecker, themeDisplay.getScopeGroupId(), gadget.getGadgetId(), ActionKeys.DELETE) %>">

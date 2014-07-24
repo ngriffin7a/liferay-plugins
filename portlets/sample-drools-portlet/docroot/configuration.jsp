@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -23,9 +23,9 @@ String userCustomAttributeNamesValue = ParamUtil.getString(request, "userCustomA
 long[] classNameIdValues = StringUtil.split(ParamUtil.getString(request, "classNameIds", StringUtil.merge(classNameIds)), 0L);
 %>
 
-<liferay-portlet:actionURL portletConfiguration="true" var="configurationURL" />
+<liferay-portlet:actionURL portletConfiguration="true" var="configurationActionURL" />
 
-<aui:form action="<%= configurationURL %>" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveConfiguration();" %>'>
+<aui:form action="<%= configurationActionURL %>" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveConfiguration();" %>'>
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.UPDATE %>" />
 	<aui:input name="classNameIds" type="hidden" />
 
@@ -35,15 +35,15 @@ long[] classNameIdValues = StringUtil.split(ParamUtil.getString(request, "classN
 	<liferay-ui:error key="rulesEngineException" message="please-check-the-syntax-of-your-rules" />
 
 	<aui:fieldset>
-		<aui:input cssClass="lfr-input-text-container" name="domainName" value="<%= domainNameValue %>" />
+		<aui:input name="domainName" value="<%= domainNameValue %>" wrapperCssClass="lfr-input-text-container"  />
 
-		<aui:input cssClass="lfr-textarea-container" name="rules" style="height: 250px; width: 100%;" type="textarea" value="<%= rulesValue %>" wrap="off" />
+		<aui:input name="rules" style="height: 250px; width: 100%;" type="textarea" value="<%= rulesValue %>" wrap="off" wrapperCssClass="lfr-textarea-container" />
 
 		<%
 
 		// Left list
 
-		MethodKey methodKey = new MethodKey(ClassResolverUtil.resolveByPortalClassLoader("com.liferay.portal.security.permission.ResourceActionsUtil"), "getModelResource", PageContext.class, String.class);
+		MethodKey methodKey = new MethodKey(ClassResolverUtil.resolveByPortalClassLoader("com.liferay.portal.security.permission.ResourceActionsUtil"), "getModelResource", HttpServletRequest.class, String.class);
 
 		List<KeyValuePair> leftList = new ArrayList<KeyValuePair>();
 
@@ -66,7 +66,7 @@ long[] classNameIdValues = StringUtil.split(ParamUtil.getString(request, "classN
 		}
 		%>
 
-		<aui:input cssClass="lfr-input-text-container" name="userCustomAttributeNames" value="<%= userCustomAttributeNamesValue %>" />
+		<aui:input name="userCustomAttributeNames" value="<%= userCustomAttributeNamesValue %>" wrapperCssClass="lfr-input-text-container" />
 
 		<liferay-ui:input-move-boxes
 			leftBoxName="currentClassNameIds"

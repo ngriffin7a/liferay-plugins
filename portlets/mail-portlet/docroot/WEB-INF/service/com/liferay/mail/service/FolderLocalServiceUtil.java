@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -44,12 +44,19 @@ public class FolderLocalServiceUtil {
 	*
 	* @param folder the folder
 	* @return the folder that was added
-	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.mail.model.Folder addFolder(
-		com.liferay.mail.model.Folder folder)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.mail.model.Folder folder) {
 		return getService().addFolder(folder);
+	}
+
+	public static com.liferay.mail.model.Folder addFolder(long userId,
+		long accountId, java.lang.String fullName,
+		java.lang.String displayName, int remoteMessageCount)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addFolder(userId, accountId, fullName, displayName,
+			remoteMessageCount);
 	}
 
 	/**
@@ -63,32 +70,42 @@ public class FolderLocalServiceUtil {
 	}
 
 	/**
-	* Deletes the folder with the primary key from the database. Also notifies the appropriate model listeners.
-	*
-	* @param folderId the primary key of the folder
-	* @return the folder that was removed
-	* @throws PortalException if a folder with the primary key could not be found
-	* @throws SystemException if a system exception occurred
-	*/
-	public static com.liferay.mail.model.Folder deleteFolder(long folderId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().deleteFolder(folderId);
-	}
-
-	/**
 	* Deletes the folder from the database. Also notifies the appropriate model listeners.
 	*
 	* @param folder the folder
 	* @return the folder that was removed
 	* @throws PortalException
-	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.mail.model.Folder deleteFolder(
 		com.liferay.mail.model.Folder folder)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().deleteFolder(folder);
+	}
+
+	/**
+	* Deletes the folder with the primary key from the database. Also notifies the appropriate model listeners.
+	*
+	* @param folderId the primary key of the folder
+	* @return the folder that was removed
+	* @throws PortalException if a folder with the primary key could not be found
+	*/
+	public static com.liferay.mail.model.Folder deleteFolder(long folderId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().deleteFolder(folderId);
+	}
+
+	public static void deleteFolders(long accountId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService().deleteFolders(accountId);
+	}
+
+	/**
+	* @throws PortalException
+	*/
+	public static com.liferay.portal.model.PersistedModel deletePersistedModel(
+		com.liferay.portal.model.PersistedModel persistedModel)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().deletePersistedModel(persistedModel);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery() {
@@ -100,12 +117,9 @@ public class FolderLocalServiceUtil {
 	*
 	* @param dynamicQuery the dynamic query
 	* @return the matching rows
-	* @throws SystemException if a system exception occurred
 	*/
-	@SuppressWarnings("rawtypes")
-	public static java.util.List dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public static <T> java.util.List<T> dynamicQuery(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
 		return getService().dynamicQuery(dynamicQuery);
 	}
 
@@ -120,12 +134,10 @@ public class FolderLocalServiceUtil {
 	* @param start the lower bound of the range of model instances
 	* @param end the upper bound of the range of model instances (not inclusive)
 	* @return the range of matching rows
-	* @throws SystemException if a system exception occurred
 	*/
-	@SuppressWarnings("rawtypes")
-	public static java.util.List dynamicQuery(
+	public static <T> java.util.List<T> dynamicQuery(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
-		int end) throws com.liferay.portal.kernel.exception.SystemException {
+		int end) {
 		return getService().dynamicQuery(dynamicQuery, start, end);
 	}
 
@@ -141,14 +153,11 @@ public class FolderLocalServiceUtil {
 	* @param end the upper bound of the range of model instances (not inclusive)
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching rows
-	* @throws SystemException if a system exception occurred
 	*/
-	@SuppressWarnings("rawtypes")
-	public static java.util.List dynamicQuery(
+	public static <T> java.util.List<T> dynamicQuery(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
 		int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.util.OrderByComparator<T> orderByComparator) {
 		return getService()
 				   .dynamicQuery(dynamicQuery, start, end, orderByComparator);
 	}
@@ -158,11 +167,9 @@ public class FolderLocalServiceUtil {
 	*
 	* @param dynamicQuery the dynamic query
 	* @return the number of rows that match the dynamic query
-	* @throws SystemException if a system exception occurred
 	*/
 	public static long dynamicQueryCount(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
 		return getService().dynamicQueryCount(dynamicQuery);
 	}
 
@@ -172,18 +179,34 @@ public class FolderLocalServiceUtil {
 	* @param dynamicQuery the dynamic query
 	* @param projection the projection to apply to the query
 	* @return the number of rows that match the dynamic query
-	* @throws SystemException if a system exception occurred
 	*/
 	public static long dynamicQueryCount(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery,
-		com.liferay.portal.kernel.dao.orm.Projection projection)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.dao.orm.Projection projection) {
 		return getService().dynamicQueryCount(dynamicQuery, projection);
 	}
 
-	public static com.liferay.mail.model.Folder fetchFolder(long folderId)
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public static com.liferay.mail.model.Folder fetchFolder(long folderId) {
 		return getService().fetchFolder(folderId);
+	}
+
+	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
+		return getService().getActionableDynamicQuery();
+	}
+
+	/**
+	* Returns the Spring bean ID for this bean.
+	*
+	* @return the Spring bean ID for this bean
+	*/
+	public static java.lang.String getBeanIdentifier() {
+		return getService().getBeanIdentifier();
+	}
+
+	public static com.liferay.mail.model.Folder getFolder(long accountId,
+		java.lang.String fullName)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getFolder(accountId, fullName);
 	}
 
 	/**
@@ -192,19 +215,15 @@ public class FolderLocalServiceUtil {
 	* @param folderId the primary key of the folder
 	* @return the folder
 	* @throws PortalException if a folder with the primary key could not be found
-	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.mail.model.Folder getFolder(long folderId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getFolder(folderId);
 	}
 
-	public static com.liferay.portal.model.PersistedModel getPersistedModel(
-		java.io.Serializable primaryKeyObj)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().getPersistedModel(primaryKeyObj);
+	public static java.util.List<com.liferay.mail.model.Folder> getFolders(
+		long accountId) {
+		return getService().getFolders(accountId);
 	}
 
 	/**
@@ -217,11 +236,9 @@ public class FolderLocalServiceUtil {
 	* @param start the lower bound of the range of folders
 	* @param end the upper bound of the range of folders (not inclusive)
 	* @return the range of folders
-	* @throws SystemException if a system exception occurred
 	*/
 	public static java.util.List<com.liferay.mail.model.Folder> getFolders(
-		int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		int start, int end) {
 		return getService().getFolders(start, end);
 	}
 
@@ -229,33 +246,35 @@ public class FolderLocalServiceUtil {
 	* Returns the number of folders.
 	*
 	* @return the number of folders
-	* @throws SystemException if a system exception occurred
 	*/
-	public static int getFoldersCount()
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public static int getFoldersCount() {
 		return getService().getFoldersCount();
 	}
 
-	/**
-	* Updates the folder in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
-	*
-	* @param folder the folder
-	* @return the folder that was updated
-	* @throws SystemException if a system exception occurred
-	*/
-	public static com.liferay.mail.model.Folder updateFolder(
-		com.liferay.mail.model.Folder folder)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().updateFolder(folder);
+	public static int getLocalPageCount(long folderId, int messagesPerPage) {
+		return getService().getLocalPageCount(folderId, messagesPerPage);
 	}
 
-	/**
-	* Returns the Spring bean ID for this bean.
-	*
-	* @return the Spring bean ID for this bean
-	*/
-	public static java.lang.String getBeanIdentifier() {
-		return getService().getBeanIdentifier();
+	public static int getPercentDownloaded(long folderId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getPercentDownloaded(folderId);
+	}
+
+	public static com.liferay.portal.model.PersistedModel getPersistedModel(
+		java.io.Serializable primaryKeyObj)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getPersistedModel(primaryKeyObj);
+	}
+
+	public static int getRemotePageCount(long folderId, int messagesPerPage)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getRemotePageCount(folderId, messagesPerPage);
+	}
+
+	public static java.lang.Object invokeMethod(java.lang.String name,
+		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
+		throws java.lang.Throwable {
+		return getService().invokeMethod(name, parameterTypes, arguments);
 	}
 
 	/**
@@ -267,63 +286,21 @@ public class FolderLocalServiceUtil {
 		getService().setBeanIdentifier(beanIdentifier);
 	}
 
-	public static java.lang.Object invokeMethod(java.lang.String name,
-		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
-		throws java.lang.Throwable {
-		return getService().invokeMethod(name, parameterTypes, arguments);
-	}
-
-	public static com.liferay.mail.model.Folder addFolder(long userId,
-		long accountId, java.lang.String fullName,
-		java.lang.String displayName, int remoteMessageCount)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .addFolder(userId, accountId, fullName, displayName,
-			remoteMessageCount);
-	}
-
-	public static void deleteFolders(long accountId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		getService().deleteFolders(accountId);
-	}
-
-	public static com.liferay.mail.model.Folder getFolder(long accountId,
-		java.lang.String fullName)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().getFolder(accountId, fullName);
-	}
-
-	public static java.util.List<com.liferay.mail.model.Folder> getFolders(
-		long accountId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().getFolders(accountId);
-	}
-
-	public static int getLocalPageCount(long folderId, int messagesPerPage)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().getLocalPageCount(folderId, messagesPerPage);
-	}
-
-	public static int getPercentDownloaded(long folderId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().getPercentDownloaded(folderId);
-	}
-
-	public static int getRemotePageCount(long folderId, int messagesPerPage)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().getRemotePageCount(folderId, messagesPerPage);
+	/**
+	* Updates the folder in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	*
+	* @param folder the folder
+	* @return the folder that was updated
+	*/
+	public static com.liferay.mail.model.Folder updateFolder(
+		com.liferay.mail.model.Folder folder) {
+		return getService().updateFolder(folder);
 	}
 
 	public static com.liferay.mail.model.Folder updateFolder(long folderId,
 		java.lang.String fullName, java.lang.String displayName,
 		int remoteMessageCount)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .updateFolder(folderId, fullName, displayName,
 			remoteMessageCount);
@@ -355,6 +332,7 @@ public class FolderLocalServiceUtil {
 	/**
 	 * @deprecated As of 6.2.0
 	 */
+	@Deprecated
 	public void setService(FolderLocalService service) {
 	}
 

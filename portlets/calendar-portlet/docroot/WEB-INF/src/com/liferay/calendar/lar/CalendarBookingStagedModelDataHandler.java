@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -18,12 +18,13 @@ import com.liferay.calendar.model.Calendar;
 import com.liferay.calendar.model.CalendarBooking;
 import com.liferay.calendar.model.CalendarBookingConstants;
 import com.liferay.calendar.service.CalendarBookingLocalServiceUtil;
+import com.liferay.calendar.workflow.CalendarBookingWorkflowConstants;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.portal.kernel.lar.ExportImportPathUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.service.ServiceContext;
@@ -43,11 +44,10 @@ public class CalendarBookingStagedModelDataHandler
 	@Override
 	public void deleteStagedModel(
 			String uuid, long groupId, String className, String extraData)
-		throws PortalException, SystemException {
+		throws PortalException {
 
-		CalendarBooking calendarBooking =
-			CalendarBookingLocalServiceUtil.
-				fetchCalendarBookingByUuidAndGroupId(uuid, groupId);
+		CalendarBooking calendarBooking = fetchExistingStagedModel(
+			uuid, groupId);
 
 		if (calendarBooking != null) {
 			CalendarBookingLocalServiceUtil.deleteCalendarBooking(
@@ -66,17 +66,25 @@ public class CalendarBookingStagedModelDataHandler
 	}
 
 	@Override
+	public int[] getExportableStatuses() {
+		return _EXPORTABLE_STATUSES;
+	}
+
+	@Override
 	protected void doExportStagedModel(
 			PortletDataContext portletDataContext,
 			CalendarBooking calendarBooking)
 		throws Exception {
 
-		StagedModelDataHandlerUtil.exportStagedModel(
-			portletDataContext, calendarBooking.getCalendar());
+		StagedModelDataHandlerUtil.exportReferenceStagedModel(
+			portletDataContext, calendarBooking, calendarBooking.getCalendar(),
+			PortletDataContext.REFERENCE_TYPE_STRONG);
 
 		if (!calendarBooking.isMasterBooking()) {
-			StagedModelDataHandlerUtil.exportStagedModel(
-				portletDataContext, calendarBooking.getParentCalendarBooking());
+			StagedModelDataHandlerUtil.exportReferenceStagedModel(
+				portletDataContext, calendarBooking,
+				calendarBooking.getParentCalendarBooking(),
+				PortletDataContext.REFERENCE_TYPE_STRONG);
 		}
 
 		Element calendarBookingElement =
@@ -84,8 +92,16 @@ public class CalendarBookingStagedModelDataHandler
 
 		portletDataContext.addClassedModel(
 			calendarBookingElement,
-			ExportImportPathUtil.getModelPath(calendarBooking), calendarBooking,
-			CalendarPortletDataHandler.NAMESPACE);
+			ExportImportPathUtil.getModelPath(calendarBooking),
+			calendarBooking);
+	}
+
+	@Override
+	protected CalendarBooking doFetchExistingStagedModel(
+		String uuid, long groupId) {
+
+		return CalendarBookingLocalServiceUtil.
+			fetchCalendarBookingByUuidAndGroupId(uuid, groupId);
 	}
 
 	@Override
@@ -97,15 +113,8 @@ public class CalendarBookingStagedModelDataHandler
 		long userId = portletDataContext.getUserId(
 			calendarBooking.getUserUuid());
 
-		String calendarPath = ExportImportPathUtil.getModelPath(
-			portletDataContext, Calendar.class.getName(),
-			calendarBooking.getCalendarId());
-
-		Calendar calendar = (Calendar)portletDataContext.getZipEntryAsObject(
-			calendarPath);
-
-		StagedModelDataHandlerUtil.importStagedModel(
-			portletDataContext, calendar);
+		StagedModelDataHandlerUtil.importReferenceStagedModels(
+			portletDataContext, calendarBooking, Calendar.class);
 
 		Map<Long, Long> calendarIds =
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
@@ -119,17 +128,8 @@ public class CalendarBookingStagedModelDataHandler
 			CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT;
 
 		if (!calendarBooking.isMasterBooking()) {
-			String parentCalendarBookingPath =
-				ExportImportPathUtil.getModelPath(
-					portletDataContext, CalendarBooking.class.getName(),
-					calendarBooking.getParentCalendarBookingId());
-
-			CalendarBooking parentCalendarBooking =
-				(CalendarBooking)portletDataContext.getZipEntryAsObject(
-					parentCalendarBookingPath);
-
-			StagedModelDataHandlerUtil.importStagedModel(
-				portletDataContext, parentCalendarBooking);
+			StagedModelDataHandlerUtil.importReferenceStagedModels(
+				portletDataContext, calendarBooking, CalendarBooking.class);
 
 			Map<Long, Long> calendarBookingIds =
 				(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
@@ -142,16 +142,14 @@ public class CalendarBookingStagedModelDataHandler
 		}
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			calendarBooking, CalendarPortletDataHandler.NAMESPACE);
+			calendarBooking);
 
 		CalendarBooking importedCalendarBooking = null;
 
 		if (portletDataContext.isDataStrategyMirror()) {
-			CalendarBooking existingCalendarBooking =
-				CalendarBookingLocalServiceUtil.
-					fetchCalendarBookingByUuidAndGroupId(
-						calendarBooking.getUuid(),
-						portletDataContext.getScopeGroupId());
+			CalendarBooking existingCalendarBooking = fetchExistingStagedModel(
+				calendarBooking.getUuid(),
+				portletDataContext.getScopeGroupId());
 
 			if (existingCalendarBooking == null) {
 				serviceContext.setUuid(calendarBooking.getUuid());
@@ -207,8 +205,38 @@ public class CalendarBookingStagedModelDataHandler
 		}
 
 		portletDataContext.importClassedModel(
-			calendarBooking, importedCalendarBooking,
-			CalendarPortletDataHandler.NAMESPACE);
+			calendarBooking, importedCalendarBooking);
 	}
+
+	@Override
+	protected void doRestoreStagedModel(
+			PortletDataContext portletDataContext,
+			CalendarBooking calendarBooking)
+		throws Exception {
+
+		long userId = portletDataContext.getUserId(
+			calendarBooking.getUserUuid());
+
+		CalendarBooking existingBooking = fetchExistingStagedModel(
+			calendarBooking.getUuid(), portletDataContext.getScopeGroupId());
+
+		if ((existingBooking == null) || !existingBooking.isInTrash()) {
+			return;
+		}
+
+		TrashHandler trashHandler = existingBooking.getTrashHandler();
+
+		if (trashHandler.isRestorable(existingBooking.getCalendarBookingId())) {
+			trashHandler.restoreTrashEntry(
+				userId, existingBooking.getCalendarBookingId());
+		}
+	}
+
+	private static final int[] _EXPORTABLE_STATUSES = {
+		CalendarBookingWorkflowConstants.STATUS_APPROVED,
+		CalendarBookingWorkflowConstants.STATUS_DENIED,
+		CalendarBookingWorkflowConstants.STATUS_MAYBE,
+		CalendarBookingWorkflowConstants.STATUS_PENDING
+	};
 
 }

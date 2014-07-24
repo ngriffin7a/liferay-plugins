@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -18,6 +18,7 @@
 package com.liferay.so.util;
 
 import com.liferay.portal.kernel.configuration.Filter;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -133,13 +134,13 @@ public class LayoutUtil {
 			addResources(layout, portletId);
 
 			if (portletId.startsWith("1_WAR_eventsdisplayportlet")) {
-				updatePortletTitle(layout, portletId, "Events");
+				updatePortletTitle(layout, portletId, "events");
 			}
 			else if (portletId.startsWith("1_WAR_soannouncementsportlet")) {
-				updatePortletTitle(layout, portletId, "Announcements");
+				updatePortletTitle(layout, portletId, "announcements");
 			}
 			else if (portletId.startsWith("1_WAR_wysiwygportlet")) {
-				updatePortletTitle(layout, portletId, "Welcome");
+				updatePortletTitle(layout, portletId, "welcome");
 			}
 			else if (portletId.contains("_WAR_contactsportlet")) {
 				configureProfile(layout, portletId);
@@ -147,11 +148,11 @@ public class LayoutUtil {
 			}
 			else if (portletId.startsWith(PortletKeys.ASSET_PUBLISHER)) {
 				configureAssetPublisher(layout);
-				updatePortletTitle(layout, portletId, "Related Content");
+				updatePortletTitle(layout, portletId, "related-content");
 			}
 			else if (portletId.startsWith(PortletKeys.BLOGS_AGGREGATOR)) {
 				configureBlogsAggregator(layout);
-				updatePortletTitle(layout, portletId, "Recent Blogs");
+				updatePortletTitle(layout, portletId, "recent-blogs");
 			}
 			else if (portletId.startsWith(PortletKeys.BREADCRUMB)) {
 				removePortletBorder(layout, portletId);
@@ -160,10 +161,10 @@ public class LayoutUtil {
 				configureMessageBoards(layout);
 				removePortletBorder(layout, portletId);
 			}
-			else if (portletId.equals(PortletKeys.CALENDAR) ||
-					 portletId.equals(PortletKeys.DOCUMENT_LIBRARY) ||
+			else if (portletId.equals(PortletKeys.DOCUMENT_LIBRARY) ||
 					 portletId.equals(PortletKeys.BLOGS) ||
 					 portletId.equals(PortletKeys.WIKI) ||
+					 portletId.equals("1_WAR_calendarportlet") ||
 					 portletId.contains("_WAR_microblogsportlet") ||
 					 portletId.equals("1_WAR_privatemessagingportlet") ||
 					 portletId.contains("1_WAR_tasksportlet")) {
@@ -174,7 +175,7 @@ public class LayoutUtil {
 	}
 
 	public static void addResources(Layout layout, String portletId)
-		throws Exception {
+		throws PortalException {
 
 		String rootPortletId = PortletConstants.getRootPortletId(portletId);
 

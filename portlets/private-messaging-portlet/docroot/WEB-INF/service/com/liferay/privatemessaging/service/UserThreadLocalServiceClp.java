@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -25,132 +25,136 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 		InvokableLocalService invokableLocalService) {
 		_invokableLocalService = invokableLocalService;
 
-		_methodName0 = "addUserThread";
+		_methodName0 = "addPrivateMessage";
 
 		_methodParameterTypes0 = new String[] {
-				"com.liferay.privatemessaging.model.UserThread"
-			};
-
-		_methodName1 = "createUserThread";
-
-		_methodParameterTypes1 = new String[] { "long" };
-
-		_methodName2 = "deleteUserThread";
-
-		_methodParameterTypes2 = new String[] { "long" };
-
-		_methodName3 = "deleteUserThread";
-
-		_methodParameterTypes3 = new String[] {
-				"com.liferay.privatemessaging.model.UserThread"
-			};
-
-		_methodName4 = "dynamicQuery";
-
-		_methodParameterTypes4 = new String[] {  };
-
-		_methodName5 = "dynamicQuery";
-
-		_methodParameterTypes5 = new String[] {
-				"com.liferay.portal.kernel.dao.orm.DynamicQuery"
-			};
-
-		_methodName6 = "dynamicQuery";
-
-		_methodParameterTypes6 = new String[] {
-				"com.liferay.portal.kernel.dao.orm.DynamicQuery", "int", "int"
-			};
-
-		_methodName7 = "dynamicQuery";
-
-		_methodParameterTypes7 = new String[] {
-				"com.liferay.portal.kernel.dao.orm.DynamicQuery", "int", "int",
-				"com.liferay.portal.kernel.util.OrderByComparator"
-			};
-
-		_methodName8 = "dynamicQueryCount";
-
-		_methodParameterTypes8 = new String[] {
-				"com.liferay.portal.kernel.dao.orm.DynamicQuery"
-			};
-
-		_methodName9 = "dynamicQueryCount";
-
-		_methodParameterTypes9 = new String[] {
-				"com.liferay.portal.kernel.dao.orm.DynamicQuery",
-				"com.liferay.portal.kernel.dao.orm.Projection"
-			};
-
-		_methodName10 = "fetchUserThread";
-
-		_methodParameterTypes10 = new String[] { "long" };
-
-		_methodName11 = "getUserThread";
-
-		_methodParameterTypes11 = new String[] { "long" };
-
-		_methodName12 = "getPersistedModel";
-
-		_methodParameterTypes12 = new String[] { "java.io.Serializable" };
-
-		_methodName13 = "getUserThreads";
-
-		_methodParameterTypes13 = new String[] { "int", "int" };
-
-		_methodName14 = "getUserThreadsCount";
-
-		_methodParameterTypes14 = new String[] {  };
-
-		_methodName15 = "updateUserThread";
-
-		_methodParameterTypes15 = new String[] {
-				"com.liferay.privatemessaging.model.UserThread"
-			};
-
-		_methodName16 = "getBeanIdentifier";
-
-		_methodParameterTypes16 = new String[] {  };
-
-		_methodName17 = "setBeanIdentifier";
-
-		_methodParameterTypes17 = new String[] { "java.lang.String" };
-
-		_methodName19 = "addPrivateMessage";
-
-		_methodParameterTypes19 = new String[] {
 				"long", "long", "java.lang.String", "java.lang.String",
 				"java.lang.String", "java.util.List",
 				"com.liferay.portal.theme.ThemeDisplay"
 			};
 
-		_methodName20 = "addPrivateMessageBranch";
+		_methodName1 = "addPrivateMessageBranch";
 
-		_methodParameterTypes20 = new String[] {
+		_methodParameterTypes1 = new String[] {
 				"long", "long", "java.lang.String", "java.util.List",
 				"com.liferay.portal.theme.ThemeDisplay"
 			};
 
-		_methodName21 = "addUserThread";
+		_methodName2 = "addUserThread";
 
-		_methodParameterTypes21 = new String[] {
+		_methodParameterTypes2 = new String[] {
 				"long", "long", "long", "boolean", "boolean"
 			};
 
-		_methodName22 = "deleteUser";
+		_methodName3 = "addUserThread";
 
-		_methodParameterTypes22 = new String[] { "long" };
+		_methodParameterTypes3 = new String[] {
+				"com.liferay.privatemessaging.model.UserThread"
+			};
 
-		_methodName23 = "deleteUserThread";
+		_methodName4 = "createUserThread";
 
-		_methodParameterTypes23 = new String[] { "long", "long" };
+		_methodParameterTypes4 = new String[] { "long" };
 
-		_methodName24 = "getMBThreadUserThreads";
+		_methodName5 = "deletePersistedModel";
 
-		_methodParameterTypes24 = new String[] { "long" };
+		_methodParameterTypes5 = new String[] {
+				"com.liferay.portal.model.PersistedModel"
+			};
 
-		_methodName25 = "getUserThread";
+		_methodName6 = "deleteUser";
 
-		_methodParameterTypes25 = new String[] { "long", "long" };
+		_methodParameterTypes6 = new String[] { "long" };
+
+		_methodName7 = "deleteUserThread";
+
+		_methodParameterTypes7 = new String[] { "long", "long" };
+
+		_methodName8 = "deleteUserThread";
+
+		_methodParameterTypes8 = new String[] {
+				"com.liferay.privatemessaging.model.UserThread"
+			};
+
+		_methodName9 = "deleteUserThread";
+
+		_methodParameterTypes9 = new String[] { "long" };
+
+		_methodName10 = "dynamicQuery";
+
+		_methodParameterTypes10 = new String[] {  };
+
+		_methodName11 = "dynamicQuery";
+
+		_methodParameterTypes11 = new String[] {
+				"com.liferay.portal.kernel.dao.orm.DynamicQuery"
+			};
+
+		_methodName12 = "dynamicQuery";
+
+		_methodParameterTypes12 = new String[] {
+				"com.liferay.portal.kernel.dao.orm.DynamicQuery", "int", "int"
+			};
+
+		_methodName13 = "dynamicQuery";
+
+		_methodParameterTypes13 = new String[] {
+				"com.liferay.portal.kernel.dao.orm.DynamicQuery", "int", "int",
+				"com.liferay.portal.kernel.util.OrderByComparator"
+			};
+
+		_methodName14 = "dynamicQueryCount";
+
+		_methodParameterTypes14 = new String[] {
+				"com.liferay.portal.kernel.dao.orm.DynamicQuery"
+			};
+
+		_methodName15 = "dynamicQueryCount";
+
+		_methodParameterTypes15 = new String[] {
+				"com.liferay.portal.kernel.dao.orm.DynamicQuery",
+				"com.liferay.portal.kernel.dao.orm.Projection"
+			};
+
+		_methodName16 = "fetchUserThread";
+
+		_methodParameterTypes16 = new String[] { "long", "long" };
+
+		_methodName17 = "fetchUserThread";
+
+		_methodParameterTypes17 = new String[] { "long" };
+
+		_methodName18 = "getActionableDynamicQuery";
+
+		_methodParameterTypes18 = new String[] {  };
+
+		_methodName19 = "getBeanIdentifier";
+
+		_methodParameterTypes19 = new String[] {  };
+
+		_methodName20 = "getMBThreadUserThreads";
+
+		_methodParameterTypes20 = new String[] { "long" };
+
+		_methodName21 = "getPersistedModel";
+
+		_methodParameterTypes21 = new String[] { "java.io.Serializable" };
+
+		_methodName22 = "getUserThread";
+
+		_methodParameterTypes22 = new String[] { "long", "long" };
+
+		_methodName23 = "getUserThread";
+
+		_methodParameterTypes23 = new String[] { "long" };
+
+		_methodName24 = "getUserThreads";
+
+		_methodParameterTypes24 = new String[] { "int", "int" };
+
+		_methodName25 = "getUserThreadsCount";
+
+		_methodParameterTypes25 = new String[] {  };
 
 		_methodName26 = "getUserUserThreadCount";
 
@@ -166,573 +170,33 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 
 		_methodName29 = "getUserUserThreads";
 
-		_methodParameterTypes29 = new String[] { "long", "boolean", "boolean" };
+		_methodParameterTypes29 = new String[] { "long", "boolean", "int", "int" };
 
 		_methodName30 = "getUserUserThreads";
 
-		_methodParameterTypes30 = new String[] { "long", "boolean", "int", "int" };
+		_methodParameterTypes30 = new String[] { "long", "boolean", "boolean" };
 
-		_methodName31 = "markUserThreadAsRead";
-
-		_methodParameterTypes31 = new String[] { "long", "long" };
-
-		_methodName32 = "markUserThreadAsUnread";
+		_methodName32 = "markUserThreadAsRead";
 
 		_methodParameterTypes32 = new String[] { "long", "long" };
 
-		_methodName33 = "updateUserName";
+		_methodName33 = "markUserThreadAsUnread";
 
-		_methodParameterTypes33 = new String[] { "com.liferay.portal.model.User" };
-	}
+		_methodParameterTypes33 = new String[] { "long", "long" };
 
-	@Override
-	public com.liferay.privatemessaging.model.UserThread addUserThread(
-		com.liferay.privatemessaging.model.UserThread userThread)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
+		_methodName34 = "setBeanIdentifier";
 
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName0,
-					_methodParameterTypes0,
-					new Object[] { ClpSerializer.translateInput(userThread) });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
+		_methodParameterTypes34 = new String[] { "java.lang.String" };
 
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
+		_methodName35 = "updateUserName";
 
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
+		_methodParameterTypes35 = new String[] { "com.liferay.portal.model.User" };
 
-		return (com.liferay.privatemessaging.model.UserThread)ClpSerializer.translateOutput(returnObj);
-	}
+		_methodName36 = "updateUserThread";
 
-	@Override
-	public com.liferay.privatemessaging.model.UserThread createUserThread(
-		long userThreadId) {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName1,
-					_methodParameterTypes1, new Object[] { userThreadId });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.liferay.privatemessaging.model.UserThread)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public com.liferay.privatemessaging.model.UserThread deleteUserThread(
-		long userThreadId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName2,
-					_methodParameterTypes2, new Object[] { userThreadId });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
-				throw (com.liferay.portal.kernel.exception.PortalException)t;
-			}
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.liferay.privatemessaging.model.UserThread)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public com.liferay.privatemessaging.model.UserThread deleteUserThread(
-		com.liferay.privatemessaging.model.UserThread userThread)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName3,
-					_methodParameterTypes3,
-					new Object[] { ClpSerializer.translateInput(userThread) });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.liferay.privatemessaging.model.UserThread)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery() {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName4,
-					_methodParameterTypes4, new Object[] {  });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.liferay.portal.kernel.dao.orm.DynamicQuery)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	@SuppressWarnings("rawtypes")
-	public java.util.List dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName5,
-					_methodParameterTypes5,
-					new Object[] { ClpSerializer.translateInput(dynamicQuery) });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (java.util.List)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	@SuppressWarnings("rawtypes")
-	public java.util.List dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
-		int end) throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName6,
-					_methodParameterTypes6,
-					new Object[] {
-						ClpSerializer.translateInput(dynamicQuery),
-						
-					start,
-						
-					end
-					});
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (java.util.List)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	@SuppressWarnings("rawtypes")
-	public java.util.List dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
-		int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName7,
-					_methodParameterTypes7,
-					new Object[] {
-						ClpSerializer.translateInput(dynamicQuery),
-						
-					start,
-						
-					end,
-						
-					ClpSerializer.translateInput(orderByComparator)
-					});
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (java.util.List)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public long dynamicQueryCount(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName8,
-					_methodParameterTypes8,
-					new Object[] { ClpSerializer.translateInput(dynamicQuery) });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return ((Long)returnObj).longValue();
-	}
-
-	@Override
-	public long dynamicQueryCount(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery,
-		com.liferay.portal.kernel.dao.orm.Projection projection)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName9,
-					_methodParameterTypes9,
-					new Object[] {
-						ClpSerializer.translateInput(dynamicQuery),
-						
-					ClpSerializer.translateInput(projection)
-					});
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return ((Long)returnObj).longValue();
-	}
-
-	@Override
-	public com.liferay.privatemessaging.model.UserThread fetchUserThread(
-		long userThreadId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName10,
-					_methodParameterTypes10, new Object[] { userThreadId });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.liferay.privatemessaging.model.UserThread)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public com.liferay.privatemessaging.model.UserThread getUserThread(
-		long userThreadId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName11,
-					_methodParameterTypes11, new Object[] { userThreadId });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
-				throw (com.liferay.portal.kernel.exception.PortalException)t;
-			}
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.liferay.privatemessaging.model.UserThread)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public com.liferay.portal.model.PersistedModel getPersistedModel(
-		java.io.Serializable primaryKeyObj)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName12,
-					_methodParameterTypes12,
-					new Object[] { ClpSerializer.translateInput(primaryKeyObj) });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
-				throw (com.liferay.portal.kernel.exception.PortalException)t;
-			}
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.liferay.portal.model.PersistedModel)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public java.util.List<com.liferay.privatemessaging.model.UserThread> getUserThreads(
-		int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName13,
-					_methodParameterTypes13, new Object[] { start, end });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (java.util.List<com.liferay.privatemessaging.model.UserThread>)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public int getUserThreadsCount()
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName14,
-					_methodParameterTypes14, new Object[] {  });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return ((Integer)returnObj).intValue();
-	}
-
-	@Override
-	public com.liferay.privatemessaging.model.UserThread updateUserThread(
-		com.liferay.privatemessaging.model.UserThread userThread)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName15,
-					_methodParameterTypes15,
-					new Object[] { ClpSerializer.translateInput(userThread) });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (com.liferay.privatemessaging.model.UserThread)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public java.lang.String getBeanIdentifier() {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName16,
-					_methodParameterTypes16, new Object[] {  });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (java.lang.String)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public void setBeanIdentifier(java.lang.String beanIdentifier) {
-		try {
-			_invokableLocalService.invokeMethod(_methodName17,
-				_methodParameterTypes17,
-				new Object[] { ClpSerializer.translateInput(beanIdentifier) });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-	}
-
-	@Override
-	public java.lang.Object invokeMethod(java.lang.String name,
-		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
-		throws java.lang.Throwable {
-		throw new UnsupportedOperationException();
+		_methodParameterTypes36 = new String[] {
+				"com.liferay.privatemessaging.model.UserThread"
+			};
 	}
 
 	@Override
@@ -741,13 +205,12 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 		java.lang.String subject, java.lang.String body,
 		java.util.List<com.liferay.portal.kernel.util.ObjectValuePair<java.lang.String, java.io.InputStream>> inputStreamOVPs,
 		com.liferay.portal.theme.ThemeDisplay themeDisplay)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName19,
-					_methodParameterTypes19,
+			returnObj = _invokableLocalService.invokeMethod(_methodName0,
+					_methodParameterTypes0,
 					new Object[] {
 						userId,
 						
@@ -771,10 +234,6 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 				throw (com.liferay.portal.kernel.exception.PortalException)t;
 			}
 
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
 			}
@@ -792,13 +251,12 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 		long userId, long parentMBMessageId, java.lang.String body,
 		java.util.List<com.liferay.portal.kernel.util.ObjectValuePair<java.lang.String, java.io.InputStream>> inputStreamOVPs,
 		com.liferay.portal.theme.ThemeDisplay themeDisplay)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName20,
-					_methodParameterTypes20,
+			returnObj = _invokableLocalService.invokeMethod(_methodName1,
+					_methodParameterTypes1,
 					new Object[] {
 						userId,
 						
@@ -818,10 +276,6 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 				throw (com.liferay.portal.kernel.exception.PortalException)t;
 			}
 
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
 			}
@@ -837,11 +291,10 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 	@Override
 	public void addUserThread(long userId, long mbThreadId,
 		long topMBMessageId, boolean read, boolean deleted)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
-			_invokableLocalService.invokeMethod(_methodName21,
-				_methodParameterTypes21,
+			_invokableLocalService.invokeMethod(_methodName2,
+				_methodParameterTypes2,
 				new Object[] { userId, mbThreadId, topMBMessageId, read, deleted });
 		}
 		catch (Throwable t) {
@@ -849,10 +302,6 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 
 			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
 				throw (com.liferay.portal.kernel.exception.PortalException)t;
-			}
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
 			}
 
 			if (t instanceof RuntimeException) {
@@ -866,12 +315,64 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 	}
 
 	@Override
-	public void deleteUser(long userId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+	public com.liferay.privatemessaging.model.UserThread addUserThread(
+		com.liferay.privatemessaging.model.UserThread userThread) {
+		Object returnObj = null;
+
 		try {
-			_invokableLocalService.invokeMethod(_methodName22,
-				_methodParameterTypes22, new Object[] { userId });
+			returnObj = _invokableLocalService.invokeMethod(_methodName3,
+					_methodParameterTypes3,
+					new Object[] { ClpSerializer.translateInput(userThread) });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.privatemessaging.model.UserThread)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public com.liferay.privatemessaging.model.UserThread createUserThread(
+		long userThreadId) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName4,
+					_methodParameterTypes4, new Object[] { userThreadId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.privatemessaging.model.UserThread)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public com.liferay.portal.model.PersistedModel deletePersistedModel(
+		com.liferay.portal.model.PersistedModel persistedModel)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName5,
+					_methodParameterTypes5,
+					new Object[] { ClpSerializer.translateInput(persistedModel) });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -880,8 +381,30 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 				throw (com.liferay.portal.kernel.exception.PortalException)t;
 			}
 
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.portal.model.PersistedModel)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public void deleteUser(long userId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		try {
+			_invokableLocalService.invokeMethod(_methodName6,
+				_methodParameterTypes6, new Object[] { userId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
 			}
 
 			if (t instanceof RuntimeException) {
@@ -896,21 +419,16 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 
 	@Override
 	public void deleteUserThread(long userId, long mbThreadId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
-			_invokableLocalService.invokeMethod(_methodName23,
-				_methodParameterTypes23, new Object[] { userId, mbThreadId });
+			_invokableLocalService.invokeMethod(_methodName7,
+				_methodParameterTypes7, new Object[] { userId, mbThreadId });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
 				throw (com.liferay.portal.kernel.exception.PortalException)t;
-			}
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
 			}
 
 			if (t instanceof RuntimeException) {
@@ -924,21 +442,17 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 	}
 
 	@Override
-	public java.util.List<com.liferay.privatemessaging.model.UserThread> getMBThreadUserThreads(
-		long mbThreadId)
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public com.liferay.privatemessaging.model.UserThread deleteUserThread(
+		com.liferay.privatemessaging.model.UserThread userThread) {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName24,
-					_methodParameterTypes24, new Object[] { mbThreadId });
+			returnObj = _invokableLocalService.invokeMethod(_methodName8,
+					_methodParameterTypes8,
+					new Object[] { ClpSerializer.translateInput(userThread) });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -949,29 +463,24 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 			}
 		}
 
-		return (java.util.List<com.liferay.privatemessaging.model.UserThread>)ClpSerializer.translateOutput(returnObj);
+		return (com.liferay.privatemessaging.model.UserThread)ClpSerializer.translateOutput(returnObj);
 	}
 
 	@Override
-	public com.liferay.privatemessaging.model.UserThread getUserThread(
-		long userId, long mbThreadId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+	public com.liferay.privatemessaging.model.UserThread deleteUserThread(
+		long userThreadId)
+		throws com.liferay.portal.kernel.exception.PortalException {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName25,
-					_methodParameterTypes25, new Object[] { userId, mbThreadId });
+			returnObj = _invokableLocalService.invokeMethod(_methodName9,
+					_methodParameterTypes9, new Object[] { userThreadId });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
 				throw (com.liferay.portal.kernel.exception.PortalException)t;
-			}
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
 			}
 
 			if (t instanceof RuntimeException) {
@@ -987,20 +496,420 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 	}
 
 	@Override
-	public int getUserUserThreadCount(long userId, boolean deleted)
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery() {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName26,
-					_methodParameterTypes26, new Object[] { userId, deleted });
+			returnObj = _invokableLocalService.invokeMethod(_methodName10,
+					_methodParameterTypes10, new Object[] {  });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
 
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
 			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.portal.kernel.dao.orm.DynamicQuery)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public <T> java.util.List<T> dynamicQuery(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName11,
+					_methodParameterTypes11,
+					new Object[] { ClpSerializer.translateInput(dynamicQuery) });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<T>)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public <T> java.util.List<T> dynamicQuery(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
+		int end) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName12,
+					_methodParameterTypes12,
+					new Object[] {
+						ClpSerializer.translateInput(dynamicQuery),
+						
+					start,
+						
+					end
+					});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<T>)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public <T> java.util.List<T> dynamicQuery(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
+		int end,
+		com.liferay.portal.kernel.util.OrderByComparator<T> orderByComparator) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName13,
+					_methodParameterTypes13,
+					new Object[] {
+						ClpSerializer.translateInput(dynamicQuery),
+						
+					start,
+						
+					end,
+						
+					ClpSerializer.translateInput(orderByComparator)
+					});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<T>)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public long dynamicQueryCount(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName14,
+					_methodParameterTypes14,
+					new Object[] { ClpSerializer.translateInput(dynamicQuery) });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Long)returnObj).longValue();
+	}
+
+	@Override
+	public long dynamicQueryCount(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery,
+		com.liferay.portal.kernel.dao.orm.Projection projection) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName15,
+					_methodParameterTypes15,
+					new Object[] {
+						ClpSerializer.translateInput(dynamicQuery),
+						
+					ClpSerializer.translateInput(projection)
+					});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Long)returnObj).longValue();
+	}
+
+	@Override
+	public com.liferay.privatemessaging.model.UserThread fetchUserThread(
+		long userId, long mbThreadId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName16,
+					_methodParameterTypes16, new Object[] { userId, mbThreadId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.privatemessaging.model.UserThread)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public com.liferay.privatemessaging.model.UserThread fetchUserThread(
+		long userThreadId) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName17,
+					_methodParameterTypes17, new Object[] { userThreadId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.privatemessaging.model.UserThread)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName18,
+					_methodParameterTypes18, new Object[] {  });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public java.lang.String getBeanIdentifier() {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName19,
+					_methodParameterTypes19, new Object[] {  });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.lang.String)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public java.util.List<com.liferay.privatemessaging.model.UserThread> getMBThreadUserThreads(
+		long mbThreadId) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName20,
+					_methodParameterTypes20, new Object[] { mbThreadId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<com.liferay.privatemessaging.model.UserThread>)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public com.liferay.portal.model.PersistedModel getPersistedModel(
+		java.io.Serializable primaryKeyObj)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName21,
+					_methodParameterTypes21,
+					new Object[] { ClpSerializer.translateInput(primaryKeyObj) });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.portal.model.PersistedModel)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public com.liferay.privatemessaging.model.UserThread getUserThread(
+		long userId, long mbThreadId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName22,
+					_methodParameterTypes22, new Object[] { userId, mbThreadId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.privatemessaging.model.UserThread)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public com.liferay.privatemessaging.model.UserThread getUserThread(
+		long userThreadId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName23,
+					_methodParameterTypes23, new Object[] { userThreadId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.privatemessaging.model.UserThread)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public java.util.List<com.liferay.privatemessaging.model.UserThread> getUserThreads(
+		int start, int end) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName24,
+					_methodParameterTypes24, new Object[] { start, end });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<com.liferay.privatemessaging.model.UserThread>)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public int getUserThreadsCount() {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName25,
+					_methodParameterTypes25, new Object[] {  });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -1015,8 +924,30 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 	}
 
 	@Override
-	public int getUserUserThreadCount(long userId, boolean read, boolean deleted)
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public int getUserUserThreadCount(long userId, boolean deleted) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName26,
+					_methodParameterTypes26, new Object[] { userId, deleted });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Integer)returnObj).intValue();
+	}
+
+	@Override
+	public int getUserUserThreadCount(long userId, boolean read, boolean deleted) {
 		Object returnObj = null;
 
 		try {
@@ -1027,10 +958,6 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
 
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
 			}
@@ -1045,8 +972,7 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 
 	@Override
 	public java.util.List<com.liferay.privatemessaging.model.UserThread> getUserUserThreads(
-		long userId, boolean deleted)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		long userId, boolean deleted) {
 		Object returnObj = null;
 
 		try {
@@ -1056,10 +982,6 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
 
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
-
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
 			}
@@ -1074,21 +996,16 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 
 	@Override
 	public java.util.List<com.liferay.privatemessaging.model.UserThread> getUserUserThreads(
-		long userId, boolean read, boolean deleted)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		long userId, boolean deleted, int start, int end) {
 		Object returnObj = null;
 
 		try {
 			returnObj = _invokableLocalService.invokeMethod(_methodName29,
 					_methodParameterTypes29,
-					new Object[] { userId, read, deleted });
+					new Object[] { userId, deleted, start, end });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -1104,21 +1021,16 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 
 	@Override
 	public java.util.List<com.liferay.privatemessaging.model.UserThread> getUserUserThreads(
-		long userId, boolean deleted, int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		long userId, boolean read, boolean deleted) {
 		Object returnObj = null;
 
 		try {
 			returnObj = _invokableLocalService.invokeMethod(_methodName30,
 					_methodParameterTypes30,
-					new Object[] { userId, deleted, start, end });
+					new Object[] { userId, read, deleted });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -1133,22 +1045,24 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 	}
 
 	@Override
+	public java.lang.Object invokeMethod(java.lang.String name,
+		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
+		throws java.lang.Throwable {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public void markUserThreadAsRead(long userId, long mbThreadId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
-			_invokableLocalService.invokeMethod(_methodName31,
-				_methodParameterTypes31, new Object[] { userId, mbThreadId });
+			_invokableLocalService.invokeMethod(_methodName32,
+				_methodParameterTypes32, new Object[] { userId, mbThreadId });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
 				throw (com.liferay.portal.kernel.exception.PortalException)t;
-			}
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
 			}
 
 			if (t instanceof RuntimeException) {
@@ -1163,21 +1077,16 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 
 	@Override
 	public void markUserThreadAsUnread(long userId, long mbThreadId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
-			_invokableLocalService.invokeMethod(_methodName32,
-				_methodParameterTypes32, new Object[] { userId, mbThreadId });
+			_invokableLocalService.invokeMethod(_methodName33,
+				_methodParameterTypes33, new Object[] { userId, mbThreadId });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
 				throw (com.liferay.portal.kernel.exception.PortalException)t;
-			}
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
 			}
 
 			if (t instanceof RuntimeException) {
@@ -1191,19 +1100,14 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 	}
 
 	@Override
-	public void updateUserName(com.liferay.portal.model.User user)
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public void setBeanIdentifier(java.lang.String beanIdentifier) {
 		try {
-			_invokableLocalService.invokeMethod(_methodName33,
-				_methodParameterTypes33,
-				new Object[] { ClpSerializer.translateInput(user) });
+			_invokableLocalService.invokeMethod(_methodName34,
+				_methodParameterTypes34,
+				new Object[] { ClpSerializer.translateInput(beanIdentifier) });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -1213,6 +1117,51 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 					" is not a valid exception");
 			}
 		}
+	}
+
+	@Override
+	public void updateUserName(com.liferay.portal.model.User user) {
+		try {
+			_invokableLocalService.invokeMethod(_methodName35,
+				_methodParameterTypes35,
+				new Object[] { ClpSerializer.translateInput(user) });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+	}
+
+	@Override
+	public com.liferay.privatemessaging.model.UserThread updateUserThread(
+		com.liferay.privatemessaging.model.UserThread userThread) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName36,
+					_methodParameterTypes36,
+					new Object[] { ClpSerializer.translateInput(userThread) });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.privatemessaging.model.UserThread)ClpSerializer.translateOutput(returnObj);
 	}
 
 	private InvokableLocalService _invokableLocalService;
@@ -1252,6 +1201,8 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 	private String[] _methodParameterTypes16;
 	private String _methodName17;
 	private String[] _methodParameterTypes17;
+	private String _methodName18;
+	private String[] _methodParameterTypes18;
 	private String _methodName19;
 	private String[] _methodParameterTypes19;
 	private String _methodName20;
@@ -1276,10 +1227,14 @@ public class UserThreadLocalServiceClp implements UserThreadLocalService {
 	private String[] _methodParameterTypes29;
 	private String _methodName30;
 	private String[] _methodParameterTypes30;
-	private String _methodName31;
-	private String[] _methodParameterTypes31;
 	private String _methodName32;
 	private String[] _methodParameterTypes32;
 	private String _methodName33;
 	private String[] _methodParameterTypes33;
+	private String _methodName34;
+	private String[] _methodParameterTypes34;
+	private String _methodName35;
+	private String[] _methodParameterTypes35;
+	private String _methodName36;
+	private String[] _methodParameterTypes36;
 }

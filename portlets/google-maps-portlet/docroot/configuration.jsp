@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -16,17 +16,17 @@
 
 <%@ include file="/init.jsp" %>
 
-<liferay-portlet:actionURL portletConfiguration="true" var="actionURL" />
+<liferay-portlet:actionURL portletConfiguration="true" var="configurationActionURL" />
 
-<aui:form action="<%= actionURL %>" method="post" name="fm">
+<aui:form action="<%= configurationActionURL %>" method="post" name="fm">
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.UPDATE %>" />
 
 	<aui:fieldset>
-		<aui:input cssClass="lfr-input-text-container" name="preferences--mapAddress--" type="text" value="<%= mapAddress %>" />
+		<aui:input name="preferences--mapAddress--" type="text" value="<%= mapAddress %>" wrapperCssClass="lfr-input-text-container" />
 
 		<aui:input label="allow-map-address-to-be-edited" name="preferences--mapInputEnabled--" type="checkbox" value="<%= mapInputEnabled %>" />
 
-		<aui:input cssClass="lfr-input-text-container" name="preferences--directionsAddress--" type="text" value="<%= directionsAddress %>" />
+		<aui:input name="preferences--directionsAddress--" type="text" value="<%= directionsAddress %>" wrapperCssClass="lfr-input-text-container" />
 
 		<aui:input label="allow-directions-address-to-be-edited" name="preferences--directionsInputEnabled--" type="checkbox" value="<%= directionsInputEnabled %>" />
 

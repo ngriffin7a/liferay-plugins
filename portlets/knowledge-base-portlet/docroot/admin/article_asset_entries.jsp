@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -58,10 +58,9 @@ KBArticle kbArticle = (KBArticle)request.getAttribute(WebKeys.KNOWLEDGE_BASE_KB_
 
 							<div class="kb-title">
 								<liferay-ui:icon
+									iconCssClass="<%= assetRenderer.getIconCssClass() %>"
 									label="<%= true %>"
 									message="<%= assetRenderer.getTitle(locale) %>"
-									method="get"
-									src="<%= assetRenderer.getIconPath(renderRequest) %>"
 									url="<%= KBArticleAssetEntriesUtil.getURL(request, themeDisplay, assetRendererFactory, assetRenderer) %>"
 								/>
 
@@ -91,10 +90,9 @@ KBArticle kbArticle = (KBArticle)request.getAttribute(WebKeys.KNOWLEDGE_BASE_KB_
 
 							<div class="kb-title">
 								<liferay-ui:icon
+									iconCssClass="<%= assetRenderer.getIconCssClass() %>"
 									label="<%= true %>"
 									message="<%= assetRenderer.getTitle(locale) %>"
-									method="get"
-									src="<%= assetRenderer.getIconPath(renderRequest) %>"
 									url="<%= KBArticleAssetEntriesUtil.getURL(request, themeDisplay, assetRendererFactory, assetRenderer) %>"
 								/>
 

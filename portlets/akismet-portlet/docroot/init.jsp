@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -33,13 +33,13 @@ page import="com.liferay.portal.kernel.dao.orm.DynamicQuery" %><%@
 page import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil" %><%@
 page import="com.liferay.portal.kernel.dao.orm.Property" %><%@
 page import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil" %><%@
-page import="com.liferay.portal.kernel.dao.search.ResultRow" %><%@
 page import="com.liferay.portal.kernel.dao.search.RowChecker" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
 page import="com.liferay.portal.kernel.language.UnicodeLanguageUtil" %><%@
 page import="com.liferay.portal.kernel.servlet.SessionMessages" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
+page import="com.liferay.portal.kernel.util.StringPool" %><%@
 page import="com.liferay.portal.kernel.util.StringUtil" %><%@
 page import="com.liferay.portal.kernel.util.WebKeys" %><%@
 page import="com.liferay.portal.kernel.workflow.WorkflowConstants" %><%@
@@ -56,7 +56,8 @@ page import="com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil
 page import="com.liferay.portlet.wiki.NoSuchPageException" %><%@
 page import="com.liferay.portlet.wiki.model.WikiNode" %><%@
 page import="com.liferay.portlet.wiki.model.WikiPage" %><%@
-page import="com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil" %>
+page import="com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil" %><%@
+page import="com.liferay.taglib.search.ResultRow" %>
 
 <%@ page import="java.text.DateFormat" %>
 

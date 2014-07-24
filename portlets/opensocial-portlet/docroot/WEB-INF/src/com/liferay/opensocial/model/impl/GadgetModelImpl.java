@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -190,6 +190,9 @@ public class GadgetModelImpl extends BaseModelImpl<Gadget>
 		attributes.put("url", getUrl());
 		attributes.put("portletCategoryNames", getPortletCategoryNames());
 
+		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
+		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
+
 		return attributes;
 	}
 
@@ -245,8 +248,8 @@ public class GadgetModelImpl extends BaseModelImpl<Gadget>
 		}
 	}
 
-	@Override
 	@JSON
+	@Override
 	public String getUuid() {
 		if (_uuid == null) {
 			return StringPool.BLANK;
@@ -269,8 +272,8 @@ public class GadgetModelImpl extends BaseModelImpl<Gadget>
 		return GetterUtil.getString(_originalUuid);
 	}
 
-	@Override
 	@JSON
+	@Override
 	public long getGadgetId() {
 		return _gadgetId;
 	}
@@ -280,8 +283,8 @@ public class GadgetModelImpl extends BaseModelImpl<Gadget>
 		_gadgetId = gadgetId;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public long getCompanyId() {
 		return _companyId;
 	}
@@ -303,8 +306,8 @@ public class GadgetModelImpl extends BaseModelImpl<Gadget>
 		return _originalCompanyId;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public Date getCreateDate() {
 		return _createDate;
 	}
@@ -314,8 +317,8 @@ public class GadgetModelImpl extends BaseModelImpl<Gadget>
 		_createDate = createDate;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public Date getModifiedDate() {
 		return _modifiedDate;
 	}
@@ -325,8 +328,8 @@ public class GadgetModelImpl extends BaseModelImpl<Gadget>
 		_modifiedDate = modifiedDate;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public String getName() {
 		if (_name == null) {
 			return StringPool.BLANK;
@@ -343,8 +346,8 @@ public class GadgetModelImpl extends BaseModelImpl<Gadget>
 		_name = name;
 	}
 
-	@Override
 	@JSON
+	@Override
 	public String getUrl() {
 		if (_url == null) {
 			return StringPool.BLANK;
@@ -369,8 +372,8 @@ public class GadgetModelImpl extends BaseModelImpl<Gadget>
 		return GetterUtil.getString(_originalUrl);
 	}
 
-	@Override
 	@JSON
+	@Override
 	public String getPortletCategoryNames() {
 		if (_portletCategoryNames == null) {
 			return StringPool.BLANK;
@@ -474,6 +477,16 @@ public class GadgetModelImpl extends BaseModelImpl<Gadget>
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	@Override
+	public boolean isEntityCacheEnabled() {
+		return ENTITY_CACHE_ENABLED;
+	}
+
+	@Override
+	public boolean isFinderCacheEnabled() {
+		return FINDER_CACHE_ENABLED;
 	}
 
 	@Override

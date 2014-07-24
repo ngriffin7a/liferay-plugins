@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -63,7 +63,7 @@ portletURL.setParameter("meetupsEntryId", String.valueOf(meetupsEntryId));
 String thumbnailURL = null;
 
 if (meetupsEntry.getThumbnailId() == 0) {
-	thumbnailURL = request.getContextPath() + "/meetups/images/calendar.png";
+	thumbnailURL = PortalUtil.getPathContext(request) + "/meetups/images/calendar.png";
 }
 else {
 	thumbnailURL = themeDisplay.getPathImage() + "/meetups?img_id=" + meetupsEntry.getThumbnailId() + "&t=" + WebServerServletTokenUtil.getToken(meetupsEntry.getThumbnailId());
@@ -88,7 +88,7 @@ int yesTotal = MeetupsRegistrationLocalServiceUtil.getMeetupsRegistrationsCount(
 
 <c:if test="<%= yesTotal > 1 %>">
 	<div>
-		<%= LanguageUtil.format(pageContext, "x-people-are-planning-to-attend-this-meetup", String.valueOf(yesTotal)) %>
+		<%= LanguageUtil.format(request, "x-people-are-planning-to-attend-this-meetup", String.valueOf(yesTotal), false) %>
 	</div>
 
 	<br />
@@ -144,12 +144,14 @@ int yesTotal = MeetupsRegistrationLocalServiceUtil.getMeetupsRegistrationsCount(
 
 		List<MeetupsRegistration> results = MeetupsRegistrationLocalServiceUtil.getMeetupsRegistrations(meetupsEntryId, tabs1Status, searchContainer.getStart(), searchContainer.getEnd());
 
+		searchContainer.setResults(results);
+
 		for (MeetupsRegistration curMeetupsRegistration : results) {
 		%>
 
 			<div class="response">
 				<liferay-ui:user-display
-					displayStyle="<%= 2 %>"
+					displayStyle="2"
 					userId="<%= curMeetupsRegistration.getUserId() %>"
 					userName="<%= curMeetupsRegistration.getUserName() %>"
 				/>
@@ -195,7 +197,7 @@ int yesTotal = MeetupsRegistrationLocalServiceUtil.getMeetupsRegistrationsCount(
 	</c:when>
 	<c:otherwise>
 		<div>
-			<liferay-ui:message arguments="<%= new Object[] {themeDisplay.getURLSignIn(), PortalUtil.getCreateAccountURL(request, themeDisplay)} %>" key="you-have-to-be-signed-in-to-register-for-this-meetup" />
+			<liferay-ui:message arguments="<%= new Object[] {themeDisplay.getURLSignIn(), PortalUtil.getCreateAccountURL(request, themeDisplay)} %>" key="you-have-to-be-signed-in-to-register-for-this-meetup" translateArguments="<%= false %>" />
 		</div>
 	</c:otherwise>
 </c:choose>

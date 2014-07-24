@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,28 +15,29 @@
 --%>
 
 <liferay-ui:search-container id="sites" searchContainer='<%= new CalendarResourceSearch(renderRequest, CalendarResourceSearch.DEFAULT_CUR_PARAM + "Groups", iteratorURL) %>'>
-	<liferay-ui:search-container-results>
 
-		<%
-		String[] params = {"site:true:boolean"};
+	<%
+	String[] params = {"site:true:boolean"};
 
-		if (displayTerms.isAdvancedSearch()) {
-			results = GroupServiceUtil.search(themeDisplay.getCompanyId(), displayTerms.getName(), displayTerms.getDescription(), params, searchContainer.getStart(), searchContainer.getEnd());
-			total = GroupServiceUtil.searchCount(themeDisplay.getCompanyId(), displayTerms.getName(), displayTerms.getDescription(), params);
-		}
-		else {
-			results = GroupServiceUtil.search(themeDisplay.getCompanyId(), displayTerms.getKeywords(), displayTerms.getKeywords(), params, searchContainer.getStart(), searchContainer.getEnd());
-			total = GroupServiceUtil.searchCount(themeDisplay.getCompanyId(), displayTerms.getKeywords(), displayTerms.getKeywords(), params);
-		}
+	if (displayTerms.isAdvancedSearch()) {
+		total = GroupServiceUtil.searchCount(themeDisplay.getCompanyId(), displayTerms.getName(), displayTerms.getDescription(), params);
 
-		pageContext.setAttribute("results", results);
-		pageContext.setAttribute("total", total);
-		%>
+		searchContainer.setTotal(total);
 
-	</liferay-ui:search-container-results>
+		searchContainer.setResults(GroupServiceUtil.search(themeDisplay.getCompanyId(), displayTerms.getName(), displayTerms.getDescription(), params, searchContainer.getStart(), searchContainer.getEnd()));
+	}
+	else {
+		total = GroupServiceUtil.searchCount(themeDisplay.getCompanyId(), displayTerms.getKeywords(), displayTerms.getKeywords(), params);
+
+		searchContainer.setTotal(total);
+
+		searchContainer.setResults(GroupServiceUtil.search(themeDisplay.getCompanyId(), displayTerms.getKeywords(), displayTerms.getKeywords(), params, searchContainer.getStart(), searchContainer.getEnd()));
+	}
+	%>
 
 	<liferay-ui:search-container-row
 		className="com.liferay.portal.model.Group"
+		escapedModel="<%= true %>"
 		keyProperty="groupId"
 		modelVar="group"
 	>
@@ -52,7 +53,7 @@
 
 		<liferay-ui:search-container-column-text
 			name="type"
-			value='<%= LanguageUtil.get(pageContext, "site") %>'
+			value='<%= LanguageUtil.get(request, "site") %>'
 		/>
 
 		<liferay-ui:search-container-column-text name="active">
@@ -61,6 +62,7 @@
 
 		<liferay-ui:search-container-column-jsp
 			align="right"
+			cssClass="entry-action"
 			path="/calendar_resource_group_action.jsp"
 		/>
 	</liferay-ui:search-container-row>

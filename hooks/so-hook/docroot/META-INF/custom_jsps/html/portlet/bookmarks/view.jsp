@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -24,7 +24,7 @@ String topLink = ParamUtil.getString(request, "topLink", "bookmarks-home");
 
 BookmarksFolder folder = (BookmarksFolder)request.getAttribute(WebKeys.BOOKMARKS_FOLDER);
 
-long defaultFolderId = GetterUtil.getLong(preferences.getValue("rootFolderId", StringPool.BLANK), BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+long defaultFolderId = GetterUtil.getLong(portalPreferences.getValue("rootFolderId", StringPool.BLANK), BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID);
 
 long folderId = BeanParamUtil.getLong(folder, request, "folderId", defaultFolderId);
 
@@ -69,15 +69,15 @@ request.setAttribute("view.jsp-viewFolder", Boolean.TRUE.toString());
 <liferay-ui:search-container
 	curParam="cur1"
 	iteratorURL="<%= portletURL %>"
+	total="<%= BookmarksEntryServiceUtil.getEntriesCount(scopeGroupId, folderId) %>"
 >
 
 	<%
-	OrderByComparator orderByComparator = BookmarksUtil.getEntriesOrderByComparator("name", "asc");
+	OrderByComparator orderByComparator = BookmarksUtil.getEntryOrderByComparator("name", "asc");
 	%>
 
 	<liferay-ui:search-container-results
 		results="<%= BookmarksEntryServiceUtil.getEntries(scopeGroupId, folderId, searchContainer.getStart(), searchContainer.getEnd(), orderByComparator) %>"
-		total="<%= BookmarksEntryServiceUtil.getEntriesCount(scopeGroupId, folderId) %>"
 	/>
 
 	<liferay-ui:search-container-row
@@ -112,6 +112,7 @@ request.setAttribute("view.jsp-viewFolder", Boolean.TRUE.toString());
 
 		<liferay-ui:search-container-column-jsp
 			align="right"
+			cssClass="entry-action"
 			path="/html/portlet/bookmarks/entry_action.jsp"
 		/>
 	</liferay-ui:search-container-row>

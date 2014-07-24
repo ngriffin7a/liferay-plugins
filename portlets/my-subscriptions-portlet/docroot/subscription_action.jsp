@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -24,7 +24,7 @@ Subscription subscription = (Subscription)row.getObject();
 AssetRenderer assetRenderer = MySubscriptionsUtil.getAssetRenderer(subscription.getClassName(), subscription.getClassPK());
 %>
 
-<liferay-ui:icon-menu>
+<liferay-ui:icon-menu icon="<%= StringPool.BLANK %>" message="<%= StringPool.BLANK %>">
 
 	<%
 	String viewURL = null;
@@ -37,10 +37,13 @@ AssetRenderer assetRenderer = MySubscriptionsUtil.getAssetRenderer(subscription.
 	}
 	%>
 
-	<liferay-ui:icon
-		image="view"
-		url="<%= viewURL %>"
-	/>
+	<c:if test="<%= viewURL != null %>">
+		<liferay-ui:icon
+			iconCssClass="icon-search"
+			message="view"
+			url="<%= viewURL %>"
+		/>
+	</c:if>
 
 	<%
 	String displayPopupHREF = null;
@@ -49,15 +52,25 @@ AssetRenderer assetRenderer = MySubscriptionsUtil.getAssetRenderer(subscription.
 		PortletURL displayPopupURL = assetRenderer.getURLView(liferayPortletResponse, LiferayWindowState.POP_UP);
 
 		if (displayPopupURL != null) {
-			displayPopupHREF = "javascript:displayPopup('" + displayPopupURL.toString() + "', 'my-subscription');";
+			StringBundler sb = new StringBundler(7);
+
+			sb.append("javascript:");
+			sb.append(liferayPortletResponse.getNamespace());
+			sb.append("displayPopup('");
+			sb.append(displayPopupURL.toString());
+			sb.append("', '");
+			sb.append(UnicodeLanguageUtil.get(request, "my-subscription"));
+			sb.append("');");
+
+			displayPopupHREF = sb.toString();
 		}
 	}
 	%>
 
 	<c:if test="<%= displayPopupHREF != null %>">
 		<liferay-ui:icon
+			iconCssClass="icon-list-alt"
 			message="view-in-popup"
-			src="../portlet/pop_up.png"
 			url="<%= displayPopupHREF %>"
 		/>
 	</c:if>
@@ -68,8 +81,9 @@ AssetRenderer assetRenderer = MySubscriptionsUtil.getAssetRenderer(subscription.
 	</portlet:actionURL>
 
 	<liferay-ui:icon
-		image="unsubscribe"
+		iconCssClass="icon-remove-sign"
 		label="<%= true %>"
+		message="unsubscribe"
 		url="<%= unsubscribeURL %>"
 	/>
 </liferay-ui:icon-menu>

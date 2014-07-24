@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -46,12 +46,13 @@ page import="com.liferay.portal.kernel.messaging.Message" %><%@
 page import="com.liferay.portal.kernel.messaging.MessageBusUtil" %><%@
 page import="com.liferay.portal.kernel.portlet.PortletClassLoaderUtil" %><%@
 page import="com.liferay.portal.kernel.search.SearchEngineUtil" %><%@
-page import="com.liferay.portal.kernel.util.FileUtil" %><%@
+page import="com.liferay.portal.kernel.security.pacl.permission.PortalFilePermission" %><%@
 page import="com.liferay.portal.kernel.util.HttpUtil" %><%@
 page import="com.liferay.portal.kernel.util.LocaleUtil" %><%@
 page import="com.liferay.portal.kernel.util.OSDetector" %><%@
 page import="com.liferay.portal.kernel.util.PortalClassLoaderUtil" %><%@
 page import="com.liferay.portal.kernel.util.PropsKeys" %><%@
+page import="com.liferay.portal.kernel.util.ServerDetector" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
 page import="com.liferay.portal.model.Group" %><%@
 page import="com.liferay.portal.model.GroupWrapper" %><%@

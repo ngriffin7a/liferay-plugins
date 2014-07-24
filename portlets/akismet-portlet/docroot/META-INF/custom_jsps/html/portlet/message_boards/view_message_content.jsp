@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -29,10 +29,12 @@
 		int x = html.indexOf("<ul class=\"edit-controls", messagePos);
 		int y = html.indexOf("</ul>", x);
 
-		int messageIdPos = html.indexOf("_19_messageId=", x);
+		String messageIdParameter = renderResponse.getNamespace() + "messageId=";
+
+		int messageIdPos = html.indexOf(messageIdParameter, x);
 
 		if ((x > 0) && (y > 0) && (messageIdPos > 0)) {
-			String messageId = html.substring(messageIdPos + 14, html.indexOf("\"", messageIdPos));
+			String messageId = html.substring(messageIdPos + messageIdParameter.length(), html.indexOf("\"", messageIdPos));
 
 			MBMessage message = null;
 
@@ -65,7 +67,7 @@
 							</portlet:actionURL>
 
 							<liferay-ui:icon
-								image="../mail/compose"
+								iconCssClass="icon-envelope-alt"
 								label="<%= true %>"
 								message="not-spam"
 								url="<%= notSpamURL %>"
@@ -83,7 +85,7 @@
 							</portlet:actionURL>
 
 							<liferay-ui:icon
-								image="../mail/delete"
+								iconCssClass="icon-remove"
 								label="<%= true %>"
 								message="mark-as-spam"
 								url="<%= markAsSpamURL %>"

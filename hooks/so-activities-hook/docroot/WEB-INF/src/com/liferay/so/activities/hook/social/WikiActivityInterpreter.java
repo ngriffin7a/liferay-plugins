@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,7 +15,6 @@
 package com.liferay.so.activities.hook.social;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -24,6 +23,7 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
@@ -40,6 +40,7 @@ import com.liferay.portlet.wiki.model.WikiPageResource;
 import com.liferay.portlet.wiki.service.WikiNodeLocalServiceUtil;
 import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
 import com.liferay.portlet.wiki.service.WikiPageResourceLocalServiceUtil;
+import com.liferay.so.activities.util.SocialActivityKeyConstants;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
@@ -55,9 +56,7 @@ public class WikiActivityInterpreter extends SOSocialActivityInterpreter {
 	}
 
 	@Override
-	public void updateActivitySet(long activityId)
-		throws PortalException, SystemException {
-
+	public void updateActivitySet(long activityId) throws PortalException {
 		SocialActivity activity =
 			SocialActivityLocalServiceUtil.fetchSocialActivity(activityId);
 
@@ -71,7 +70,9 @@ public class WikiActivityInterpreter extends SOSocialActivityInterpreter {
 			SocialActivitySetLocalServiceUtil.incrementActivityCount(
 				activitySetId, activityId);
 
-			if (activity.getType() == _ACTIVITY_KEY_UPDATE_PAGE) {
+			if (activity.getType() ==
+					SocialActivityKeyConstants.WIKI_UPDATE_PAGE) {
+
 				SocialActivitySet activitySet =
 					SocialActivitySetLocalServiceUtil.fetchSocialActivitySet(
 						activitySetId);
@@ -110,7 +111,9 @@ public class WikiActivityInterpreter extends SOSocialActivityInterpreter {
 			SocialActivitySet activitySet =
 				SocialActivitySetLocalServiceUtil.addActivitySet(activityId);
 
-			if (activity.getType() == _ACTIVITY_KEY_UPDATE_PAGE) {
+			if (activity.getType() ==
+					SocialActivityKeyConstants.WIKI_UPDATE_PAGE) {
+
 				WikiPageResource pageResource =
 					WikiPageResourceLocalServiceUtil.fetchWikiPageResource(
 						activity.getClassPK());
@@ -166,7 +169,8 @@ public class WikiActivityInterpreter extends SOSocialActivityInterpreter {
 
 			boolean comment = false;
 
-			if ((activity.getType() == _ACTIVITY_KEY_ADD_COMMENT) ||
+			if ((activity.getType() ==
+					SocialActivityKeyConstants.WIKI_ADD_COMMENT) ||
 				(activity.getType() ==
 					SocialActivityConstants.TYPE_ADD_COMMENT)) {
 
@@ -177,7 +181,9 @@ public class WikiActivityInterpreter extends SOSocialActivityInterpreter {
 
 				comment = true;
 			}
-			else if (activity.getType() == _ACTIVITY_KEY_UPDATE_PAGE) {
+			else if (activity.getType() ==
+						SocialActivityKeyConstants.WIKI_UPDATE_PAGE) {
+
 				activitySet =
 					SocialActivitySetLocalServiceUtil.getClassActivitySet(
 						activity.getUserId(), activity.getClassNameId(),
@@ -208,8 +214,10 @@ public class WikiActivityInterpreter extends SOSocialActivityInterpreter {
 			SocialActivitySet activitySet, ServiceContext serviceContext)
 		throws Exception {
 
-		if ((activitySet.getType() == _ACTIVITY_KEY_ADD_COMMENT) ||
-			(activitySet.getType() == _ACTIVITY_KEY_UPDATE_PAGE) ||
+		if ((activitySet.getType() ==
+				SocialActivityKeyConstants.WIKI_ADD_COMMENT) ||
+			(activitySet.getType() ==
+				SocialActivityKeyConstants.WIKI_UPDATE_PAGE) ||
 			(activitySet.getType() ==
 				SocialActivityConstants.TYPE_ADD_COMMENT)) {
 
@@ -235,7 +243,7 @@ public class WikiActivityInterpreter extends SOSocialActivityInterpreter {
 
 		sb.append(
 			StringUtil.shorten(
-				assetRenderer.getSummary(serviceContext.getLocale()), 200));
+				HtmlUtil.escape(assetRenderer.getSummary(), 200)));
 
 		sb.append("</div></div>");
 
@@ -254,10 +262,9 @@ public class WikiActivityInterpreter extends SOSocialActivityInterpreter {
 			return null;
 		}
 
-		long plid = PortalUtil.getPlidFromPortletId(
-			groupId, false, PortletKeys.WIKI);
+		long plid = PortalUtil.getPlidFromPortletId(groupId, PortletKeys.WIKI);
 
-		if (plid <= 0) {
+		if (plid == LayoutConstants.DEFAULT_PLID) {
 			return null;
 		}
 
@@ -294,7 +301,7 @@ public class WikiActivityInterpreter extends SOSocialActivityInterpreter {
 			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
 
-		if (activity.getType() != _ACTIVITY_KEY_UPDATE_PAGE) {
+		if (activity.getType() != SocialActivityKeyConstants.WIKI_UPDATE_PAGE) {
 			return null;
 		}
 
@@ -305,6 +312,10 @@ public class WikiActivityInterpreter extends SOSocialActivityInterpreter {
 		SocialActivitySet activitySet =
 			SocialActivitySetLocalServiceUtil.fetchSocialActivitySet(
 				socialActivity.getActivitySetId());
+
+		if (Validator.isNull(activitySet.getExtraData())) {
+			return null;
+		}
 
 		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject(
 			activitySet.getExtraData());
@@ -322,7 +333,13 @@ public class WikiActivityInterpreter extends SOSocialActivityInterpreter {
 			SocialActivitySet activitySet, ServiceContext serviceContext)
 		throws Exception {
 
-		if (activitySet.getType() != _ACTIVITY_KEY_UPDATE_PAGE) {
+		if (activitySet.getType() !=
+				SocialActivityKeyConstants.WIKI_UPDATE_PAGE) {
+
+			return null;
+		}
+
+		if (Validator.isNull(activitySet.getExtraData())) {
 			return null;
 		}
 
@@ -355,10 +372,9 @@ public class WikiActivityInterpreter extends SOSocialActivityInterpreter {
 			return null;
 		}
 
-		long plid = PortalUtil.getPlidFromPortletId(
-			groupId, false, PortletKeys.WIKI);
+		long plid = PortalUtil.getPlidFromPortletId(groupId, PortletKeys.WIKI);
 
-		if (plid <= 0) {
+		if (plid == LayoutConstants.DEFAULT_PLID) {
 			return HtmlUtil.escape(node.getName());
 		}
 
@@ -369,7 +385,7 @@ public class WikiActivityInterpreter extends SOSocialActivityInterpreter {
 		nodeURL.setParameter("struts_action", "/wiki/view");
 		nodeURL.setParameter("nodeId", String.valueOf(node.getNodeId()));
 
-		return wrapLink(nodeURL.toString(), HtmlUtil.escape(node.getName()));
+		return wrapLink(nodeURL.toString(), node.getName());
 	}
 
 	@Override
@@ -393,7 +409,8 @@ public class WikiActivityInterpreter extends SOSocialActivityInterpreter {
 		String nodeTitle = getNodeTitle(
 			activitySet.getClassPK(), activitySet.getGroupId(), serviceContext);
 
-		if ((activitySet.getType() == _ACTIVITY_KEY_ADD_COMMENT) ||
+		if ((activitySet.getType() ==
+				SocialActivityKeyConstants.WIKI_ADD_COMMENT) ||
 			(activitySet.getType() ==
 				SocialActivityConstants.TYPE_ADD_COMMENT)) {
 
@@ -411,15 +428,20 @@ public class WikiActivityInterpreter extends SOSocialActivityInterpreter {
 
 		String titlePattern = null;
 
-		if ((activity.getType() == _ACTIVITY_KEY_ADD_COMMENT) ||
+		if ((activity.getType() ==
+				SocialActivityKeyConstants.WIKI_ADD_COMMENT) ||
 			(activity.getType() == SocialActivityConstants.TYPE_ADD_COMMENT)) {
 
 			titlePattern = "commented-on-a-wiki-page";
 		}
-		else if (activity.getType() == _ACTIVITY_KEY_ADD_PAGE) {
+		else if (activity.getType() ==
+					SocialActivityKeyConstants.WIKI_ADD_PAGE) {
+
 			titlePattern = "created-a-new-wiki-page";
 		}
-		else if (activity.getType() == _ACTIVITY_KEY_UPDATE_PAGE) {
+		else if (activity.getType() ==
+					SocialActivityKeyConstants.WIKI_UPDATE_PAGE) {
+
 			titlePattern = "updated-a-wiki-page";
 		}
 		else {
@@ -436,16 +458,21 @@ public class WikiActivityInterpreter extends SOSocialActivityInterpreter {
 
 		String titlePattern = null;
 
-		if ((activitySet.getType() == _ACTIVITY_KEY_ADD_COMMENT) ||
+		if ((activitySet.getType() ==
+				SocialActivityKeyConstants.WIKI_ADD_COMMENT) ||
 			(activitySet.getType() ==
 				SocialActivityConstants.TYPE_ADD_COMMENT)) {
 
 			titlePattern = "commented-on-a-wiki-page";
 		}
-		else if (activitySet.getType() == _ACTIVITY_KEY_ADD_PAGE) {
+		else if (activitySet.getType() ==
+					SocialActivityKeyConstants.WIKI_ADD_PAGE) {
+
 			titlePattern = "created-x-new-wiki-pages";
 		}
-		else if (activitySet.getType() == _ACTIVITY_KEY_UPDATE_PAGE) {
+		else if (activitySet.getType() ==
+					SocialActivityKeyConstants.WIKI_UPDATE_PAGE) {
+
 			titlePattern = "made-x-updates-to-a-wiki-page";
 		}
 		else {
@@ -454,21 +481,6 @@ public class WikiActivityInterpreter extends SOSocialActivityInterpreter {
 
 		return appendNodeTitlePattern(titlePattern, activitySet.getClassPK());
 	}
-
-	/**
-	 * {@link com.liferay.portlet.wiki.social.WikiActivityKeys#ADD_COMMENT}
-	 */
-	private static final int _ACTIVITY_KEY_ADD_COMMENT = 3;
-
-	/**
-	 * {@link com.liferay.portlet.wiki.social.WikiActivityKeys#ADD_PAGE}
-	 */
-	private static final int _ACTIVITY_KEY_ADD_PAGE = 1;
-
-	/**
-	 * {@link com.liferay.portlet.wiki.social.WikiActivityKeys#UPDATE_PAGE}
-	 */
-	private static final int _ACTIVITY_KEY_UPDATE_PAGE = 2;
 
 	private static final String[] _CLASS_NAMES = {WikiPage.class.getName()};
 

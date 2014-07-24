@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -19,8 +19,6 @@ import com.liferay.calendar.model.CalendarClp;
 import com.liferay.calendar.model.CalendarNotificationTemplateClp;
 import com.liferay.calendar.model.CalendarResourceClp;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayOutputStream;
 import com.liferay.portal.kernel.log.Log;
@@ -199,20 +197,148 @@ public class ClpSerializer {
 					"com.liferay.calendar.model.impl.CalendarImpl")) {
 			return translateOutputCalendar(oldModel);
 		}
+		else if (oldModelClassName.endsWith("Clp")) {
+			try {
+				ClassLoader classLoader = ClpSerializer.class.getClassLoader();
+
+				Method getClpSerializerClassMethod = oldModelClass.getMethod(
+						"getClpSerializerClass");
+
+				Class<?> oldClpSerializerClass = (Class<?>)getClpSerializerClassMethod.invoke(oldModel);
+
+				Class<?> newClpSerializerClass = classLoader.loadClass(oldClpSerializerClass.getName());
+
+				Method translateOutputMethod = newClpSerializerClass.getMethod("translateOutput",
+						BaseModel.class);
+
+				Class<?> oldModelModelClass = oldModel.getModelClass();
+
+				Method getRemoteModelMethod = oldModelClass.getMethod("get" +
+						oldModelModelClass.getSimpleName() + "RemoteModel");
+
+				Object oldRemoteModel = getRemoteModelMethod.invoke(oldModel);
+
+				BaseModel<?> newModel = (BaseModel<?>)translateOutputMethod.invoke(null,
+						oldRemoteModel);
+
+				return newModel;
+			}
+			catch (Throwable t) {
+				if (_log.isInfoEnabled()) {
+					_log.info("Unable to translate " + oldModelClassName, t);
+				}
+			}
+		}
 
 		if (oldModelClassName.equals(
 					"com.liferay.calendar.model.impl.CalendarBookingImpl")) {
 			return translateOutputCalendarBooking(oldModel);
+		}
+		else if (oldModelClassName.endsWith("Clp")) {
+			try {
+				ClassLoader classLoader = ClpSerializer.class.getClassLoader();
+
+				Method getClpSerializerClassMethod = oldModelClass.getMethod(
+						"getClpSerializerClass");
+
+				Class<?> oldClpSerializerClass = (Class<?>)getClpSerializerClassMethod.invoke(oldModel);
+
+				Class<?> newClpSerializerClass = classLoader.loadClass(oldClpSerializerClass.getName());
+
+				Method translateOutputMethod = newClpSerializerClass.getMethod("translateOutput",
+						BaseModel.class);
+
+				Class<?> oldModelModelClass = oldModel.getModelClass();
+
+				Method getRemoteModelMethod = oldModelClass.getMethod("get" +
+						oldModelModelClass.getSimpleName() + "RemoteModel");
+
+				Object oldRemoteModel = getRemoteModelMethod.invoke(oldModel);
+
+				BaseModel<?> newModel = (BaseModel<?>)translateOutputMethod.invoke(null,
+						oldRemoteModel);
+
+				return newModel;
+			}
+			catch (Throwable t) {
+				if (_log.isInfoEnabled()) {
+					_log.info("Unable to translate " + oldModelClassName, t);
+				}
+			}
 		}
 
 		if (oldModelClassName.equals(
 					"com.liferay.calendar.model.impl.CalendarNotificationTemplateImpl")) {
 			return translateOutputCalendarNotificationTemplate(oldModel);
 		}
+		else if (oldModelClassName.endsWith("Clp")) {
+			try {
+				ClassLoader classLoader = ClpSerializer.class.getClassLoader();
+
+				Method getClpSerializerClassMethod = oldModelClass.getMethod(
+						"getClpSerializerClass");
+
+				Class<?> oldClpSerializerClass = (Class<?>)getClpSerializerClassMethod.invoke(oldModel);
+
+				Class<?> newClpSerializerClass = classLoader.loadClass(oldClpSerializerClass.getName());
+
+				Method translateOutputMethod = newClpSerializerClass.getMethod("translateOutput",
+						BaseModel.class);
+
+				Class<?> oldModelModelClass = oldModel.getModelClass();
+
+				Method getRemoteModelMethod = oldModelClass.getMethod("get" +
+						oldModelModelClass.getSimpleName() + "RemoteModel");
+
+				Object oldRemoteModel = getRemoteModelMethod.invoke(oldModel);
+
+				BaseModel<?> newModel = (BaseModel<?>)translateOutputMethod.invoke(null,
+						oldRemoteModel);
+
+				return newModel;
+			}
+			catch (Throwable t) {
+				if (_log.isInfoEnabled()) {
+					_log.info("Unable to translate " + oldModelClassName, t);
+				}
+			}
+		}
 
 		if (oldModelClassName.equals(
 					"com.liferay.calendar.model.impl.CalendarResourceImpl")) {
 			return translateOutputCalendarResource(oldModel);
+		}
+		else if (oldModelClassName.endsWith("Clp")) {
+			try {
+				ClassLoader classLoader = ClpSerializer.class.getClassLoader();
+
+				Method getClpSerializerClassMethod = oldModelClass.getMethod(
+						"getClpSerializerClass");
+
+				Class<?> oldClpSerializerClass = (Class<?>)getClpSerializerClassMethod.invoke(oldModel);
+
+				Class<?> newClpSerializerClass = classLoader.loadClass(oldClpSerializerClass.getName());
+
+				Method translateOutputMethod = newClpSerializerClass.getMethod("translateOutput",
+						BaseModel.class);
+
+				Class<?> oldModelModelClass = oldModel.getModelClass();
+
+				Method getRemoteModelMethod = oldModelClass.getMethod("get" +
+						oldModelModelClass.getSimpleName() + "RemoteModel");
+
+				Object oldRemoteModel = getRemoteModelMethod.invoke(oldModel);
+
+				BaseModel<?> newModel = (BaseModel<?>)translateOutputMethod.invoke(null,
+						oldRemoteModel);
+
+				return newModel;
+			}
+			catch (Throwable t) {
+				if (_log.isInfoEnabled()) {
+					_log.info("Unable to translate " + oldModelClassName, t);
+				}
+			}
 		}
 
 		return oldModel;
@@ -269,6 +395,13 @@ public class ClpSerializer {
 
 				return throwable;
 			}
+			catch (ClassNotFoundException cnfe) {
+				if (_log.isInfoEnabled()) {
+					_log.info("Do not use reflection to translate throwable");
+				}
+
+				_useReflectionToTranslateThrowable = false;
+			}
 			catch (SecurityException se) {
 				if (_log.isInfoEnabled()) {
 					_log.info("Do not use reflection to translate throwable");
@@ -287,72 +420,77 @@ public class ClpSerializer {
 
 		String className = clazz.getName();
 
-		if (className.equals(PortalException.class.getName())) {
-			return new PortalException();
-		}
-
-		if (className.equals(SystemException.class.getName())) {
-			return new SystemException();
-		}
-
 		if (className.equals(
 					"com.liferay.calendar.CalendarBookingDurationException")) {
-			return new com.liferay.calendar.CalendarBookingDurationException();
+			return new com.liferay.calendar.CalendarBookingDurationException(throwable.getMessage(),
+				throwable.getCause());
 		}
 
 		if (className.equals(
 					"com.liferay.calendar.CalendarBookingEndTimeException")) {
-			return new com.liferay.calendar.CalendarBookingEndTimeException();
+			return new com.liferay.calendar.CalendarBookingEndTimeException(throwable.getMessage(),
+				throwable.getCause());
 		}
 
 		if (className.equals(
 					"com.liferay.calendar.CalendarBookingStartTimeException")) {
-			return new com.liferay.calendar.CalendarBookingStartTimeException();
+			return new com.liferay.calendar.CalendarBookingStartTimeException(throwable.getMessage(),
+				throwable.getCause());
 		}
 
 		if (className.equals(
 					"com.liferay.calendar.CalendarBookingTitleException")) {
-			return new com.liferay.calendar.CalendarBookingTitleException();
+			return new com.liferay.calendar.CalendarBookingTitleException(throwable.getMessage(),
+				throwable.getCause());
 		}
 
 		if (className.equals("com.liferay.calendar.CalendarNameException")) {
-			return new com.liferay.calendar.CalendarNameException();
+			return new com.liferay.calendar.CalendarNameException(throwable.getMessage(),
+				throwable.getCause());
 		}
 
 		if (className.equals(
 					"com.liferay.calendar.CalendarResourceCodeException")) {
-			return new com.liferay.calendar.CalendarResourceCodeException();
+			return new com.liferay.calendar.CalendarResourceCodeException(throwable.getMessage(),
+				throwable.getCause());
 		}
 
 		if (className.equals(
 					"com.liferay.calendar.CalendarResourceNameException")) {
-			return new com.liferay.calendar.CalendarResourceNameException();
+			return new com.liferay.calendar.CalendarResourceNameException(throwable.getMessage(),
+				throwable.getCause());
 		}
 
 		if (className.equals(
 					"com.liferay.calendar.DuplicateCalendarResourceException")) {
-			return new com.liferay.calendar.DuplicateCalendarResourceException();
+			return new com.liferay.calendar.DuplicateCalendarResourceException(throwable.getMessage(),
+				throwable.getCause());
 		}
 
 		if (className.equals("com.liferay.calendar.RequiredCalendarException")) {
-			return new com.liferay.calendar.RequiredCalendarException();
+			return new com.liferay.calendar.RequiredCalendarException(throwable.getMessage(),
+				throwable.getCause());
 		}
 
 		if (className.equals("com.liferay.calendar.NoSuchCalendarException")) {
-			return new com.liferay.calendar.NoSuchCalendarException();
+			return new com.liferay.calendar.NoSuchCalendarException(throwable.getMessage(),
+				throwable.getCause());
 		}
 
 		if (className.equals("com.liferay.calendar.NoSuchBookingException")) {
-			return new com.liferay.calendar.NoSuchBookingException();
+			return new com.liferay.calendar.NoSuchBookingException(throwable.getMessage(),
+				throwable.getCause());
 		}
 
 		if (className.equals(
 					"com.liferay.calendar.NoSuchNotificationTemplateException")) {
-			return new com.liferay.calendar.NoSuchNotificationTemplateException();
+			return new com.liferay.calendar.NoSuchNotificationTemplateException(throwable.getMessage(),
+				throwable.getCause());
 		}
 
 		if (className.equals("com.liferay.calendar.NoSuchResourceException")) {
-			return new com.liferay.calendar.NoSuchResourceException();
+			return new com.liferay.calendar.NoSuchResourceException(throwable.getMessage(),
+				throwable.getCause());
 		}
 
 		return throwable;

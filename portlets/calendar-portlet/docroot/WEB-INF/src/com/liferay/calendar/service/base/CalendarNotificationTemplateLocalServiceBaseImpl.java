@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -26,20 +26,32 @@ import com.liferay.calendar.service.persistence.CalendarResourcePersistence;
 
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.bean.IdentifiableBean;
+import com.liferay.portal.kernel.dao.db.DB;
+import com.liferay.portal.kernel.dao.db.DBFactoryUtil;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdate;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DefaultActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.lar.ExportImportHelperUtil;
+import com.liferay.portal.kernel.lar.ManifestSummary;
+import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.model.PersistedModel;
 import com.liferay.portal.service.BaseLocalServiceImpl;
 import com.liferay.portal.service.PersistedModelLocalServiceRegistryUtil;
+import com.liferay.portal.service.persistence.ClassNamePersistence;
 import com.liferay.portal.service.persistence.UserPersistence;
+import com.liferay.portal.util.PortalUtil;
 
 import java.io.Serializable;
 
@@ -73,13 +85,11 @@ public abstract class CalendarNotificationTemplateLocalServiceBaseImpl
 	 *
 	 * @param calendarNotificationTemplate the calendar notification template
 	 * @return the calendar notification template that was added
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public CalendarNotificationTemplate addCalendarNotificationTemplate(
-		CalendarNotificationTemplate calendarNotificationTemplate)
-		throws SystemException {
+		CalendarNotificationTemplate calendarNotificationTemplate) {
 		calendarNotificationTemplate.setNew(true);
 
 		return calendarNotificationTemplatePersistence.update(calendarNotificationTemplate);
@@ -103,13 +113,11 @@ public abstract class CalendarNotificationTemplateLocalServiceBaseImpl
 	 * @param calendarNotificationTemplateId the primary key of the calendar notification template
 	 * @return the calendar notification template that was removed
 	 * @throws PortalException if a calendar notification template with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public CalendarNotificationTemplate deleteCalendarNotificationTemplate(
-		long calendarNotificationTemplateId)
-		throws PortalException, SystemException {
+		long calendarNotificationTemplateId) throws PortalException {
 		return calendarNotificationTemplatePersistence.remove(calendarNotificationTemplateId);
 	}
 
@@ -118,13 +126,11 @@ public abstract class CalendarNotificationTemplateLocalServiceBaseImpl
 	 *
 	 * @param calendarNotificationTemplate the calendar notification template
 	 * @return the calendar notification template that was removed
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public CalendarNotificationTemplate deleteCalendarNotificationTemplate(
-		CalendarNotificationTemplate calendarNotificationTemplate)
-		throws SystemException {
+		CalendarNotificationTemplate calendarNotificationTemplate) {
 		return calendarNotificationTemplatePersistence.remove(calendarNotificationTemplate);
 	}
 
@@ -141,12 +147,9 @@ public abstract class CalendarNotificationTemplateLocalServiceBaseImpl
 	 *
 	 * @param dynamicQuery the dynamic query
 	 * @return the matching rows
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public List dynamicQuery(DynamicQuery dynamicQuery)
-		throws SystemException {
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery) {
 		return calendarNotificationTemplatePersistence.findWithDynamicQuery(dynamicQuery);
 	}
 
@@ -161,12 +164,10 @@ public abstract class CalendarNotificationTemplateLocalServiceBaseImpl
 	 * @param start the lower bound of the range of model instances
 	 * @param end the upper bound of the range of model instances (not inclusive)
 	 * @return the range of matching rows
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public List dynamicQuery(DynamicQuery dynamicQuery, int start, int end)
-		throws SystemException {
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery, int start,
+		int end) {
 		return calendarNotificationTemplatePersistence.findWithDynamicQuery(dynamicQuery,
 			start, end);
 	}
@@ -183,12 +184,10 @@ public abstract class CalendarNotificationTemplateLocalServiceBaseImpl
 	 * @param end the upper bound of the range of model instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching rows
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public List dynamicQuery(DynamicQuery dynamicQuery, int start, int end,
-		OrderByComparator orderByComparator) throws SystemException {
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery, int start,
+		int end, OrderByComparator<T> orderByComparator) {
 		return calendarNotificationTemplatePersistence.findWithDynamicQuery(dynamicQuery,
 			start, end, orderByComparator);
 	}
@@ -198,11 +197,9 @@ public abstract class CalendarNotificationTemplateLocalServiceBaseImpl
 	 *
 	 * @param dynamicQuery the dynamic query
 	 * @return the number of rows that match the dynamic query
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public long dynamicQueryCount(DynamicQuery dynamicQuery)
-		throws SystemException {
+	public long dynamicQueryCount(DynamicQuery dynamicQuery) {
 		return calendarNotificationTemplatePersistence.countWithDynamicQuery(dynamicQuery);
 	}
 
@@ -212,34 +209,18 @@ public abstract class CalendarNotificationTemplateLocalServiceBaseImpl
 	 * @param dynamicQuery the dynamic query
 	 * @param projection the projection to apply to the query
 	 * @return the number of rows that match the dynamic query
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public long dynamicQueryCount(DynamicQuery dynamicQuery,
-		Projection projection) throws SystemException {
+		Projection projection) {
 		return calendarNotificationTemplatePersistence.countWithDynamicQuery(dynamicQuery,
 			projection);
 	}
 
 	@Override
 	public CalendarNotificationTemplate fetchCalendarNotificationTemplate(
-		long calendarNotificationTemplateId) throws SystemException {
+		long calendarNotificationTemplateId) {
 		return calendarNotificationTemplatePersistence.fetchByPrimaryKey(calendarNotificationTemplateId);
-	}
-
-	/**
-	 * Returns the calendar notification template with the matching UUID and company.
-	 *
-	 * @param uuid the calendar notification template's UUID
-	 * @param  companyId the primary key of the company
-	 * @return the matching calendar notification template, or <code>null</code> if a matching calendar notification template could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	@Override
-	public CalendarNotificationTemplate fetchCalendarNotificationTemplateByUuidAndCompanyId(
-		String uuid, long companyId) throws SystemException {
-		return calendarNotificationTemplatePersistence.fetchByUuid_C_First(uuid,
-			companyId, null);
 	}
 
 	/**
@@ -248,11 +229,10 @@ public abstract class CalendarNotificationTemplateLocalServiceBaseImpl
 	 * @param uuid the calendar notification template's UUID
 	 * @param groupId the primary key of the group
 	 * @return the matching calendar notification template, or <code>null</code> if a matching calendar notification template could not be found
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public CalendarNotificationTemplate fetchCalendarNotificationTemplateByUuidAndGroupId(
-		String uuid, long groupId) throws SystemException {
+		String uuid, long groupId) {
 		return calendarNotificationTemplatePersistence.fetchByUUID_G(uuid,
 			groupId);
 	}
@@ -263,35 +243,121 @@ public abstract class CalendarNotificationTemplateLocalServiceBaseImpl
 	 * @param calendarNotificationTemplateId the primary key of the calendar notification template
 	 * @return the calendar notification template
 	 * @throws PortalException if a calendar notification template with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public CalendarNotificationTemplate getCalendarNotificationTemplate(
-		long calendarNotificationTemplateId)
-		throws PortalException, SystemException {
+		long calendarNotificationTemplateId) throws PortalException {
 		return calendarNotificationTemplatePersistence.findByPrimaryKey(calendarNotificationTemplateId);
 	}
 
 	@Override
-	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
-		throws PortalException, SystemException {
-		return calendarNotificationTemplatePersistence.findByPrimaryKey(primaryKeyObj);
+	public ActionableDynamicQuery getActionableDynamicQuery() {
+		ActionableDynamicQuery actionableDynamicQuery = new DefaultActionableDynamicQuery();
+
+		actionableDynamicQuery.setBaseLocalService(com.liferay.calendar.service.CalendarNotificationTemplateLocalServiceUtil.getService());
+		actionableDynamicQuery.setClass(CalendarNotificationTemplate.class);
+		actionableDynamicQuery.setClassLoader(getClassLoader());
+
+		actionableDynamicQuery.setPrimaryKeyPropertyName(
+			"calendarNotificationTemplateId");
+
+		return actionableDynamicQuery;
+	}
+
+	protected void initActionableDynamicQuery(
+		ActionableDynamicQuery actionableDynamicQuery) {
+		actionableDynamicQuery.setBaseLocalService(com.liferay.calendar.service.CalendarNotificationTemplateLocalServiceUtil.getService());
+		actionableDynamicQuery.setClass(CalendarNotificationTemplate.class);
+		actionableDynamicQuery.setClassLoader(getClassLoader());
+
+		actionableDynamicQuery.setPrimaryKeyPropertyName(
+			"calendarNotificationTemplateId");
+	}
+
+	@Override
+	public ExportActionableDynamicQuery getExportActionableDynamicQuery(
+		final PortletDataContext portletDataContext) {
+		final ExportActionableDynamicQuery exportActionableDynamicQuery = new ExportActionableDynamicQuery() {
+				@Override
+				public long performCount() throws PortalException {
+					ManifestSummary manifestSummary = portletDataContext.getManifestSummary();
+
+					StagedModelType stagedModelType = getStagedModelType();
+
+					long modelAdditionCount = super.performCount();
+
+					manifestSummary.addModelAdditionCount(stagedModelType.toString(),
+						modelAdditionCount);
+
+					long modelDeletionCount = ExportImportHelperUtil.getModelDeletionCount(portletDataContext,
+							stagedModelType);
+
+					manifestSummary.addModelDeletionCount(stagedModelType.toString(),
+						modelDeletionCount);
+
+					return modelAdditionCount;
+				}
+			};
+
+		initActionableDynamicQuery(exportActionableDynamicQuery);
+
+		exportActionableDynamicQuery.setAddCriteriaMethod(new ActionableDynamicQuery.AddCriteriaMethod() {
+				@Override
+				public void addCriteria(DynamicQuery dynamicQuery) {
+					portletDataContext.addDateRangeCriteria(dynamicQuery,
+						"modifiedDate");
+				}
+			});
+
+		exportActionableDynamicQuery.setCompanyId(portletDataContext.getCompanyId());
+
+		exportActionableDynamicQuery.setGroupId(portletDataContext.getScopeGroupId());
+
+		exportActionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod() {
+				@Override
+				public void performAction(Object object)
+					throws PortalException {
+					CalendarNotificationTemplate stagedModel = (CalendarNotificationTemplate)object;
+
+					StagedModelDataHandlerUtil.exportStagedModel(portletDataContext,
+						stagedModel);
+				}
+			});
+		exportActionableDynamicQuery.setStagedModelType(new StagedModelType(
+				PortalUtil.getClassNameId(
+					CalendarNotificationTemplate.class.getName())));
+
+		return exportActionableDynamicQuery;
 	}
 
 	/**
-	 * Returns the calendar notification template with the matching UUID and company.
-	 *
-	 * @param uuid the calendar notification template's UUID
-	 * @param  companyId the primary key of the company
-	 * @return the matching calendar notification template
-	 * @throws PortalException if a matching calendar notification template could not be found
-	 * @throws SystemException if a system exception occurred
+	 * @throws PortalException
 	 */
 	@Override
-	public CalendarNotificationTemplate getCalendarNotificationTemplateByUuidAndCompanyId(
-		String uuid, long companyId) throws PortalException, SystemException {
-		return calendarNotificationTemplatePersistence.findByUuid_C_First(uuid,
-			companyId, null);
+	public PersistedModel deletePersistedModel(PersistedModel persistedModel)
+		throws PortalException {
+		return calendarNotificationTemplateLocalService.deleteCalendarNotificationTemplate((CalendarNotificationTemplate)persistedModel);
+	}
+
+	@Override
+	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
+		throws PortalException {
+		return calendarNotificationTemplatePersistence.findByPrimaryKey(primaryKeyObj);
+	}
+
+	@Override
+	public List<CalendarNotificationTemplate> getCalendarNotificationTemplatesByUuidAndCompanyId(
+		String uuid, long companyId) {
+		return calendarNotificationTemplatePersistence.findByUuid_C(uuid,
+			companyId);
+	}
+
+	@Override
+	public List<CalendarNotificationTemplate> getCalendarNotificationTemplatesByUuidAndCompanyId(
+		String uuid, long companyId, int start, int end,
+		OrderByComparator<CalendarNotificationTemplate> orderByComparator) {
+		return calendarNotificationTemplatePersistence.findByUuid_C(uuid,
+			companyId, start, end, orderByComparator);
 	}
 
 	/**
@@ -301,11 +367,10 @@ public abstract class CalendarNotificationTemplateLocalServiceBaseImpl
 	 * @param groupId the primary key of the group
 	 * @return the matching calendar notification template
 	 * @throws PortalException if a matching calendar notification template could not be found
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public CalendarNotificationTemplate getCalendarNotificationTemplateByUuidAndGroupId(
-		String uuid, long groupId) throws PortalException, SystemException {
+		String uuid, long groupId) throws PortalException {
 		return calendarNotificationTemplatePersistence.findByUUID_G(uuid,
 			groupId);
 	}
@@ -320,11 +385,10 @@ public abstract class CalendarNotificationTemplateLocalServiceBaseImpl
 	 * @param start the lower bound of the range of calendar notification templates
 	 * @param end the upper bound of the range of calendar notification templates (not inclusive)
 	 * @return the range of calendar notification templates
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public List<CalendarNotificationTemplate> getCalendarNotificationTemplates(
-		int start, int end) throws SystemException {
+		int start, int end) {
 		return calendarNotificationTemplatePersistence.findAll(start, end);
 	}
 
@@ -332,11 +396,9 @@ public abstract class CalendarNotificationTemplateLocalServiceBaseImpl
 	 * Returns the number of calendar notification templates.
 	 *
 	 * @return the number of calendar notification templates
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public int getCalendarNotificationTemplatesCount()
-		throws SystemException {
+	public int getCalendarNotificationTemplatesCount() {
 		return calendarNotificationTemplatePersistence.countAll();
 	}
 
@@ -345,13 +407,11 @@ public abstract class CalendarNotificationTemplateLocalServiceBaseImpl
 	 *
 	 * @param calendarNotificationTemplate the calendar notification template
 	 * @return the calendar notification template that was updated
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public CalendarNotificationTemplate updateCalendarNotificationTemplate(
-		CalendarNotificationTemplate calendarNotificationTemplate)
-		throws SystemException {
+		CalendarNotificationTemplate calendarNotificationTemplate) {
 		return calendarNotificationTemplatePersistence.update(calendarNotificationTemplate);
 	}
 
@@ -677,6 +737,63 @@ public abstract class CalendarNotificationTemplateLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the class name local service.
+	 *
+	 * @return the class name local service
+	 */
+	public com.liferay.portal.service.ClassNameLocalService getClassNameLocalService() {
+		return classNameLocalService;
+	}
+
+	/**
+	 * Sets the class name local service.
+	 *
+	 * @param classNameLocalService the class name local service
+	 */
+	public void setClassNameLocalService(
+		com.liferay.portal.service.ClassNameLocalService classNameLocalService) {
+		this.classNameLocalService = classNameLocalService;
+	}
+
+	/**
+	 * Returns the class name remote service.
+	 *
+	 * @return the class name remote service
+	 */
+	public com.liferay.portal.service.ClassNameService getClassNameService() {
+		return classNameService;
+	}
+
+	/**
+	 * Sets the class name remote service.
+	 *
+	 * @param classNameService the class name remote service
+	 */
+	public void setClassNameService(
+		com.liferay.portal.service.ClassNameService classNameService) {
+		this.classNameService = classNameService;
+	}
+
+	/**
+	 * Returns the class name persistence.
+	 *
+	 * @return the class name persistence
+	 */
+	public ClassNamePersistence getClassNamePersistence() {
+		return classNamePersistence;
+	}
+
+	/**
+	 * Sets the class name persistence.
+	 *
+	 * @param classNamePersistence the class name persistence
+	 */
+	public void setClassNamePersistence(
+		ClassNamePersistence classNamePersistence) {
+		this.classNamePersistence = classNamePersistence;
+	}
+
+	/**
 	 * Returns the resource local service.
 	 *
 	 * @return the resource local service
@@ -815,13 +932,18 @@ public abstract class CalendarNotificationTemplateLocalServiceBaseImpl
 	}
 
 	/**
-	 * Performs an SQL query.
+	 * Performs a SQL query.
 	 *
 	 * @param sql the sql query
 	 */
-	protected void runSQL(String sql) throws SystemException {
+	protected void runSQL(String sql) {
 		try {
 			DataSource dataSource = calendarNotificationTemplatePersistence.getDataSource();
+
+			DB db = DBFactoryUtil.getDB();
+
+			sql = db.buildSQL(sql);
+			sql = PortalUtil.transformSQL(sql);
 
 			SqlUpdate sqlUpdate = SqlUpdateFactoryUtil.getSqlUpdate(dataSource,
 					sql, new int[0]);
@@ -867,6 +989,12 @@ public abstract class CalendarNotificationTemplateLocalServiceBaseImpl
 	protected CalendarResourceFinder calendarResourceFinder;
 	@BeanReference(type = com.liferay.counter.service.CounterLocalService.class)
 	protected com.liferay.counter.service.CounterLocalService counterLocalService;
+	@BeanReference(type = com.liferay.portal.service.ClassNameLocalService.class)
+	protected com.liferay.portal.service.ClassNameLocalService classNameLocalService;
+	@BeanReference(type = com.liferay.portal.service.ClassNameService.class)
+	protected com.liferay.portal.service.ClassNameService classNameService;
+	@BeanReference(type = ClassNamePersistence.class)
+	protected ClassNamePersistence classNamePersistence;
 	@BeanReference(type = com.liferay.portal.service.ResourceLocalService.class)
 	protected com.liferay.portal.service.ResourceLocalService resourceLocalService;
 	@BeanReference(type = com.liferay.portal.service.UserLocalService.class)

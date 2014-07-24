@@ -103,9 +103,9 @@ AUI.add(
 
 						var maxCoordinateY = maxCoordinate.y;
 
-						var node = instance._host._node;
+						var host = instance._host;
 
-						var scrollTop = node.scrollTop || node.scrollY;
+						var scrollTop = host.get('scrollTop') || host.get('scrollY') || 0;
 
 						if (edgeProximity % 1) {
 							edgeProximityY *= maxCoordinateY;
@@ -182,6 +182,7 @@ AUI.add(
 
 AUI().use(
 	'aui-base',
+	'liferay-node',
 	'transition',
 	function(A) {
 		var TPL_COMMENT_ENTRY = '<div class="comment-entry">' +
@@ -232,7 +233,7 @@ AUI().use(
 
 				entry.toggleClass('toggler-content-collapsed', !collapsed);
 
-				var viewText = Liferay.Language.get('view-more');
+				var viewText = '<i class="icon-expand-alt"></i><span> ' + Liferay.Language.get('view-more') + '</span>';
 
 				if (collapsed) {
 					bodyContainer.setStyles(
@@ -244,7 +245,7 @@ AUI().use(
 
 					bodyHeight = body.height();
 
-					viewText = Liferay.Language.get('view-less');
+					viewText = '<i class="icon-collapse-alt"></i><span> ' + Liferay.Language.get('view-less') + '</span>';
 				}
 
 				if (control) {

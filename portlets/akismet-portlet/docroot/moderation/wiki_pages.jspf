@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -23,28 +23,12 @@
 		headerNames="title,version,posted-by"
 		iteratorURL="<%= portletURL %>"
 		rowChecker="<%= new RowChecker(renderResponse) %>"
+		total="<%= (int)WikiPageLocalServiceUtil.dynamicQueryCount(_getDynamicQuery(scopeGroupId)) %>"
 	>
-		<liferay-ui:search-container-results>
 
-			<%
-			DynamicQuery wikiPageDynamicQuery = DynamicQueryFactoryUtil.forClass(WikiPage.class);
-
-			Property groupIdProperty = PropertyFactoryUtil.forName("groupId");
-
-			wikiPageDynamicQuery.add(groupIdProperty.eq(scopeGroupId));
-
-			Property summaryProperty = PropertyFactoryUtil.forName("summary");
-
-			wikiPageDynamicQuery.add(summaryProperty.eq(AkismetConstants.WIKI_PAGE_PENDING_APPROVAL));
-
-			results = WikiPageLocalServiceUtil.dynamicQuery(wikiPageDynamicQuery, searchContainer.getStart(), searchContainer.getEnd());
-			total = (int)WikiPageLocalServiceUtil.dynamicQueryCount(wikiPageDynamicQuery);
-
-			pageContext.setAttribute("results", results);
-			pageContext.setAttribute("total", total);
-			%>
-
-		</liferay-ui:search-container-results>
+		<liferay-ui:search-container-results
+			results="<%= WikiPageLocalServiceUtil.dynamicQuery(_getDynamicQuery(scopeGroupId), searchContainer.getStart(), searchContainer.getEnd()) %>"
+		/>
 
 		<c:if test="<%= !results.isEmpty() %>">
 			<aui:button-row>
@@ -99,6 +83,7 @@
 
 			<liferay-ui:search-container-column-jsp
 				align="right"
+				cssClass="entry-action"
 				path="/moderation/wiki_pages_action.jsp"
 			/>
 		</liferay-ui:search-container-row>
@@ -106,3 +91,19 @@
 		<liferay-ui:search-iterator />
 	</liferay-ui:search-container>
 </aui:form>
+
+<%!
+private DynamicQuery _getDynamicQuery(long scopeGroupId) {
+	DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(WikiPage.class);
+
+	Property groupIdProperty = PropertyFactoryUtil.forName("groupId");
+
+	dynamicQuery.add(groupIdProperty.eq(scopeGroupId));
+
+	Property summaryProperty = PropertyFactoryUtil.forName("summary");
+
+	dynamicQuery.add(summaryProperty.eq(AkismetConstants.WIKI_PAGE_PENDING_APPROVAL));
+
+	return dynamicQuery;
+}
+%>

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,19 +15,19 @@
 package com.liferay.so.activities.hook.social;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.parsers.bbcode.BBCodeTranslatorUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.messageboards.model.MBMessage;
 import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.model.SocialActivitySet;
 import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
 import com.liferay.portlet.social.service.SocialActivitySetLocalServiceUtil;
+import com.liferay.so.activities.util.SocialActivityKeyConstants;
 
 import java.util.List;
 
@@ -41,9 +41,7 @@ public class MBActivityInterpreter extends SOSocialActivityInterpreter {
 		return _CLASS_NAMES;
 	}
 
-	public void updateActivitySet(long activityId)
-		throws PortalException, SystemException {
-
+	public void updateActivitySet(long activityId) throws PortalException {
 		SocialActivity activity =
 			SocialActivityLocalServiceUtil.fetchSocialActivity(activityId);
 
@@ -61,10 +59,12 @@ public class MBActivityInterpreter extends SOSocialActivityInterpreter {
 			SocialActivitySet activitySet =
 				SocialActivitySetLocalServiceUtil.addActivitySet(activityId);
 
-			if ((activity.getType() == _ACTIVITY_KEY_ADD_MESSAGE) &&
+			if ((activity.getType() ==
+					SocialActivityKeyConstants.MB_ADD_MESSAGE) &&
 				(activity.getReceiverUserId() > 0)) {
 
-				activitySet.setType(_ACTIVITY_KEY_REPLY_MESSAGE);
+				activitySet.setType(
+					SocialActivityKeyConstants.MB_REPLY_MESSAGE);
 
 				SocialActivitySetLocalServiceUtil.updateSocialActivitySet(
 					activitySet);
@@ -80,17 +80,18 @@ public class MBActivityInterpreter extends SOSocialActivityInterpreter {
 
 			int activityType = activity.getType();
 
-			if ((activity.getType() == _ACTIVITY_KEY_ADD_MESSAGE) &&
+			if ((activity.getType() ==
+					SocialActivityKeyConstants.MB_ADD_MESSAGE) &&
 				(activity.getReceiverUserId() > 0)) {
 
-				activityType = _ACTIVITY_KEY_REPLY_MESSAGE;
+				activityType = SocialActivityKeyConstants.MB_REPLY_MESSAGE;
 			}
 
 			SocialActivitySet activitySet = null;
 
 			boolean comment = false;
 
-			if (activityType == _ACTIVITY_KEY_REPLY_MESSAGE) {
+			if (activityType == SocialActivityKeyConstants.MB_REPLY_MESSAGE) {
 				activitySet =
 					SocialActivitySetLocalServiceUtil.getClassActivitySet(
 						activity.getClassNameId(), activity.getClassPK(),
@@ -123,7 +124,9 @@ public class MBActivityInterpreter extends SOSocialActivityInterpreter {
 			SocialActivitySet activitySet, ServiceContext serviceContext)
 		throws Exception {
 
-		if (activitySet.getType() == _ACTIVITY_KEY_REPLY_MESSAGE) {
+		if (activitySet.getType() ==
+				SocialActivityKeyConstants.MB_REPLY_MESSAGE) {
+
 			return getBody(
 				activitySet.getClassName(), activitySet.getClassPK(),
 				serviceContext);
@@ -142,13 +145,17 @@ public class MBActivityInterpreter extends SOSocialActivityInterpreter {
 		sb.append(getPageTitle(className, classPK, serviceContext));
 		sb.append("</div><div class=\"forum-page-content\">");
 
-		AssetRenderer assetRenderer = getAssetRenderer(className, classPK);
+		MBMessage mbMessage = MBMessageLocalServiceUtil.getMBMessage(classPK);
+
+		String body = mbMessage.getBody();
+
+		if (mbMessage.isFormatBBCode()) {
+			body = BBCodeTranslatorUtil.getHTML(body);
+		}
 
 		sb.append(
 			StringUtil.shorten(
-				HtmlUtil.escape(
-					assetRenderer.getSearchSummary(
-						serviceContext.getLocale())), 200));
+				HtmlUtil.escape(HtmlUtil.extractText(body)), 200));
 
 		sb.append("</div></div>");
 
@@ -177,11 +184,22 @@ public class MBActivityInterpreter extends SOSocialActivityInterpreter {
 
 		String categoryLink = wrapLink(categoryURL, categoryName);
 
-		if ((activity.getType() == _ACTIVITY_KEY_REPLY_MESSAGE) ||
+		if ((activity.getType() ==
+				SocialActivityKeyConstants.MB_REPLY_MESSAGE) ||
 			(activity.getReceiverUserId() > 0)) {
 
-			String receiverUserName = getUserName(
-				activity.getReceiverUserId(), serviceContext);
+			String receiverUserName = StringPool.BLANK;
+
+			MBMessage parentMessage = MBMessageLocalServiceUtil.fetchMBMessage(
+				message.getParentMessageId());
+
+			if ((parentMessage != null) && parentMessage.isAnonymous()) {
+				receiverUserName = serviceContext.translate("anonymous");
+			}
+			else {
+				receiverUserName = getUserName(
+					activity.getReceiverUserId(), serviceContext);
+			}
 
 			if (message.getCategoryId() > 0) {
 				return new Object[] {receiverUserName, categoryLink};
@@ -189,7 +207,9 @@ public class MBActivityInterpreter extends SOSocialActivityInterpreter {
 
 			return new Object[] {receiverUserName};
 		}
-		else if (activity.getType() == _ACTIVITY_KEY_ADD_MESSAGE) {
+		else if (activity.getType() ==
+					SocialActivityKeyConstants.MB_ADD_MESSAGE) {
+
 			if (message.getCategoryId() > 0) {
 				return new Object[] {categoryLink};
 			}
@@ -204,7 +224,9 @@ public class MBActivityInterpreter extends SOSocialActivityInterpreter {
 			String title, ServiceContext serviceContext)
 		throws Exception {
 
-		if (activitySet.getType() == _ACTIVITY_KEY_REPLY_MESSAGE) {
+		if (activitySet.getType() ==
+				SocialActivityKeyConstants.MB_REPLY_MESSAGE) {
+
 			List<SocialActivity> activities =
 				SocialActivityLocalServiceUtil.getActivitySetActivities(
 					activitySet.getActivitySetId(), 0, 1);
@@ -225,12 +247,15 @@ public class MBActivityInterpreter extends SOSocialActivityInterpreter {
 
 		String titlePattern = StringPool.BLANK;
 
-		if ((activity.getType() == _ACTIVITY_KEY_REPLY_MESSAGE) ||
+		if ((activity.getType() ==
+				SocialActivityKeyConstants.MB_REPLY_MESSAGE) ||
 			(activity.getReceiverUserId() > 0)) {
 
 			titlePattern = "replied-to-x-forum-post";
 		}
-		else if (activity.getType() == _ACTIVITY_KEY_ADD_MESSAGE) {
+		else if (activity.getType() ==
+					SocialActivityKeyConstants.MB_ADD_MESSAGE) {
+
 			titlePattern = "wrote-a-new-forum-post";
 		}
 		else {
@@ -252,27 +277,19 @@ public class MBActivityInterpreter extends SOSocialActivityInterpreter {
 			String groupName, SocialActivitySet activitySet)
 		throws Exception {
 
-		if (activitySet.getType() == _ACTIVITY_KEY_ADD_MESSAGE) {
+		if (activitySet.getType() ==
+				SocialActivityKeyConstants.MB_ADD_MESSAGE) {
+
 			return "wrote-x-new-forum-posts";
 		}
-		else if (activitySet.getType() == _ACTIVITY_KEY_REPLY_MESSAGE) {
+		else if (activitySet.getType() ==
+					SocialActivityKeyConstants.MB_REPLY_MESSAGE) {
+
 			return "replied-to-x-forum-post";
 		}
 
 		return StringPool.BLANK;
 	}
-
-	/**
-	 * {@link
-	 * com.liferay.portlet.messageboards.social.MBActivityKeys#ADD_MESSAGE}
-	 */
-	private static final int _ACTIVITY_KEY_ADD_MESSAGE = 1;
-
-	/**
-	 * {@link
-	 * com.liferay.portlet.messageboards.social.MBActivityKeys#REPLY_MESSAGE}
-	 */
-	private static final int _ACTIVITY_KEY_REPLY_MESSAGE = 2;
 
 	private static final String[] _CLASS_NAMES = {MBMessage.class.getName()};
 

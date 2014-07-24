@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -21,8 +21,8 @@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <%@ page import="com.liferay.portal.kernel.bean.BeanParamUtil" %><%@
-page import="com.liferay.portal.kernel.dao.search.ResultRow" %><%@
 page import="com.liferay.portal.kernel.dao.search.SearchContainer" %><%@
+page import="com.liferay.portal.kernel.dao.search.SearchPaginationUtil" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
 page import="com.liferay.portal.kernel.language.UnicodeLanguageUtil" %><%@
 page import="com.liferay.portal.kernel.portlet.LiferayWindowState" %><%@
@@ -45,7 +45,6 @@ page import="com.liferay.portal.kernel.util.WebKeys" %><%@
 page import="com.liferay.portal.model.Group" %><%@
 page import="com.liferay.portal.model.Organization" %><%@
 page import="com.liferay.portal.model.Role" %><%@
-page import="com.liferay.portal.model.Team" %><%@
 page import="com.liferay.portal.model.User" %><%@
 page import="com.liferay.portal.model.UserGroup" %><%@
 page import="com.liferay.portal.security.auth.PrincipalException" %><%@
@@ -53,13 +52,10 @@ page import="com.liferay.portal.security.permission.ActionKeys" %><%@
 page import="com.liferay.portal.service.GroupLocalServiceUtil" %><%@
 page import="com.liferay.portal.service.OrganizationLocalServiceUtil" %><%@
 page import="com.liferay.portal.service.RoleLocalServiceUtil" %><%@
-page import="com.liferay.portal.service.TeamLocalServiceUtil" %><%@
 page import="com.liferay.portal.service.UserGroupLocalServiceUtil" %><%@
 page import="com.liferay.portal.service.UserLocalServiceUtil" %><%@
 page import="com.liferay.portal.service.permission.GroupPermissionUtil" %><%@
-page import="com.liferay.portal.service.permission.OrganizationPermissionUtil" %><%@
-page import="com.liferay.portal.service.permission.RolePermissionUtil" %><%@
-page import="com.liferay.portal.service.permission.UserGroupPermissionUtil" %><%@
+page import="com.liferay.portal.service.permission.PortalPermissionUtil" %><%@
 page import="com.liferay.portal.util.PortalUtil" %><%@
 page import="com.liferay.portal.util.PortletKeys" %><%@
 page import="com.liferay.portlet.announcements.NoSuchFlagException" %><%@
@@ -68,7 +64,9 @@ page import="com.liferay.portlet.announcements.model.AnnouncementsEntryConstants
 page import="com.liferay.portlet.announcements.model.AnnouncementsFlagConstants" %><%@
 page import="com.liferay.portlet.announcements.service.AnnouncementsEntryLocalServiceUtil" %><%@
 page import="com.liferay.portlet.announcements.service.AnnouncementsFlagLocalServiceUtil" %><%@
-page import="com.liferay.portlet.announcements.util.AnnouncementsUtil" %>
+page import="com.liferay.portlet.announcements.util.AnnouncementsUtil" %><%@
+page import="com.liferay.so.announcements.util.SOAnnouncementsUtil" %><%@
+page import="com.liferay.taglib.search.ResultRow" %>
 
 <%@ page import="java.text.Format" %>
 

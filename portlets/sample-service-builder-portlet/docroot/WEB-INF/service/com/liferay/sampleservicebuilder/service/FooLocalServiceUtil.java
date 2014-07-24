@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -38,17 +38,22 @@ public class FooLocalServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.sampleservicebuilder.service.impl.FooLocalServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static void addFoo(java.lang.String field1, boolean field2,
+		int field3, java.util.Date field4, java.lang.String field5,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService()
+			.addFoo(field1, field2, field3, field4, field5, serviceContext);
+	}
 
 	/**
 	* Adds the foo to the database. Also notifies the appropriate model listeners.
 	*
 	* @param foo the foo
 	* @return the foo that was added
-	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.sampleservicebuilder.model.Foo addFoo(
-		com.liferay.sampleservicebuilder.model.Foo foo)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.sampleservicebuilder.model.Foo foo) {
 		return getService().addFoo(foo);
 	}
 
@@ -64,31 +69,35 @@ public class FooLocalServiceUtil {
 	}
 
 	/**
+	* Deletes the foo from the database. Also notifies the appropriate model listeners.
+	*
+	* @param foo the foo
+	* @return the foo that was removed
+	*/
+	public static com.liferay.sampleservicebuilder.model.Foo deleteFoo(
+		com.liferay.sampleservicebuilder.model.Foo foo) {
+		return getService().deleteFoo(foo);
+	}
+
+	/**
 	* Deletes the foo with the primary key from the database. Also notifies the appropriate model listeners.
 	*
 	* @param fooId the primary key of the foo
 	* @return the foo that was removed
 	* @throws PortalException if a foo with the primary key could not be found
-	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.sampleservicebuilder.model.Foo deleteFoo(
-		long fooId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		long fooId) throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().deleteFoo(fooId);
 	}
 
 	/**
-	* Deletes the foo from the database. Also notifies the appropriate model listeners.
-	*
-	* @param foo the foo
-	* @return the foo that was removed
-	* @throws SystemException if a system exception occurred
+	* @throws PortalException
 	*/
-	public static com.liferay.sampleservicebuilder.model.Foo deleteFoo(
-		com.liferay.sampleservicebuilder.model.Foo foo)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().deleteFoo(foo);
+	public static com.liferay.portal.model.PersistedModel deletePersistedModel(
+		com.liferay.portal.model.PersistedModel persistedModel)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().deletePersistedModel(persistedModel);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery() {
@@ -100,12 +109,9 @@ public class FooLocalServiceUtil {
 	*
 	* @param dynamicQuery the dynamic query
 	* @return the matching rows
-	* @throws SystemException if a system exception occurred
 	*/
-	@SuppressWarnings("rawtypes")
-	public static java.util.List dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public static <T> java.util.List<T> dynamicQuery(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
 		return getService().dynamicQuery(dynamicQuery);
 	}
 
@@ -120,12 +126,10 @@ public class FooLocalServiceUtil {
 	* @param start the lower bound of the range of model instances
 	* @param end the upper bound of the range of model instances (not inclusive)
 	* @return the range of matching rows
-	* @throws SystemException if a system exception occurred
 	*/
-	@SuppressWarnings("rawtypes")
-	public static java.util.List dynamicQuery(
+	public static <T> java.util.List<T> dynamicQuery(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
-		int end) throws com.liferay.portal.kernel.exception.SystemException {
+		int end) {
 		return getService().dynamicQuery(dynamicQuery, start, end);
 	}
 
@@ -141,14 +145,11 @@ public class FooLocalServiceUtil {
 	* @param end the upper bound of the range of model instances (not inclusive)
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching rows
-	* @throws SystemException if a system exception occurred
 	*/
-	@SuppressWarnings("rawtypes")
-	public static java.util.List dynamicQuery(
+	public static <T> java.util.List<T> dynamicQuery(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
 		int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.util.OrderByComparator<T> orderByComparator) {
 		return getService()
 				   .dynamicQuery(dynamicQuery, start, end, orderByComparator);
 	}
@@ -158,11 +159,9 @@ public class FooLocalServiceUtil {
 	*
 	* @param dynamicQuery the dynamic query
 	* @return the number of rows that match the dynamic query
-	* @throws SystemException if a system exception occurred
 	*/
 	public static long dynamicQueryCount(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
 		return getService().dynamicQueryCount(dynamicQuery);
 	}
 
@@ -172,32 +171,16 @@ public class FooLocalServiceUtil {
 	* @param dynamicQuery the dynamic query
 	* @param projection the projection to apply to the query
 	* @return the number of rows that match the dynamic query
-	* @throws SystemException if a system exception occurred
 	*/
 	public static long dynamicQueryCount(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery,
-		com.liferay.portal.kernel.dao.orm.Projection projection)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.dao.orm.Projection projection) {
 		return getService().dynamicQueryCount(dynamicQuery, projection);
 	}
 
 	public static com.liferay.sampleservicebuilder.model.Foo fetchFoo(
-		long fooId) throws com.liferay.portal.kernel.exception.SystemException {
+		long fooId) {
 		return getService().fetchFoo(fooId);
-	}
-
-	/**
-	* Returns the foo with the matching UUID and company.
-	*
-	* @param uuid the foo's UUID
-	* @param companyId the primary key of the company
-	* @return the matching foo, or <code>null</code> if a matching foo could not be found
-	* @throws SystemException if a system exception occurred
-	*/
-	public static com.liferay.sampleservicebuilder.model.Foo fetchFooByUuidAndCompanyId(
-		java.lang.String uuid, long companyId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().fetchFooByUuidAndCompanyId(uuid, companyId);
 	}
 
 	/**
@@ -206,12 +189,28 @@ public class FooLocalServiceUtil {
 	* @param uuid the foo's UUID
 	* @param groupId the primary key of the group
 	* @return the matching foo, or <code>null</code> if a matching foo could not be found
-	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.sampleservicebuilder.model.Foo fetchFooByUuidAndGroupId(
-		java.lang.String uuid, long groupId)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		java.lang.String uuid, long groupId) {
 		return getService().fetchFooByUuidAndGroupId(uuid, groupId);
+	}
+
+	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
+		return getService().getActionableDynamicQuery();
+	}
+
+	/**
+	* Returns the Spring bean ID for this bean.
+	*
+	* @return the Spring bean ID for this bean
+	*/
+	public static java.lang.String getBeanIdentifier() {
+		return getService().getBeanIdentifier();
+	}
+
+	public static com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery getExportActionableDynamicQuery(
+		com.liferay.portal.kernel.lar.PortletDataContext portletDataContext) {
+		return getService().getExportActionableDynamicQuery(portletDataContext);
 	}
 
 	/**
@@ -220,35 +219,10 @@ public class FooLocalServiceUtil {
 	* @param fooId the primary key of the foo
 	* @return the foo
 	* @throws PortalException if a foo with the primary key could not be found
-	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.sampleservicebuilder.model.Foo getFoo(long fooId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getFoo(fooId);
-	}
-
-	public static com.liferay.portal.model.PersistedModel getPersistedModel(
-		java.io.Serializable primaryKeyObj)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().getPersistedModel(primaryKeyObj);
-	}
-
-	/**
-	* Returns the foo with the matching UUID and company.
-	*
-	* @param uuid the foo's UUID
-	* @param companyId the primary key of the company
-	* @return the matching foo
-	* @throws PortalException if a matching foo could not be found
-	* @throws SystemException if a system exception occurred
-	*/
-	public static com.liferay.sampleservicebuilder.model.Foo getFooByUuidAndCompanyId(
-		java.lang.String uuid, long companyId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().getFooByUuidAndCompanyId(uuid, companyId);
 	}
 
 	/**
@@ -258,13 +232,16 @@ public class FooLocalServiceUtil {
 	* @param groupId the primary key of the group
 	* @return the matching foo
 	* @throws PortalException if a matching foo could not be found
-	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.sampleservicebuilder.model.Foo getFooByUuidAndGroupId(
 		java.lang.String uuid, long groupId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getFooByUuidAndGroupId(uuid, groupId);
+	}
+
+	public static java.util.List<com.liferay.sampleservicebuilder.model.Foo> getFoos(
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.sampleservicebuilder.model.Foo> obc) {
+		return getService().getFoos(obc);
 	}
 
 	/**
@@ -277,45 +254,54 @@ public class FooLocalServiceUtil {
 	* @param start the lower bound of the range of foos
 	* @param end the upper bound of the range of foos (not inclusive)
 	* @return the range of foos
-	* @throws SystemException if a system exception occurred
 	*/
 	public static java.util.List<com.liferay.sampleservicebuilder.model.Foo> getFoos(
-		int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		int start, int end) {
 		return getService().getFoos(start, end);
+	}
+
+	public static java.util.List<com.liferay.sampleservicebuilder.model.Foo> getFoos(
+		int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.sampleservicebuilder.model.Foo> obc) {
+		return getService().getFoos(start, end, obc);
+	}
+
+	public static java.util.List<com.liferay.sampleservicebuilder.model.Foo> getFoosByUuidAndCompanyId(
+		java.lang.String uuid, long companyId) {
+		return getService().getFoosByUuidAndCompanyId(uuid, companyId);
+	}
+
+	public static java.util.List<com.liferay.sampleservicebuilder.model.Foo> getFoosByUuidAndCompanyId(
+		java.lang.String uuid, long companyId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.sampleservicebuilder.model.Foo> orderByComparator) {
+		return getService()
+				   .getFoosByUuidAndCompanyId(uuid, companyId, start, end,
+			orderByComparator);
 	}
 
 	/**
 	* Returns the number of foos.
 	*
 	* @return the number of foos
-	* @throws SystemException if a system exception occurred
 	*/
-	public static int getFoosCount()
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public static int getFoosCount() {
 		return getService().getFoosCount();
 	}
 
-	/**
-	* Updates the foo in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
-	*
-	* @param foo the foo
-	* @return the foo that was updated
-	* @throws SystemException if a system exception occurred
-	*/
-	public static com.liferay.sampleservicebuilder.model.Foo updateFoo(
-		com.liferay.sampleservicebuilder.model.Foo foo)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().updateFoo(foo);
+	public static java.lang.Object getLocalObject() throws java.lang.Exception {
+		return getService().getLocalObject();
 	}
 
-	/**
-	* Returns the Spring bean ID for this bean.
-	*
-	* @return the Spring bean ID for this bean
-	*/
-	public static java.lang.String getBeanIdentifier() {
-		return getService().getBeanIdentifier();
+	public static com.liferay.portal.model.PersistedModel getPersistedModel(
+		java.io.Serializable primaryKeyObj)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getPersistedModel(primaryKeyObj);
+	}
+
+	public static java.lang.Object invokeMethod(java.lang.String name,
+		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
+		throws java.lang.Throwable {
+		return getService().invokeMethod(name, parameterTypes, arguments);
 	}
 
 	/**
@@ -327,51 +313,29 @@ public class FooLocalServiceUtil {
 		getService().setBeanIdentifier(beanIdentifier);
 	}
 
-	public static java.lang.Object invokeMethod(java.lang.String name,
-		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
-		throws java.lang.Throwable {
-		return getService().invokeMethod(name, parameterTypes, arguments);
-	}
-
-	public static void addFoo(java.lang.String field1, boolean field2,
-		int field3, java.util.Date field4, java.lang.String field5,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		getService()
-			.addFoo(field1, field2, field3, field4, field5, serviceContext);
-	}
-
-	public static java.util.List<com.liferay.sampleservicebuilder.model.Foo> getFoos(
-		int start, int end, com.liferay.portal.kernel.util.OrderByComparator obc)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().getFoos(start, end, obc);
-	}
-
-	public static java.util.List<com.liferay.sampleservicebuilder.model.Foo> getFoos(
-		com.liferay.portal.kernel.util.OrderByComparator obc)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().getFoos(obc);
-	}
-
-	public static java.lang.Object getLocalObject() throws java.lang.Exception {
-		return getService().getLocalObject();
-	}
-
 	public static void updateAsset(long userId,
 		com.liferay.sampleservicebuilder.model.Foo foo,
 		long[] assetCategoryIds, java.lang.String[] assetTagNames)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		getService().updateAsset(userId, foo, assetCategoryIds, assetTagNames);
+	}
+
+	/**
+	* Updates the foo in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	*
+	* @param foo the foo
+	* @return the foo that was updated
+	*/
+	public static com.liferay.sampleservicebuilder.model.Foo updateFoo(
+		com.liferay.sampleservicebuilder.model.Foo foo) {
+		return getService().updateFoo(foo);
 	}
 
 	public static void updateFoo(long fooId, java.lang.String field1,
 		boolean field2, int field3, java.util.Date field4,
 		java.lang.String field5,
 		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		getService()
 			.updateFoo(fooId, field1, field2, field3, field4, field5,
 			serviceContext);
@@ -403,6 +367,7 @@ public class FooLocalServiceUtil {
 	/**
 	 * @deprecated As of 6.2.0
 	 */
+	@Deprecated
 	public void setService(FooLocalService service) {
 	}
 

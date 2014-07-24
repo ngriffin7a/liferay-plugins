@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -14,7 +14,6 @@
 
 package com.liferay.portal.workflow.kaleo.util;
 
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.workflow.WorkflowTaskAssignee;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignmentInstance;
 import com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceToken;
@@ -28,8 +27,7 @@ import java.util.List;
 public class KaleoTaskAssignmentInstanceUtil {
 
 	public static List<WorkflowTaskAssignee> getWorkflowTaskAssignees(
-			KaleoTaskInstanceToken kaleoTaskInstanceToken)
-		throws SystemException {
+		KaleoTaskInstanceToken kaleoTaskInstanceToken) {
 
 		List<KaleoTaskAssignmentInstance> kaleoTaskAssignmentInstances =
 			kaleoTaskInstanceToken.getKaleoTaskAssignmentInstances();

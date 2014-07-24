@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -18,30 +18,25 @@ import java.io.IOException;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.EventRequest;
+import javax.portlet.EventResponse;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.portlet.filter.ActionFilter;
+import javax.portlet.filter.EventFilter;
 import javax.portlet.filter.FilterChain;
 import javax.portlet.filter.FilterConfig;
 import javax.portlet.filter.RenderFilter;
 import javax.portlet.filter.ResourceFilter;
-
-import javax.xml.stream.EventFilter;
-import javax.xml.stream.events.XMLEvent;
 
 /**
  * @author Neil Griffin
  */
 public class CDIPortletFilter
 	implements ActionFilter, EventFilter, RenderFilter, ResourceFilter {
-
-	@Override
-	public boolean accept(XMLEvent xmlEvent) {
-		return false;
-	}
 
 	@Override
 	public void destroy() {
@@ -62,7 +57,35 @@ public class CDIPortletFilter
 		actionResponse = cdiResponseFactory.getCDIActionResponse(
 			actionResponse, actionRequest.getLocale());
 
-		filterChain.doFilter(actionRequest, actionResponse);
+        PortletRequestContainer.registerPortletRequest(actionRequest);
+        try {
+            filterChain.doFilter(actionRequest, actionResponse);
+        } finally {
+            PortletRequestContainer.unregisterPortletRequest();
+        }
+	}
+
+	@Override
+	public void doFilter(
+			EventRequest eventRequest, EventResponse eventResponse,
+			FilterChain filterChain)
+		throws IOException, PortletException {
+
+		CDIRequestFactory cdiRequestFactory = getCDIRequestFactory();
+
+		eventRequest = cdiRequestFactory.getCDIEventRequest(eventRequest);
+
+		CDIResponseFactory cdiResponseFactory = getCDIResponseFactory();
+
+		eventResponse = cdiResponseFactory.getCDIEventResponse(
+			eventResponse, eventRequest.getLocale());
+
+        PortletRequestContainer.registerPortletRequest(eventRequest);
+        try {
+            filterChain.doFilter(eventRequest, eventResponse);
+        } finally {
+            PortletRequestContainer.unregisterPortletRequest();
+        }
 	}
 
 	@Override
@@ -80,7 +103,12 @@ public class CDIPortletFilter
 		renderResponse = cdiResponseFactory.getCDIRenderResponse(
 			renderResponse, renderRequest.getLocale());
 
-		filterChain.doFilter(renderRequest, renderResponse);
+        PortletRequestContainer.registerPortletRequest(renderRequest);
+        try {
+            filterChain.doFilter(renderRequest, renderResponse);
+        } finally {
+            PortletRequestContainer.unregisterPortletRequest();
+        }
 	}
 
 	@Override
@@ -99,7 +127,12 @@ public class CDIPortletFilter
 		resourceResponse = cdiResponseFactory.getCDIResourceResponse(
 			resourceResponse, resourceRequest.getLocale());
 
-		filterChain.doFilter(resourceRequest, resourceResponse);
+        PortletRequestContainer.registerPortletRequest(resourceRequest);
+        try {
+            filterChain.doFilter(resourceRequest, resourceResponse);
+        } finally {
+            PortletRequestContainer.unregisterPortletRequest();
+        }
 	}
 
 	@Override

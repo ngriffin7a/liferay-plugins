@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -14,7 +14,7 @@
  */
 --%>
 
-<button class="close" type="button">&times;</button>
+<aui:button cssClass="icon icon-remove" />
 
 <p>
 	This is a message embedded in a JSP file that can be displayed as a portal message.

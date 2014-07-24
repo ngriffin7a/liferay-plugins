@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -44,12 +44,21 @@ public class KaleoActionLocalServiceUtil {
 	*
 	* @param kaleoAction the kaleo action
 	* @return the kaleo action that was added
-	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.portal.workflow.kaleo.model.KaleoAction addKaleoAction(
-		com.liferay.portal.workflow.kaleo.model.KaleoAction kaleoAction)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.workflow.kaleo.model.KaleoAction kaleoAction) {
 		return getService().addKaleoAction(kaleoAction);
+	}
+
+	public static com.liferay.portal.workflow.kaleo.model.KaleoAction addKaleoAction(
+		java.lang.String kaleoClassName, long kaleoClassPK,
+		long kaleoDefinitionId, java.lang.String kaleoNodeName,
+		com.liferay.portal.workflow.kaleo.definition.Action action,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addKaleoAction(kaleoClassName, kaleoClassPK,
+			kaleoDefinitionId, kaleoNodeName, action, serviceContext);
 	}
 
 	/**
@@ -63,19 +72,8 @@ public class KaleoActionLocalServiceUtil {
 		return getService().createKaleoAction(kaleoActionId);
 	}
 
-	/**
-	* Deletes the kaleo action with the primary key from the database. Also notifies the appropriate model listeners.
-	*
-	* @param kaleoActionId the primary key of the kaleo action
-	* @return the kaleo action that was removed
-	* @throws PortalException if a kaleo action with the primary key could not be found
-	* @throws SystemException if a system exception occurred
-	*/
-	public static com.liferay.portal.workflow.kaleo.model.KaleoAction deleteKaleoAction(
-		long kaleoActionId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().deleteKaleoAction(kaleoActionId);
+	public static void deleteCompanyKaleoActions(long companyId) {
+		getService().deleteCompanyKaleoActions(companyId);
 	}
 
 	/**
@@ -83,12 +81,36 @@ public class KaleoActionLocalServiceUtil {
 	*
 	* @param kaleoAction the kaleo action
 	* @return the kaleo action that was removed
-	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.portal.workflow.kaleo.model.KaleoAction deleteKaleoAction(
-		com.liferay.portal.workflow.kaleo.model.KaleoAction kaleoAction)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.workflow.kaleo.model.KaleoAction kaleoAction) {
 		return getService().deleteKaleoAction(kaleoAction);
+	}
+
+	/**
+	* Deletes the kaleo action with the primary key from the database. Also notifies the appropriate model listeners.
+	*
+	* @param kaleoActionId the primary key of the kaleo action
+	* @return the kaleo action that was removed
+	* @throws PortalException if a kaleo action with the primary key could not be found
+	*/
+	public static com.liferay.portal.workflow.kaleo.model.KaleoAction deleteKaleoAction(
+		long kaleoActionId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().deleteKaleoAction(kaleoActionId);
+	}
+
+	public static void deleteKaleoDefinitionKaleoActions(long kaleoDefinitionId) {
+		getService().deleteKaleoDefinitionKaleoActions(kaleoDefinitionId);
+	}
+
+	/**
+	* @throws PortalException
+	*/
+	public static com.liferay.portal.model.PersistedModel deletePersistedModel(
+		com.liferay.portal.model.PersistedModel persistedModel)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().deletePersistedModel(persistedModel);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery() {
@@ -100,12 +122,9 @@ public class KaleoActionLocalServiceUtil {
 	*
 	* @param dynamicQuery the dynamic query
 	* @return the matching rows
-	* @throws SystemException if a system exception occurred
 	*/
-	@SuppressWarnings("rawtypes")
-	public static java.util.List dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public static <T> java.util.List<T> dynamicQuery(
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
 		return getService().dynamicQuery(dynamicQuery);
 	}
 
@@ -120,12 +139,10 @@ public class KaleoActionLocalServiceUtil {
 	* @param start the lower bound of the range of model instances
 	* @param end the upper bound of the range of model instances (not inclusive)
 	* @return the range of matching rows
-	* @throws SystemException if a system exception occurred
 	*/
-	@SuppressWarnings("rawtypes")
-	public static java.util.List dynamicQuery(
+	public static <T> java.util.List<T> dynamicQuery(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
-		int end) throws com.liferay.portal.kernel.exception.SystemException {
+		int end) {
 		return getService().dynamicQuery(dynamicQuery, start, end);
 	}
 
@@ -141,14 +158,11 @@ public class KaleoActionLocalServiceUtil {
 	* @param end the upper bound of the range of model instances (not inclusive)
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching rows
-	* @throws SystemException if a system exception occurred
 	*/
-	@SuppressWarnings("rawtypes")
-	public static java.util.List dynamicQuery(
+	public static <T> java.util.List<T> dynamicQuery(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
 		int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.util.OrderByComparator<T> orderByComparator) {
 		return getService()
 				   .dynamicQuery(dynamicQuery, start, end, orderByComparator);
 	}
@@ -158,11 +172,9 @@ public class KaleoActionLocalServiceUtil {
 	*
 	* @param dynamicQuery the dynamic query
 	* @return the number of rows that match the dynamic query
-	* @throws SystemException if a system exception occurred
 	*/
 	public static long dynamicQueryCount(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
 		return getService().dynamicQueryCount(dynamicQuery);
 	}
 
@@ -172,83 +184,20 @@ public class KaleoActionLocalServiceUtil {
 	* @param dynamicQuery the dynamic query
 	* @param projection the projection to apply to the query
 	* @return the number of rows that match the dynamic query
-	* @throws SystemException if a system exception occurred
 	*/
 	public static long dynamicQueryCount(
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery,
-		com.liferay.portal.kernel.dao.orm.Projection projection)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		com.liferay.portal.kernel.dao.orm.Projection projection) {
 		return getService().dynamicQueryCount(dynamicQuery, projection);
 	}
 
 	public static com.liferay.portal.workflow.kaleo.model.KaleoAction fetchKaleoAction(
-		long kaleoActionId)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		long kaleoActionId) {
 		return getService().fetchKaleoAction(kaleoActionId);
 	}
 
-	/**
-	* Returns the kaleo action with the primary key.
-	*
-	* @param kaleoActionId the primary key of the kaleo action
-	* @return the kaleo action
-	* @throws PortalException if a kaleo action with the primary key could not be found
-	* @throws SystemException if a system exception occurred
-	*/
-	public static com.liferay.portal.workflow.kaleo.model.KaleoAction getKaleoAction(
-		long kaleoActionId)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().getKaleoAction(kaleoActionId);
-	}
-
-	public static com.liferay.portal.model.PersistedModel getPersistedModel(
-		java.io.Serializable primaryKeyObj)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService().getPersistedModel(primaryKeyObj);
-	}
-
-	/**
-	* Returns a range of all the kaleo actions.
-	*
-	* <p>
-	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portal.workflow.kaleo.model.impl.KaleoActionModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
-	* </p>
-	*
-	* @param start the lower bound of the range of kaleo actions
-	* @param end the upper bound of the range of kaleo actions (not inclusive)
-	* @return the range of kaleo actions
-	* @throws SystemException if a system exception occurred
-	*/
-	public static java.util.List<com.liferay.portal.workflow.kaleo.model.KaleoAction> getKaleoActions(
-		int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().getKaleoActions(start, end);
-	}
-
-	/**
-	* Returns the number of kaleo actions.
-	*
-	* @return the number of kaleo actions
-	* @throws SystemException if a system exception occurred
-	*/
-	public static int getKaleoActionsCount()
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().getKaleoActionsCount();
-	}
-
-	/**
-	* Updates the kaleo action in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
-	*
-	* @param kaleoAction the kaleo action
-	* @return the kaleo action that was updated
-	* @throws SystemException if a system exception occurred
-	*/
-	public static com.liferay.portal.workflow.kaleo.model.KaleoAction updateKaleoAction(
-		com.liferay.portal.workflow.kaleo.model.KaleoAction kaleoAction)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().updateKaleoAction(kaleoAction);
+	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
+		return getService().getActionableDynamicQuery();
 	}
 
 	/**
@@ -261,12 +210,59 @@ public class KaleoActionLocalServiceUtil {
 	}
 
 	/**
-	* Sets the Spring bean ID for this bean.
+	* Returns the kaleo action with the primary key.
 	*
-	* @param beanIdentifier the Spring bean ID for this bean
+	* @param kaleoActionId the primary key of the kaleo action
+	* @return the kaleo action
+	* @throws PortalException if a kaleo action with the primary key could not be found
 	*/
-	public static void setBeanIdentifier(java.lang.String beanIdentifier) {
-		getService().setBeanIdentifier(beanIdentifier);
+	public static com.liferay.portal.workflow.kaleo.model.KaleoAction getKaleoAction(
+		long kaleoActionId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getKaleoAction(kaleoActionId);
+	}
+
+	public static java.util.List<com.liferay.portal.workflow.kaleo.model.KaleoAction> getKaleoActions(
+		java.lang.String kaleoClassName, long kaleoClassPK) {
+		return getService().getKaleoActions(kaleoClassName, kaleoClassPK);
+	}
+
+	public static java.util.List<com.liferay.portal.workflow.kaleo.model.KaleoAction> getKaleoActions(
+		java.lang.String kaleoClassName, long kaleoClassPK,
+		java.lang.String executionType) {
+		return getService()
+				   .getKaleoActions(kaleoClassName, kaleoClassPK, executionType);
+	}
+
+	/**
+	* Returns a range of all the kaleo actions.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link com.liferay.portal.workflow.kaleo.model.impl.KaleoActionModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param start the lower bound of the range of kaleo actions
+	* @param end the upper bound of the range of kaleo actions (not inclusive)
+	* @return the range of kaleo actions
+	*/
+	public static java.util.List<com.liferay.portal.workflow.kaleo.model.KaleoAction> getKaleoActions(
+		int start, int end) {
+		return getService().getKaleoActions(start, end);
+	}
+
+	/**
+	* Returns the number of kaleo actions.
+	*
+	* @return the number of kaleo actions
+	*/
+	public static int getKaleoActionsCount() {
+		return getService().getKaleoActionsCount();
+	}
+
+	public static com.liferay.portal.model.PersistedModel getPersistedModel(
+		java.io.Serializable primaryKeyObj)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getPersistedModel(primaryKeyObj);
 	}
 
 	public static java.lang.Object invokeMethod(java.lang.String name,
@@ -275,40 +271,24 @@ public class KaleoActionLocalServiceUtil {
 		return getService().invokeMethod(name, parameterTypes, arguments);
 	}
 
-	public static com.liferay.portal.workflow.kaleo.model.KaleoAction addKaleoAction(
-		java.lang.String kaleoClassName, long kaleoClassPK,
-		long kaleoDefinitionId, java.lang.String kaleoNodeName,
-		com.liferay.portal.workflow.kaleo.definition.Action action,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .addKaleoAction(kaleoClassName, kaleoClassPK,
-			kaleoDefinitionId, kaleoNodeName, action, serviceContext);
+	/**
+	* Sets the Spring bean ID for this bean.
+	*
+	* @param beanIdentifier the Spring bean ID for this bean
+	*/
+	public static void setBeanIdentifier(java.lang.String beanIdentifier) {
+		getService().setBeanIdentifier(beanIdentifier);
 	}
 
-	public static void deleteCompanyKaleoActions(long companyId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		getService().deleteCompanyKaleoActions(companyId);
-	}
-
-	public static void deleteKaleoDefinitionKaleoActions(long kaleoDefinitionId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		getService().deleteKaleoDefinitionKaleoActions(kaleoDefinitionId);
-	}
-
-	public static java.util.List<com.liferay.portal.workflow.kaleo.model.KaleoAction> getKaleoActions(
-		java.lang.String kaleoClassName, long kaleoClassPK)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().getKaleoActions(kaleoClassName, kaleoClassPK);
-	}
-
-	public static java.util.List<com.liferay.portal.workflow.kaleo.model.KaleoAction> getKaleoActions(
-		java.lang.String kaleoClassName, long kaleoClassPK,
-		java.lang.String executionType)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .getKaleoActions(kaleoClassName, kaleoClassPK, executionType);
+	/**
+	* Updates the kaleo action in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	*
+	* @param kaleoAction the kaleo action
+	* @return the kaleo action that was updated
+	*/
+	public static com.liferay.portal.workflow.kaleo.model.KaleoAction updateKaleoAction(
+		com.liferay.portal.workflow.kaleo.model.KaleoAction kaleoAction) {
+		return getService().updateKaleoAction(kaleoAction);
 	}
 
 	public static void clearService() {
@@ -337,6 +317,7 @@ public class KaleoActionLocalServiceUtil {
 	/**
 	 * @deprecated As of 6.2.0
 	 */
+	@Deprecated
 	public void setService(KaleoActionLocalService service) {
 	}
 

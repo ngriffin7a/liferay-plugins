@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -50,7 +50,7 @@ boolean portalUser = ParamUtil.getBoolean(request, "portalUser");
 						</div>
 					</div>
 
-					<aui:script position="inline" use="aui-dialog,aui-io-plugin,aui-toolbar">
+					<aui:script position="inline" use="aui-io-request-deprecated,aui-toolbar">
 						var buttonRow = A.one('#<portlet:namespace />entryToolbar');
 
 						var contactsToolbarChildren = [];
@@ -63,42 +63,46 @@ boolean portalUser = ParamUtil.getBoolean(request, "portalUser");
 
 						contactsToolbarChildren.push(
 							{
-								handler: function(event) {
-									Liferay.ContactsCenter.showPopup('<%= UnicodeLanguageUtil.get(pageContext, "update-contact") %>', '<%= viewEntryURL %>');
+								on: {
+									click: function(event) {
+										Liferay.component('contactsCenter').showPopup('<%= UnicodeLanguageUtil.get(request, "update-contact") %>', '<%= viewEntryURL %>');
+									}
 								},
-								icon: 'edit',
+								icon: 'icon-edit',
 								id: '<portlet:namespace />edit',
-								label: '<%= UnicodeLanguageUtil.get(pageContext, "edit") %>'
+								label: '<%= UnicodeLanguageUtil.get(request, "edit") %>'
 							}
 						);
 
 						contactsToolbarChildren.push(
 							{
-								handler: function(event) {
-									var confirmMessage = '<%= UnicodeLanguageUtil.format(pageContext, "are-you-sure-you-want-to-delete-x-from-your-contacts", entry.getFullName()) %>';
+								on: {
+									click: function(event) {
+										var confirmMessage = '<%= UnicodeLanguageUtil.format(request, "are-you-sure-you-want-to-delete-x-from-your-contacts", entry.getFullName(), false) %>';
 
-									if (confirm(confirmMessage)) {
-										A.io.request(
-											'<portlet:actionURL name="deleteEntry" />',
-											{
-												after: {
-													failure: function(event, id, obj) {
-														Liferay.ContactsCenter.showMessage(false);
+										if (confirm(confirmMessage)) {
+											A.io.request(
+												'<portlet:actionURL name="deleteEntry" />',
+												{
+													after: {
+														failure: function(event, id, obj) {
+															Liferay.component('contactsCenter').showMessage(false);
+														},
+														success: function(event, id, obj) {
+															location.href = '<%= HtmlUtil.escape(redirect) %>';
+														}
 													},
-													success: function(event, id, obj) {
-														location.href = '<%= HtmlUtil.escape(redirect) %>';
+													data: {
+														<portlet:namespace />entryId: <%= entryId %>
 													}
-												},
-												data: {
-													entryId: <%= entryId %>
 												}
-											}
-										);
+											);
+										}
 									}
 								},
-								icon: 'delete',
+								icon: 'icon-remove',
 								id: '<portlet:namespace />delete',
-								label: '<%= UnicodeLanguageUtil.get(pageContext, "delete") %>'
+								label: '<%= UnicodeLanguageUtil.get(request, "delete") %>'
 							}
 						);
 
@@ -145,19 +149,21 @@ boolean portalUser = ParamUtil.getBoolean(request, "portalUser");
 							</div>
 						</div>
 
-						<aui:script position="inline" use="aui-base,liferay-contacts-center">
+						<aui:script position="inline" use="aui-base,aui-toolbar,liferay-contacts-center">
 							var buttonRow = A.one('#<portlet:namespace />userToolbar');
 
 							var contactsToolbarChildren = [];
 
 							contactsToolbarChildren.push(
 								{
-									handler: function(event) {
-										Liferay.ContactsCenter._setVisibleSelectedUsersView();
-									},
-									icon: 'back',
+									icon: 'icon-chevron-sign-left',
 									id: '<portlet:namespace />backSelection',
-									label: '<%= UnicodeLanguageUtil.get(pageContext, "back-to-selection") %>'
+									label: '<%= UnicodeLanguageUtil.get(request, "back-to-selection") %>',
+									on: {
+										click: function(event) {
+											Liferay.component('contactsCenter')._setVisibleSelectedUsersView();
+										}
+									}
 								}
 							);
 

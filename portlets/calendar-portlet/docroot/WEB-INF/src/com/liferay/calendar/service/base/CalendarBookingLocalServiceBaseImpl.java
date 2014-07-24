@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -26,21 +26,38 @@ import com.liferay.calendar.service.persistence.CalendarResourcePersistence;
 
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.bean.IdentifiableBean;
+import com.liferay.portal.kernel.dao.db.DB;
+import com.liferay.portal.kernel.dao.db.DBFactoryUtil;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdate;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DefaultActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
+import com.liferay.portal.kernel.dao.orm.Property;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.lar.ExportImportHelperUtil;
+import com.liferay.portal.kernel.lar.ManifestSummary;
+import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.StagedModelDataHandler;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerRegistryUtil;
+import com.liferay.portal.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.model.PersistedModel;
 import com.liferay.portal.service.BaseLocalServiceImpl;
 import com.liferay.portal.service.PersistedModelLocalServiceRegistryUtil;
+import com.liferay.portal.service.persistence.ClassNamePersistence;
+import com.liferay.portal.service.persistence.CompanyPersistence;
 import com.liferay.portal.service.persistence.SubscriptionPersistence;
 import com.liferay.portal.service.persistence.UserPersistence;
+import com.liferay.portal.util.PortalUtil;
 
 import com.liferay.portlet.asset.service.persistence.AssetEntryPersistence;
 import com.liferay.portlet.asset.service.persistence.AssetLinkPersistence;
@@ -82,12 +99,10 @@ public abstract class CalendarBookingLocalServiceBaseImpl
 	 *
 	 * @param calendarBooking the calendar booking
 	 * @return the calendar booking that was added
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
-	public CalendarBooking addCalendarBooking(CalendarBooking calendarBooking)
-		throws SystemException {
+	public CalendarBooking addCalendarBooking(CalendarBooking calendarBooking) {
 		calendarBooking.setNew(true);
 
 		return calendarBookingPersistence.update(calendarBooking);
@@ -110,12 +125,11 @@ public abstract class CalendarBookingLocalServiceBaseImpl
 	 * @param calendarBookingId the primary key of the calendar booking
 	 * @return the calendar booking that was removed
 	 * @throws PortalException if a calendar booking with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public CalendarBooking deleteCalendarBooking(long calendarBookingId)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return calendarBookingPersistence.remove(calendarBookingId);
 	}
 
@@ -125,13 +139,11 @@ public abstract class CalendarBookingLocalServiceBaseImpl
 	 * @param calendarBooking the calendar booking
 	 * @return the calendar booking that was removed
 	 * @throws PortalException
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public CalendarBooking deleteCalendarBooking(
-		CalendarBooking calendarBooking)
-		throws PortalException, SystemException {
+		CalendarBooking calendarBooking) throws PortalException {
 		return calendarBookingPersistence.remove(calendarBooking);
 	}
 
@@ -148,12 +160,9 @@ public abstract class CalendarBookingLocalServiceBaseImpl
 	 *
 	 * @param dynamicQuery the dynamic query
 	 * @return the matching rows
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public List dynamicQuery(DynamicQuery dynamicQuery)
-		throws SystemException {
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery) {
 		return calendarBookingPersistence.findWithDynamicQuery(dynamicQuery);
 	}
 
@@ -168,12 +177,10 @@ public abstract class CalendarBookingLocalServiceBaseImpl
 	 * @param start the lower bound of the range of model instances
 	 * @param end the upper bound of the range of model instances (not inclusive)
 	 * @return the range of matching rows
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public List dynamicQuery(DynamicQuery dynamicQuery, int start, int end)
-		throws SystemException {
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery, int start,
+		int end) {
 		return calendarBookingPersistence.findWithDynamicQuery(dynamicQuery,
 			start, end);
 	}
@@ -190,12 +197,10 @@ public abstract class CalendarBookingLocalServiceBaseImpl
 	 * @param end the upper bound of the range of model instances (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching rows
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public List dynamicQuery(DynamicQuery dynamicQuery, int start, int end,
-		OrderByComparator orderByComparator) throws SystemException {
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery, int start,
+		int end, OrderByComparator<T> orderByComparator) {
 		return calendarBookingPersistence.findWithDynamicQuery(dynamicQuery,
 			start, end, orderByComparator);
 	}
@@ -205,11 +210,9 @@ public abstract class CalendarBookingLocalServiceBaseImpl
 	 *
 	 * @param dynamicQuery the dynamic query
 	 * @return the number of rows that match the dynamic query
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public long dynamicQueryCount(DynamicQuery dynamicQuery)
-		throws SystemException {
+	public long dynamicQueryCount(DynamicQuery dynamicQuery) {
 		return calendarBookingPersistence.countWithDynamicQuery(dynamicQuery);
 	}
 
@@ -219,34 +222,17 @@ public abstract class CalendarBookingLocalServiceBaseImpl
 	 * @param dynamicQuery the dynamic query
 	 * @param projection the projection to apply to the query
 	 * @return the number of rows that match the dynamic query
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public long dynamicQueryCount(DynamicQuery dynamicQuery,
-		Projection projection) throws SystemException {
+		Projection projection) {
 		return calendarBookingPersistence.countWithDynamicQuery(dynamicQuery,
 			projection);
 	}
 
 	@Override
-	public CalendarBooking fetchCalendarBooking(long calendarBookingId)
-		throws SystemException {
+	public CalendarBooking fetchCalendarBooking(long calendarBookingId) {
 		return calendarBookingPersistence.fetchByPrimaryKey(calendarBookingId);
-	}
-
-	/**
-	 * Returns the calendar booking with the matching UUID and company.
-	 *
-	 * @param uuid the calendar booking's UUID
-	 * @param  companyId the primary key of the company
-	 * @return the matching calendar booking, or <code>null</code> if a matching calendar booking could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	@Override
-	public CalendarBooking fetchCalendarBookingByUuidAndCompanyId(String uuid,
-		long companyId) throws SystemException {
-		return calendarBookingPersistence.fetchByUuid_C_First(uuid, companyId,
-			null);
 	}
 
 	/**
@@ -255,11 +241,10 @@ public abstract class CalendarBookingLocalServiceBaseImpl
 	 * @param uuid the calendar booking's UUID
 	 * @param groupId the primary key of the group
 	 * @return the matching calendar booking, or <code>null</code> if a matching calendar booking could not be found
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public CalendarBooking fetchCalendarBookingByUuidAndGroupId(String uuid,
-		long groupId) throws SystemException {
+		long groupId) {
 		return calendarBookingPersistence.fetchByUUID_G(uuid, groupId);
 	}
 
@@ -269,34 +254,125 @@ public abstract class CalendarBookingLocalServiceBaseImpl
 	 * @param calendarBookingId the primary key of the calendar booking
 	 * @return the calendar booking
 	 * @throws PortalException if a calendar booking with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public CalendarBooking getCalendarBooking(long calendarBookingId)
-		throws PortalException, SystemException {
+		throws PortalException {
 		return calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
 	}
 
 	@Override
-	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
-		throws PortalException, SystemException {
-		return calendarBookingPersistence.findByPrimaryKey(primaryKeyObj);
+	public ActionableDynamicQuery getActionableDynamicQuery() {
+		ActionableDynamicQuery actionableDynamicQuery = new DefaultActionableDynamicQuery();
+
+		actionableDynamicQuery.setBaseLocalService(com.liferay.calendar.service.CalendarBookingLocalServiceUtil.getService());
+		actionableDynamicQuery.setClass(CalendarBooking.class);
+		actionableDynamicQuery.setClassLoader(getClassLoader());
+
+		actionableDynamicQuery.setPrimaryKeyPropertyName("calendarBookingId");
+
+		return actionableDynamicQuery;
+	}
+
+	protected void initActionableDynamicQuery(
+		ActionableDynamicQuery actionableDynamicQuery) {
+		actionableDynamicQuery.setBaseLocalService(com.liferay.calendar.service.CalendarBookingLocalServiceUtil.getService());
+		actionableDynamicQuery.setClass(CalendarBooking.class);
+		actionableDynamicQuery.setClassLoader(getClassLoader());
+
+		actionableDynamicQuery.setPrimaryKeyPropertyName("calendarBookingId");
+	}
+
+	@Override
+	public ExportActionableDynamicQuery getExportActionableDynamicQuery(
+		final PortletDataContext portletDataContext) {
+		final ExportActionableDynamicQuery exportActionableDynamicQuery = new ExportActionableDynamicQuery() {
+				@Override
+				public long performCount() throws PortalException {
+					ManifestSummary manifestSummary = portletDataContext.getManifestSummary();
+
+					StagedModelType stagedModelType = getStagedModelType();
+
+					long modelAdditionCount = super.performCount();
+
+					manifestSummary.addModelAdditionCount(stagedModelType.toString(),
+						modelAdditionCount);
+
+					long modelDeletionCount = ExportImportHelperUtil.getModelDeletionCount(portletDataContext,
+							stagedModelType);
+
+					manifestSummary.addModelDeletionCount(stagedModelType.toString(),
+						modelDeletionCount);
+
+					return modelAdditionCount;
+				}
+			};
+
+		initActionableDynamicQuery(exportActionableDynamicQuery);
+
+		exportActionableDynamicQuery.setAddCriteriaMethod(new ActionableDynamicQuery.AddCriteriaMethod() {
+				@Override
+				public void addCriteria(DynamicQuery dynamicQuery) {
+					portletDataContext.addDateRangeCriteria(dynamicQuery,
+						"modifiedDate");
+
+					StagedModelDataHandler<?> stagedModelDataHandler = StagedModelDataHandlerRegistryUtil.getStagedModelDataHandler(CalendarBooking.class.getName());
+
+					Property workflowStatusProperty = PropertyFactoryUtil.forName(
+							"status");
+
+					dynamicQuery.add(workflowStatusProperty.in(
+							stagedModelDataHandler.getExportableStatuses()));
+				}
+			});
+
+		exportActionableDynamicQuery.setCompanyId(portletDataContext.getCompanyId());
+
+		exportActionableDynamicQuery.setGroupId(portletDataContext.getScopeGroupId());
+
+		exportActionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod() {
+				@Override
+				public void performAction(Object object)
+					throws PortalException {
+					CalendarBooking stagedModel = (CalendarBooking)object;
+
+					StagedModelDataHandlerUtil.exportStagedModel(portletDataContext,
+						stagedModel);
+				}
+			});
+		exportActionableDynamicQuery.setStagedModelType(new StagedModelType(
+				PortalUtil.getClassNameId(CalendarBooking.class.getName())));
+
+		return exportActionableDynamicQuery;
 	}
 
 	/**
-	 * Returns the calendar booking with the matching UUID and company.
-	 *
-	 * @param uuid the calendar booking's UUID
-	 * @param  companyId the primary key of the company
-	 * @return the matching calendar booking
-	 * @throws PortalException if a matching calendar booking could not be found
-	 * @throws SystemException if a system exception occurred
+	 * @throws PortalException
 	 */
 	@Override
-	public CalendarBooking getCalendarBookingByUuidAndCompanyId(String uuid,
-		long companyId) throws PortalException, SystemException {
-		return calendarBookingPersistence.findByUuid_C_First(uuid, companyId,
-			null);
+	public PersistedModel deletePersistedModel(PersistedModel persistedModel)
+		throws PortalException {
+		return calendarBookingLocalService.deleteCalendarBooking((CalendarBooking)persistedModel);
+	}
+
+	@Override
+	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
+		throws PortalException {
+		return calendarBookingPersistence.findByPrimaryKey(primaryKeyObj);
+	}
+
+	@Override
+	public List<CalendarBooking> getCalendarBookingsByUuidAndCompanyId(
+		String uuid, long companyId) {
+		return calendarBookingPersistence.findByUuid_C(uuid, companyId);
+	}
+
+	@Override
+	public List<CalendarBooking> getCalendarBookingsByUuidAndCompanyId(
+		String uuid, long companyId, int start, int end,
+		OrderByComparator<CalendarBooking> orderByComparator) {
+		return calendarBookingPersistence.findByUuid_C(uuid, companyId, start,
+			end, orderByComparator);
 	}
 
 	/**
@@ -306,11 +382,10 @@ public abstract class CalendarBookingLocalServiceBaseImpl
 	 * @param groupId the primary key of the group
 	 * @return the matching calendar booking
 	 * @throws PortalException if a matching calendar booking could not be found
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public CalendarBooking getCalendarBookingByUuidAndGroupId(String uuid,
-		long groupId) throws PortalException, SystemException {
+		long groupId) throws PortalException {
 		return calendarBookingPersistence.findByUUID_G(uuid, groupId);
 	}
 
@@ -324,11 +399,9 @@ public abstract class CalendarBookingLocalServiceBaseImpl
 	 * @param start the lower bound of the range of calendar bookings
 	 * @param end the upper bound of the range of calendar bookings (not inclusive)
 	 * @return the range of calendar bookings
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public List<CalendarBooking> getCalendarBookings(int start, int end)
-		throws SystemException {
+	public List<CalendarBooking> getCalendarBookings(int start, int end) {
 		return calendarBookingPersistence.findAll(start, end);
 	}
 
@@ -336,10 +409,9 @@ public abstract class CalendarBookingLocalServiceBaseImpl
 	 * Returns the number of calendar bookings.
 	 *
 	 * @return the number of calendar bookings
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
-	public int getCalendarBookingsCount() throws SystemException {
+	public int getCalendarBookingsCount() {
 		return calendarBookingPersistence.countAll();
 	}
 
@@ -348,12 +420,11 @@ public abstract class CalendarBookingLocalServiceBaseImpl
 	 *
 	 * @param calendarBooking the calendar booking
 	 * @return the calendar booking that was updated
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public CalendarBooking updateCalendarBooking(
-		CalendarBooking calendarBooking) throws SystemException {
+		CalendarBooking calendarBooking) {
 		return calendarBookingPersistence.update(calendarBooking);
 	}
 
@@ -697,6 +768,119 @@ public abstract class CalendarBookingLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the class name local service.
+	 *
+	 * @return the class name local service
+	 */
+	public com.liferay.portal.service.ClassNameLocalService getClassNameLocalService() {
+		return classNameLocalService;
+	}
+
+	/**
+	 * Sets the class name local service.
+	 *
+	 * @param classNameLocalService the class name local service
+	 */
+	public void setClassNameLocalService(
+		com.liferay.portal.service.ClassNameLocalService classNameLocalService) {
+		this.classNameLocalService = classNameLocalService;
+	}
+
+	/**
+	 * Returns the class name remote service.
+	 *
+	 * @return the class name remote service
+	 */
+	public com.liferay.portal.service.ClassNameService getClassNameService() {
+		return classNameService;
+	}
+
+	/**
+	 * Sets the class name remote service.
+	 *
+	 * @param classNameService the class name remote service
+	 */
+	public void setClassNameService(
+		com.liferay.portal.service.ClassNameService classNameService) {
+		this.classNameService = classNameService;
+	}
+
+	/**
+	 * Returns the class name persistence.
+	 *
+	 * @return the class name persistence
+	 */
+	public ClassNamePersistence getClassNamePersistence() {
+		return classNamePersistence;
+	}
+
+	/**
+	 * Sets the class name persistence.
+	 *
+	 * @param classNamePersistence the class name persistence
+	 */
+	public void setClassNamePersistence(
+		ClassNamePersistence classNamePersistence) {
+		this.classNamePersistence = classNamePersistence;
+	}
+
+	/**
+	 * Returns the company local service.
+	 *
+	 * @return the company local service
+	 */
+	public com.liferay.portal.service.CompanyLocalService getCompanyLocalService() {
+		return companyLocalService;
+	}
+
+	/**
+	 * Sets the company local service.
+	 *
+	 * @param companyLocalService the company local service
+	 */
+	public void setCompanyLocalService(
+		com.liferay.portal.service.CompanyLocalService companyLocalService) {
+		this.companyLocalService = companyLocalService;
+	}
+
+	/**
+	 * Returns the company remote service.
+	 *
+	 * @return the company remote service
+	 */
+	public com.liferay.portal.service.CompanyService getCompanyService() {
+		return companyService;
+	}
+
+	/**
+	 * Sets the company remote service.
+	 *
+	 * @param companyService the company remote service
+	 */
+	public void setCompanyService(
+		com.liferay.portal.service.CompanyService companyService) {
+		this.companyService = companyService;
+	}
+
+	/**
+	 * Returns the company persistence.
+	 *
+	 * @return the company persistence
+	 */
+	public CompanyPersistence getCompanyPersistence() {
+		return companyPersistence;
+	}
+
+	/**
+	 * Sets the company persistence.
+	 *
+	 * @param companyPersistence the company persistence
+	 */
+	public void setCompanyPersistence(CompanyPersistence companyPersistence) {
+		this.companyPersistence = companyPersistence;
+	}
+
+	/**
 	 * Returns the resource local service.
 	 *
 	 * @return the resource local service
@@ -1019,6 +1203,25 @@ public abstract class CalendarBookingLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the social activity remote service.
+	 *
+	 * @return the social activity remote service
+	 */
+	public com.liferay.portlet.social.service.SocialActivityService getSocialActivityService() {
+		return socialActivityService;
+	}
+
+	/**
+	 * Sets the social activity remote service.
+	 *
+	 * @param socialActivityService the social activity remote service
+	 */
+	public void setSocialActivityService(
+		com.liferay.portlet.social.service.SocialActivityService socialActivityService) {
+		this.socialActivityService = socialActivityService;
+	}
+
+	/**
 	 * Returns the social activity persistence.
 	 *
 	 * @return the social activity persistence
@@ -1196,13 +1399,18 @@ public abstract class CalendarBookingLocalServiceBaseImpl
 	}
 
 	/**
-	 * Performs an SQL query.
+	 * Performs a SQL query.
 	 *
 	 * @param sql the sql query
 	 */
-	protected void runSQL(String sql) throws SystemException {
+	protected void runSQL(String sql) {
 		try {
 			DataSource dataSource = calendarBookingPersistence.getDataSource();
+
+			DB db = DBFactoryUtil.getDB();
+
+			sql = db.buildSQL(sql);
+			sql = PortalUtil.transformSQL(sql);
 
 			SqlUpdate sqlUpdate = SqlUpdateFactoryUtil.getSqlUpdate(dataSource,
 					sql, new int[0]);
@@ -1250,6 +1458,18 @@ public abstract class CalendarBookingLocalServiceBaseImpl
 	protected com.liferay.counter.service.CounterLocalService counterLocalService;
 	@BeanReference(type = com.liferay.mail.service.MailService.class)
 	protected com.liferay.mail.service.MailService mailService;
+	@BeanReference(type = com.liferay.portal.service.ClassNameLocalService.class)
+	protected com.liferay.portal.service.ClassNameLocalService classNameLocalService;
+	@BeanReference(type = com.liferay.portal.service.ClassNameService.class)
+	protected com.liferay.portal.service.ClassNameService classNameService;
+	@BeanReference(type = ClassNamePersistence.class)
+	protected ClassNamePersistence classNamePersistence;
+	@BeanReference(type = com.liferay.portal.service.CompanyLocalService.class)
+	protected com.liferay.portal.service.CompanyLocalService companyLocalService;
+	@BeanReference(type = com.liferay.portal.service.CompanyService.class)
+	protected com.liferay.portal.service.CompanyService companyService;
+	@BeanReference(type = CompanyPersistence.class)
+	protected CompanyPersistence companyPersistence;
 	@BeanReference(type = com.liferay.portal.service.ResourceLocalService.class)
 	protected com.liferay.portal.service.ResourceLocalService resourceLocalService;
 	@BeanReference(type = com.liferay.portal.service.SubscriptionLocalService.class)
@@ -1284,6 +1504,8 @@ public abstract class CalendarBookingLocalServiceBaseImpl
 	protected RatingsStatsPersistence ratingsStatsPersistence;
 	@BeanReference(type = com.liferay.portlet.social.service.SocialActivityLocalService.class)
 	protected com.liferay.portlet.social.service.SocialActivityLocalService socialActivityLocalService;
+	@BeanReference(type = com.liferay.portlet.social.service.SocialActivityService.class)
+	protected com.liferay.portlet.social.service.SocialActivityService socialActivityService;
 	@BeanReference(type = SocialActivityPersistence.class)
 	protected SocialActivityPersistence socialActivityPersistence;
 	@BeanReference(type = com.liferay.portlet.social.service.SocialActivityCounterLocalService.class)

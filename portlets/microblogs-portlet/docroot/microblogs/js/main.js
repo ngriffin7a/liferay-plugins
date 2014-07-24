@@ -1,7 +1,7 @@
 AUI().use(
 	'aui-base',
-	'aui-dialog',
-	'aui-io-plugin',
+	'aui-io-plugin-deprecated',
+	'liferay-util-window',
 	function(A) {
 		Liferay.namespace('Microblogs');
 
@@ -29,7 +29,7 @@ AUI().use(
 
 				popup.show();
 
-				popup.set('title', title);
+				popup.titleNode.html(title);
 
 				popup.io.set('uri', url);
 
@@ -40,14 +40,16 @@ AUI().use(
 				var instance = this;
 
 				if (!instance._popup) {
-					instance._popup = new A.Dialog(
+					instance._popup = Liferay.Util.Window.getWindow(
 						{
-							centered: true,
-							constrain2view: true,
-							cssClass: 'microblogs-portlet',
-							modal: true,
-							resizable: false,
-							width: 475
+							dialog: {
+								centered: true,
+								constrain2view: true,
+								cssClass: 'microblogs-portlet',
+								modal: true,
+								resizable: false,
+								width: 475
+							}
 						}
 					).plug(
 						A.Plugin.IO,

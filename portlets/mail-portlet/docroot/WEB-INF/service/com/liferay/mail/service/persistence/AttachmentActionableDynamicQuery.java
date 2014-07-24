@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -18,15 +18,16 @@ import com.liferay.mail.model.Attachment;
 import com.liferay.mail.service.AttachmentLocalServiceUtil;
 
 import com.liferay.portal.kernel.dao.orm.BaseActionableDynamicQuery;
-import com.liferay.portal.kernel.exception.SystemException;
 
 /**
  * @author Brian Wing Shun Chan
+ * @deprecated As of 7.0.0, replaced by {@link AttachmentLocalServiceUtil#getActionableDynamicQuery()}
  * @generated
  */
+@Deprecated
 public abstract class AttachmentActionableDynamicQuery
 	extends BaseActionableDynamicQuery {
-	public AttachmentActionableDynamicQuery() throws SystemException {
+	public AttachmentActionableDynamicQuery() {
 		setBaseLocalService(AttachmentLocalServiceUtil.getService());
 		setClass(Attachment.class);
 

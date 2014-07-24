@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -40,14 +40,16 @@ public class KaleoDefinitionServiceWrapper implements KaleoDefinitionService,
 		return _kaleoDefinitionService.getBeanIdentifier();
 	}
 
-	/**
-	* Sets the Spring bean ID for this bean.
-	*
-	* @param beanIdentifier the Spring bean ID for this bean
-	*/
 	@Override
-	public void setBeanIdentifier(java.lang.String beanIdentifier) {
-		_kaleoDefinitionService.setBeanIdentifier(beanIdentifier);
+	public java.util.List<com.liferay.portal.workflow.kaleo.model.KaleoDefinition> getKaleoDefinitions(
+		long companyId, int start, int end) {
+		return _kaleoDefinitionService.getKaleoDefinitions(companyId, start, end);
+	}
+
+	@Override
+	public java.util.List<com.liferay.portal.workflow.kaleo.model.KaleoDefinition> getKaleoDefinitions(
+		int start, int end) {
+		return _kaleoDefinitionService.getKaleoDefinitions(start, end);
 	}
 
 	@Override
@@ -58,23 +60,20 @@ public class KaleoDefinitionServiceWrapper implements KaleoDefinitionService,
 			arguments);
 	}
 
+	/**
+	* Sets the Spring bean ID for this bean.
+	*
+	* @param beanIdentifier the Spring bean ID for this bean
+	*/
 	@Override
-	public java.util.List<com.liferay.portal.workflow.kaleo.model.KaleoDefinition> getKaleoDefinitions(
-		int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _kaleoDefinitionService.getKaleoDefinitions(start, end);
-	}
-
-	@Override
-	public java.util.List<com.liferay.portal.workflow.kaleo.model.KaleoDefinition> getKaleoDefinitions(
-		long companyId, int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return _kaleoDefinitionService.getKaleoDefinitions(companyId, start, end);
+	public void setBeanIdentifier(java.lang.String beanIdentifier) {
+		_kaleoDefinitionService.setBeanIdentifier(beanIdentifier);
 	}
 
 	/**
 	 * @deprecated As of 6.1.0, replaced by {@link #getWrappedService}
 	 */
+	@Deprecated
 	public KaleoDefinitionService getWrappedKaleoDefinitionService() {
 		return _kaleoDefinitionService;
 	}
@@ -82,6 +81,7 @@ public class KaleoDefinitionServiceWrapper implements KaleoDefinitionService,
 	/**
 	 * @deprecated As of 6.1.0, replaced by {@link #setWrappedService}
 	 */
+	@Deprecated
 	public void setWrappedKaleoDefinitionService(
 		KaleoDefinitionService kaleoDefinitionService) {
 		_kaleoDefinitionService = kaleoDefinitionService;

@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -27,7 +27,6 @@
 <%@ page import="com.liferay.mbsubscriptionmanager.util.PortletKeys" %><%@
 page import="com.liferay.mbsubscriptionmanager.util.SubscriptionManagerUtil" %><%@
 page import="com.liferay.portal.kernel.dao.search.DisplayTerms" %><%@
-page import="com.liferay.portal.kernel.dao.search.ResultRow" %><%@
 page import="com.liferay.portal.kernel.dao.search.RowChecker" %><%@
 page import="com.liferay.portal.kernel.dao.search.SearchContainer" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
@@ -44,7 +43,8 @@ page import="com.liferay.portal.theme.ThemeDisplay" %><%@
 page import="com.liferay.portal.util.PortalUtil" %><%@
 page import="com.liferay.portlet.PortletURLFactoryUtil" %><%@
 page import="com.liferay.portlet.messageboards.model.MBCategory" %><%@
-page import="com.liferay.portlet.messageboards.service.MBCategoryLocalServiceUtil" %>
+page import="com.liferay.portlet.messageboards.service.MBCategoryLocalServiceUtil" %><%@
+page import="com.liferay.taglib.search.ResultRow" %>
 
 <%@ page import="java.util.Collections" %><%@
 page import="java.util.Iterator" %><%@

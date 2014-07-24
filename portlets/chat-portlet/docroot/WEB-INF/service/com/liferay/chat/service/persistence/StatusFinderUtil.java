@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -22,25 +22,22 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
  */
 public class StatusFinderUtil {
 	public static java.util.List<java.lang.Object[]> findByModifiedDate(
-		long companyId, long userId, long modifiedDate, int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		long companyId, long userId, long modifiedDate, int start, int end) {
 		return getFinder()
 				   .findByModifiedDate(companyId, userId, modifiedDate, start,
 			end);
 	}
 
-	public static java.util.List<java.lang.Object[]> findBySocialRelationType(
-		long userId, int type, long modifiedDate, int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public static java.util.List<java.lang.Object[]> findBySocialRelationTypes(
+		long userId, int[] types, long modifiedDate, int start, int end) {
 		return getFinder()
-				   .findBySocialRelationType(userId, type, modifiedDate, start,
-			end);
+				   .findBySocialRelationTypes(userId, types, modifiedDate,
+			start, end);
 	}
 
 	public static java.util.List<java.lang.Object[]> findByUsersGroups(
 		long userId, long modifiedDate, java.lang.String[] groupNames,
-		int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		int start, int end) {
 		return getFinder()
 				   .findByUsersGroups(userId, modifiedDate, groupNames, start,
 			end);

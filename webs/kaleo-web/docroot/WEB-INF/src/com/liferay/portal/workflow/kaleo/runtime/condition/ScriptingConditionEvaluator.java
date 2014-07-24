@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,11 +15,13 @@
 package com.liferay.portal.workflow.kaleo.runtime.condition;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.scripting.ScriptingUtil;
 import com.liferay.portal.workflow.kaleo.model.KaleoCondition;
 import com.liferay.portal.workflow.kaleo.runtime.ExecutionContext;
 import com.liferay.portal.workflow.kaleo.runtime.util.ScriptingContextBuilderUtil;
+import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
+
+import java.io.Serializable;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -34,7 +36,7 @@ public class ScriptingConditionEvaluator implements ConditionEvaluator {
 	public String evaluate(
 			KaleoCondition kaleoCondition, ExecutionContext executionContext,
 			ClassLoader... classLoaders)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		Map<String, Object> inputObjects =
 			ScriptingContextBuilderUtil.buildScriptingContext(executionContext);
@@ -43,6 +45,13 @@ public class ScriptingConditionEvaluator implements ConditionEvaluator {
 			null, inputObjects, _outputNames,
 			kaleoCondition.getScriptLanguage(), kaleoCondition.getScript(),
 			classLoaders);
+
+		Map<String, Serializable> resultsWorkflowContext =
+			(Map<String, Serializable>)results.get(
+				WorkflowContextUtil.WORKFLOW_CONTEXT_NAME);
+
+		WorkflowContextUtil.mergeWorkflowContexts(
+			executionContext, resultsWorkflowContext);
 
 		String returnValue = (String)results.get(_RETURN_VALUE);
 
@@ -61,6 +70,7 @@ public class ScriptingConditionEvaluator implements ConditionEvaluator {
 
 	static {
 		_outputNames.add(_RETURN_VALUE);
+		_outputNames.add(WorkflowContextUtil.WORKFLOW_CONTEXT_NAME);
 	}
 
 }

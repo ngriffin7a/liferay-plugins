@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -35,8 +35,7 @@ import java.util.Map;
 public class BaseKaleoUpgradeTableListener extends BaseUpgradeTableListener {
 
 	protected Map<Long, Long> getKeyValueMap(
-			String tableName, String keyColumnName, String valueColumnName)
-		throws SystemException {
+		String tableName, String keyColumnName, String valueColumnName) {
 
 		Map<Long, Long> keyValueMap = new HashMap<Long, Long>();
 

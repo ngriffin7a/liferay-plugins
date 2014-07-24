@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -19,7 +19,6 @@ import com.liferay.mail.NoSuchAccountException;
 import com.liferay.mail.model.Account;
 import com.liferay.mail.service.AccountLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.User;
 
 /**
@@ -34,7 +33,7 @@ public abstract class BaseMailbox implements Mailbox {
 			String login, String password, boolean savePassword,
 			String signature, boolean useSignature, String folderPrefix,
 			boolean defaultSender)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		validateAccount(
 			incomingHostName, incomingPort, incomingSecure, outgoingHostName,
@@ -61,7 +60,7 @@ public abstract class BaseMailbox implements Mailbox {
 		}
 	}
 
-	public void deleteAccount() throws PortalException, SystemException {
+	public void deleteAccount() throws PortalException {
 		AccountLocalServiceUtil.deleteAccount(account.getAccountId());
 	}
 
@@ -85,7 +84,7 @@ public abstract class BaseMailbox implements Mailbox {
 			long accountId, String personalName, String password,
 			boolean savePassword, String signature, boolean useSignature,
 			String folderPrefix, boolean defaultSender)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		Account account = AccountLocalServiceUtil.getAccount(accountId);
 
@@ -103,7 +102,7 @@ public abstract class BaseMailbox implements Mailbox {
 	public void updateFolders(
 			long inboxFolderId, long draftFolderId, long sentFolderId,
 			long trashFolderId)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		AccountLocalServiceUtil.updateFolders(
 			account.getAccountId(), inboxFolderId, draftFolderId, sentFolderId,

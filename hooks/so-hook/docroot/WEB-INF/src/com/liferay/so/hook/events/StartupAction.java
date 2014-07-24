@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -20,7 +20,6 @@ package com.liferay.so.hook.events;
 import com.liferay.portal.kernel.events.ActionException;
 import com.liferay.portal.kernel.events.SimpleAction;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portlet.PortletPreferencesThreadLocal;
 import com.liferay.so.util.InstanceUtil;
 
 /**
@@ -42,20 +41,13 @@ public class StartupAction extends SimpleAction {
 	}
 
 	protected void doRun(long companyId) throws Exception {
-		try {
-			PortletPreferencesThreadLocal.setStrict(false);
+		InstanceUtil.initRuntime(companyId);
 
-			InstanceUtil.initRuntime(companyId);
-
-			if (InstanceUtil.isInitialized(companyId)) {
-				return;
-			}
-
-			InstanceUtil.initInstance(companyId);
+		if (InstanceUtil.isInitialized(companyId)) {
+			return;
 		}
-		finally {
-			PortletPreferencesThreadLocal.setStrict(true);
-		}
+
+		InstanceUtil.initInstance(companyId);
 	}
 
 }

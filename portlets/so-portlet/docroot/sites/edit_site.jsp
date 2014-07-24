@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -32,16 +32,16 @@ portletURL.setParameter("mvcPath", "/sites/edit_site.jsp");
 <aui:form action="<%= addSiteURL %>" method="post" name="dialogFm">
 	<aui:model-context model="<%= Group.class %>" />
 
-	<div class="portlet-msg-success aui-helper-hidden">
+	<div class="hide portlet-msg-success">
 		<liferay-ui:message key="your-request-processed-successfully" />
 	</div>
 
-	<div class="portlet-msg-error aui-helper-hidden">
+	<div class="hide portlet-msg-error">
 		<liferay-ui:message key="your-request-failed-to-complete" />
 	</div>
 
 	<div class="section-container">
-		<div class="section site-information" data-step='<%= LanguageUtil.format(pageContext, "step-x-of-x", new Integer[] {1, 2}) %>' data-title='<%= LanguageUtil.get(pageContext, "add-site-information") %>'>
+		<div class="section site-information" data-step='<%= LanguageUtil.format(request, "step-x-of-x", new String[] {"1", "2"}, false) %>' data-title='<%= LanguageUtil.get(request, "add-site-information") %>'>
 			<aui:fieldset>
 				<aui:input name="name" />
 
@@ -53,7 +53,7 @@ portletURL.setParameter("mvcPath", "/sites/edit_site.jsp");
 		LayoutSetPrototype defaultLayoutSetPrototype = null;
 		%>
 
-		<div class="section site-settings aui-helper-hidden" data-step='<%= LanguageUtil.format(pageContext, "step-x-of-x", new Integer[] {2, 2}) %>' data-title='<%= LanguageUtil.get(pageContext, "add-site-settings") %>'>
+		<div class="hide section site-settings" data-step='<%= LanguageUtil.format(request, "step-x-of-x", new String[] {"2", "2"}, false) %>' data-title='<%= LanguageUtil.get(request, "add-site-settings") %>'>
 			<div class="site-options">
 
 				<%
@@ -91,10 +91,21 @@ portletURL.setParameter("mvcPath", "/sites/edit_site.jsp");
 				</aui:select>
 
 				<aui:select id="typeSelect" label="type" name="type">
-					<aui:option label="<%= GroupConstants.getTypeLabel(GroupConstants.TYPE_SITE_OPEN) %>" value="<%= GroupConstants.TYPE_SITE_OPEN %>" />
-					<aui:option label="<%= GroupConstants.getTypeLabel(GroupConstants.TYPE_SITE_PUBLIC_RESTRICTED) %>" value="<%= GroupConstants.TYPE_SITE_PUBLIC_RESTRICTED %>" />
-					<aui:option label="<%= GroupConstants.getTypeLabel(GroupConstants.TYPE_SITE_PRIVATE_RESTRICTED) %>" value="<%= GroupConstants.TYPE_SITE_PRIVATE_RESTRICTED %>" />
-					<aui:option label="<%= GroupConstants.getTypeLabel(GroupConstants.TYPE_SITE_PRIVATE) %>" value="<%= GroupConstants.TYPE_SITE_PRIVATE %>" />
+					<c:if test="<%= enableOpenSites %>">
+						<aui:option label="<%= GroupConstants.getTypeLabel(GroupConstants.TYPE_SITE_OPEN) %>" value="<%= GroupConstants.TYPE_SITE_OPEN %>" />
+					</c:if>
+
+					<c:if test="<%= enablePublicRestrictedSites %>">
+						<aui:option label="<%= GroupConstants.getTypeLabel(GroupConstants.TYPE_SITE_PUBLIC_RESTRICTED) %>" value="<%= GroupConstants.TYPE_SITE_PUBLIC_RESTRICTED %>" />
+					</c:if>
+
+					<c:if test="<%= enablePrivateRestrictedSites %>">
+						<aui:option label="<%= GroupConstants.getTypeLabel(GroupConstants.TYPE_SITE_PRIVATE_RESTRICTED) %>" value="<%= GroupConstants.TYPE_SITE_PRIVATE_RESTRICTED %>" />
+					</c:if>
+
+					<c:if test="<%= enablePrivateSites %>">
+						<aui:option label="<%= GroupConstants.getTypeLabel(GroupConstants.TYPE_SITE_PRIVATE) %>" value="<%= GroupConstants.TYPE_SITE_PRIVATE %>" />
+					</c:if>
 				</aui:select>
 			</div>
 
@@ -143,7 +154,25 @@ portletURL.setParameter("mvcPath", "/sites/edit_site.jsp");
 							</div>
 
 							<div class="message">
-								<liferay-ui:message key="open-sites-are-listed-pages-are-public-and-users-are-free-to-join-and-collaborate" />
+
+								<%
+								String description = StringPool.BLANK;
+
+								if (enableOpenSites) {
+									description = "open-sites-are-listed-pages-are-public-and-users-are-free-to-join-and-collaborate";
+								}
+								else if (enablePublicRestrictedSites) {
+									description = "public-restricted-sites-are-listed-pages-are-public-and-users-must-request-to-join-and-collaborate";
+								}
+								else if (enablePrivateRestrictedSites) {
+									description = "private-restricted-sites-are-listed-pages-are-private-and-users-must-request-to-join-and-collaborate";
+								}
+								else if (enablePrivateSites) {
+									description = "private-sites-are-not-listed-pages-are-private-and-users-must-be-invited-to-collaborate";
+								}
+								%>
+
+								<liferay-ui:message key="<%= description %>" />
 							</div>
 						</div>
 					</aui:column>
@@ -161,7 +190,7 @@ portletURL.setParameter("mvcPath", "/sites/edit_site.jsp");
 
 		<div class="step" id="<portlet:namespace />step">
 			<span>
-				<liferay-ui:message arguments="<%= new Integer[] {1, 2} %>" key="step-x-of-x" />
+				<liferay-ui:message arguments="<%= new Integer[] {1, 2} %>" key="step-x-of-x" translateArguments="<%= false %>" />
 			</span>
 		</div>
 
@@ -171,7 +200,7 @@ portletURL.setParameter("mvcPath", "/sites/edit_site.jsp");
 	</aui:button-row>
 </aui:form>
 
-<aui:script use="aui-base,aui-io-request,aui-loading-mask">
+<aui:script use="aui-base,aui-io-request-deprecated,aui-loading-mask-deprecated">
 	var form = A.one(document.<portlet:namespace />dialogFm);
 
 	var sectionContainer = A.one('.so-portlet-sites-dialog .section-container');
@@ -187,7 +216,7 @@ portletURL.setParameter("mvcPath", "/sites/edit_site.jsp");
 
 			var loadingMask = new A.LoadingMask(
 				{
-					'strings.loading': '<%= UnicodeLanguageUtil.get(pageContext, "creating-a-new-site") %>',
+					'strings.loading': '<%= UnicodeLanguageUtil.get(request, "creating-a-new-site") %>',
 					target: A.one('.so-portlet-sites-dialog')
 				}
 			);
@@ -199,8 +228,8 @@ portletURL.setParameter("mvcPath", "/sites/edit_site.jsp");
 			var deleteLayoutIds = [];
 
 			layoutElems.each(
-				function(layoutElem, index, collection) {
-					deleteLayoutIds.push(layoutElem.getAttribute('data-layoutId'));
+				function(item, index) {
+					deleteLayoutIds.push(item.getAttribute('data-layoutId'));
 				}
 			);
 
@@ -260,7 +289,7 @@ portletURL.setParameter("mvcPath", "/sites/edit_site.jsp");
 		window,
 		'<portlet:namespace />previous',
 		function() {
-			var section = A.one('.so-portlet-sites-dialog .section:not(.aui-helper-hidden)').previous();
+			var section = A.one('.so-portlet-sites-dialog .section:not(.hide)').previous();
 
 			<portlet:namespace />showSection(section);
 		}
@@ -276,14 +305,14 @@ portletURL.setParameter("mvcPath", "/sites/edit_site.jsp");
 
 			sectionContainer.all('.section').hide();
 
-			if (!section.previous()) {
+			if (!section.previous('.section')) {
 				Liferay.SO.Sites.disableButton(previousButton);
 			}
 			else {
 				Liferay.SO.Sites.enableButton(previousButton);
 			}
 
-			if (!section.next()) {
+			if (!section.next('.section')) {
 				Liferay.SO.Sites.disableButton(nextButton);
 			}
 			else {
@@ -301,7 +330,7 @@ portletURL.setParameter("mvcPath", "/sites/edit_site.jsp");
 		window,
 		'<portlet:namespace />next',
 		function() {
-			var section = A.one('.so-portlet-sites-dialog .section:not(.aui-helper-hidden)').next();
+			var section = A.one('.so-portlet-sites-dialog .section:not(.hide)').next();
 
 			<portlet:namespace />showSection(section);
 		}
@@ -310,7 +339,7 @@ portletURL.setParameter("mvcPath", "/sites/edit_site.jsp");
 	Liferay.Util.focusFormField(document.<portlet:namespace />dialogFm.<portlet:namespace />name);
 </aui:script>
 
-<aui:script use="aui-base,aui-io">
+<aui:script use="aui-base,aui-io-deprecated">
 	var form = A.one(document.<portlet:namespace />dialogFm);
 
 	form.on(
@@ -365,7 +394,7 @@ portletURL.setParameter("mvcPath", "/sites/edit_site.jsp");
 						}
 					},
 					data: {
-						layoutSetPrototypeId: templateId
+						<portlet:namespace />layoutSetPrototypeId: templateId
 					},
 					dataType: 'JSON'
 				}
@@ -378,21 +407,21 @@ portletURL.setParameter("mvcPath", "/sites/edit_site.jsp");
 	typeSelect.on(
 		'change',
 		function(event) {
-			var type = typeSelect.get("value");
+			var type = typeSelect.get('value');
 
-			var message = "";
+			var message = '';
 
 			if (type == <%= GroupConstants.TYPE_SITE_OPEN %>) {
-				message = '<%= UnicodeLanguageUtil.get(pageContext, "open-sites-are-listed-pages-are-public-and-users-are-free-to-join-and-collaborate") %>';
+				message = '<%= UnicodeLanguageUtil.get(request, "open-sites-are-listed-pages-are-public-and-users-are-free-to-join-and-collaborate") %>';
 			}
 			else if (type == <%= GroupConstants.TYPE_SITE_PUBLIC_RESTRICTED %>) {
-				message = '<%= UnicodeLanguageUtil.get(pageContext, "public-restricted-sites-are-listed-pages-are-public-and-users-must-request-to-join-and-collaborate") %>';
+				message = '<%= UnicodeLanguageUtil.get(request, "public-restricted-sites-are-listed-pages-are-public-and-users-must-request-to-join-and-collaborate") %>';
 			}
 			else if (type == <%= GroupConstants.TYPE_SITE_PRIVATE_RESTRICTED %>) {
-				message = '<%= UnicodeLanguageUtil.get(pageContext, "private-restricted-sites-are-listed-pages-are-private-and-users-must-request-to-join-and-collaborate") %>';
+				message = '<%= UnicodeLanguageUtil.get(request, "private-restricted-sites-are-listed-pages-are-private-and-users-must-request-to-join-and-collaborate") %>';
 			}
 			else if (type == <%= GroupConstants.TYPE_SITE_PRIVATE %>) {
-				message = '<%= UnicodeLanguageUtil.get(pageContext, "private-sites-are-not-listed-pages-are-private-and-users-must-be-invited-to-collaborate") %>';
+				message = '<%= UnicodeLanguageUtil.get(request, "private-sites-are-not-listed-pages-are-private-and-users-must-be-invited-to-collaborate") %>';
 			}
 
 			A.one('.so-portlet-sites-dialog .type-details .message').html(message);

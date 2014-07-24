@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<!DOCTYPE project>
+
+<project name="sync-web" basedir="." default="deploy">
+	<import file="../build-common-web.xml" />
+
+	<property name="import.shared" value="io-delta-shared,sync-shared" />
+</project>

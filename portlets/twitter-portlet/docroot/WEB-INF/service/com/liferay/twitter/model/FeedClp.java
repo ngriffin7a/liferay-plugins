@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,12 +15,15 @@
 package com.liferay.twitter.model;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.BaseModel;
+import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.BaseModelImpl;
-import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 
 import com.liferay.twitter.service.ClpSerializer;
 import com.liferay.twitter.service.FeedLocalServiceUtil;
@@ -84,6 +87,9 @@ public class FeedClp extends BaseModelImpl<Feed> implements Feed {
 		attributes.put("twitterScreenName", getTwitterScreenName());
 		attributes.put("lastStatusId", getLastStatusId());
 
+		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
+		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
+
 		return attributes;
 	}
 
@@ -142,6 +148,9 @@ public class FeedClp extends BaseModelImpl<Feed> implements Feed {
 		if (lastStatusId != null) {
 			setLastStatusId(lastStatusId);
 		}
+
+		_entityCacheEnabled = GetterUtil.getBoolean("entityCacheEnabled");
+		_finderCacheEnabled = GetterUtil.getBoolean("finderCacheEnabled");
 	}
 
 	@Override
@@ -214,13 +223,19 @@ public class FeedClp extends BaseModelImpl<Feed> implements Feed {
 	}
 
 	@Override
-	public String getUserUuid() throws SystemException {
-		return PortalUtil.getUserValue(getUserId(), "uuid", _userUuid);
+	public String getUserUuid() {
+		try {
+			User user = UserLocalServiceUtil.getUserById(getUserId());
+
+			return user.getUuid();
+		}
+		catch (PortalException pe) {
+			return StringPool.BLANK;
+		}
 	}
 
 	@Override
 	public void setUserUuid(String userUuid) {
-		_userUuid = userUuid;
 	}
 
 	@Override
@@ -316,14 +331,19 @@ public class FeedClp extends BaseModelImpl<Feed> implements Feed {
 	}
 
 	@Override
-	public String getTwitterUserUuid() throws SystemException {
-		return PortalUtil.getUserValue(getTwitterUserId(), "uuid",
-			_twitterUserUuid);
+	public String getTwitterUserUuid() {
+		try {
+			User user = UserLocalServiceUtil.getUserById(getTwitterUserId());
+
+			return user.getUuid();
+		}
+		catch (PortalException pe) {
+			return StringPool.BLANK;
+		}
 	}
 
 	@Override
 	public void setTwitterUserUuid(String twitterUserUuid) {
-		_twitterUserUuid = twitterUserUuid;
 	}
 
 	@Override
@@ -423,7 +443,7 @@ public class FeedClp extends BaseModelImpl<Feed> implements Feed {
 	}
 
 	@Override
-	public void persist() throws SystemException {
+	public void persist() {
 		if (this.isNew()) {
 			FeedLocalServiceUtil.addFeed(this);
 		}
@@ -492,9 +512,23 @@ public class FeedClp extends BaseModelImpl<Feed> implements Feed {
 		}
 	}
 
+	public Class<?> getClpSerializerClass() {
+		return _clpSerializerClass;
+	}
+
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	@Override
+	public boolean isEntityCacheEnabled() {
+		return _entityCacheEnabled;
+	}
+
+	@Override
+	public boolean isFinderCacheEnabled() {
+		return _finderCacheEnabled;
 	}
 
 	@Override
@@ -577,13 +611,14 @@ public class FeedClp extends BaseModelImpl<Feed> implements Feed {
 	private long _feedId;
 	private long _companyId;
 	private long _userId;
-	private String _userUuid;
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
 	private long _twitterUserId;
-	private String _twitterUserUuid;
 	private String _twitterScreenName;
 	private long _lastStatusId;
 	private BaseModel<?> _feedRemoteModel;
+	private Class<?> _clpSerializerClass = com.liferay.twitter.service.ClpSerializer.class;
+	private boolean _entityCacheEnabled;
+	private boolean _finderCacheEnabled;
 }

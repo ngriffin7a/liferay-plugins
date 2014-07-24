@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -20,7 +20,7 @@ import com.liferay.calendar.model.CalendarResourceSoap;
 
 import com.liferay.portal.LocaleException;
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -31,8 +31,10 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CacheModel;
+import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.BaseModelImpl;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 
 import com.liferay.portlet.expando.model.ExpandoBridge;
@@ -113,9 +115,8 @@ public class CalendarResourceModelImpl extends BaseModelImpl<CalendarResource>
 	public static long CODE_COLUMN_BITMASK = 8L;
 	public static long COMPANYID_COLUMN_BITMASK = 16L;
 	public static long GROUPID_COLUMN_BITMASK = 32L;
-	public static long NAME_COLUMN_BITMASK = 64L;
-	public static long RESOURCEBLOCKID_COLUMN_BITMASK = 128L;
-	public static long UUID_COLUMN_BITMASK = 256L;
+	public static long RESOURCEBLOCKID_COLUMN_BITMASK = 64L;
+	public static long UUID_COLUMN_BITMASK = 128L;
 
 	/**
 	 * Converts the soap model instance into a normal model instance.
@@ -227,6 +228,9 @@ public class CalendarResourceModelImpl extends BaseModelImpl<CalendarResource>
 		attributes.put("name", getName());
 		attributes.put("description", getDescription());
 		attributes.put("active", getActive());
+
+		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
+		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -423,13 +427,19 @@ public class CalendarResourceModelImpl extends BaseModelImpl<CalendarResource>
 	}
 
 	@Override
-	public String getUserUuid() throws SystemException {
-		return PortalUtil.getUserValue(getUserId(), "uuid", _userUuid);
+	public String getUserUuid() {
+		try {
+			User user = UserLocalServiceUtil.getUserById(getUserId());
+
+			return user.getUuid();
+		}
+		catch (PortalException pe) {
+			return StringPool.BLANK;
+		}
 	}
 
 	@Override
 	public void setUserUuid(String userUuid) {
-		_userUuid = userUuid;
 	}
 
 	@JSON
@@ -657,12 +667,6 @@ public class CalendarResourceModelImpl extends BaseModelImpl<CalendarResource>
 
 	@Override
 	public void setName(String name) {
-		_columnBitmask |= NAME_COLUMN_BITMASK;
-
-		if (_originalName == null) {
-			_originalName = _name;
-		}
-
 		_name = name;
 	}
 
@@ -704,10 +708,6 @@ public class CalendarResourceModelImpl extends BaseModelImpl<CalendarResource>
 
 		setName(LocalizationUtil.updateLocalization(nameMap, getName(), "Name",
 				LocaleUtil.toLanguageId(defaultLocale)));
-	}
-
-	public String getOriginalName() {
-		return GetterUtil.getString(_originalName);
 	}
 
 	@JSON
@@ -901,19 +901,28 @@ public class CalendarResourceModelImpl extends BaseModelImpl<CalendarResource>
 			return StringPool.BLANK;
 		}
 
-		return LocalizationUtil.getDefaultLanguageId(xml);
+		Locale defaultLocale = LocaleUtil.getSiteDefault();
+
+		return LocalizationUtil.getDefaultLanguageId(xml, defaultLocale);
 	}
 
 	@Override
 	public void prepareLocalizedFieldsForImport() throws LocaleException {
-		prepareLocalizedFieldsForImport(null);
+		Locale defaultLocale = LocaleUtil.fromLanguageId(getDefaultLanguageId());
+
+		Locale[] availableLocales = LocaleUtil.fromLanguageIds(getAvailableLanguageIds());
+
+		Locale defaultImportLocale = LocalizationUtil.getDefaultImportLocale(CalendarResource.class.getName(),
+				getPrimaryKey(), defaultLocale, availableLocales);
+
+		prepareLocalizedFieldsForImport(defaultImportLocale);
 	}
 
 	@Override
 	@SuppressWarnings("unused")
 	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale)
 		throws LocaleException {
-		Locale defaultLocale = LocaleUtil.getDefault();
+		Locale defaultLocale = LocaleUtil.getSiteDefault();
 
 		String modelDefaultLanguageId = getDefaultLanguageId();
 
@@ -1014,6 +1023,16 @@ public class CalendarResourceModelImpl extends BaseModelImpl<CalendarResource>
 	}
 
 	@Override
+	public boolean isEntityCacheEnabled() {
+		return ENTITY_CACHE_ENABLED;
+	}
+
+	@Override
+	public boolean isFinderCacheEnabled() {
+		return FINDER_CACHE_ENABLED;
+	}
+
+	@Override
 	public void resetOriginalValues() {
 		CalendarResourceModelImpl calendarResourceModelImpl = this;
 
@@ -1040,8 +1059,6 @@ public class CalendarResourceModelImpl extends BaseModelImpl<CalendarResource>
 		calendarResourceModelImpl._setOriginalClassPK = false;
 
 		calendarResourceModelImpl._originalCode = calendarResourceModelImpl._code;
-
-		calendarResourceModelImpl._originalName = calendarResourceModelImpl._name;
 
 		calendarResourceModelImpl._originalActive = calendarResourceModelImpl._active;
 
@@ -1272,7 +1289,6 @@ public class CalendarResourceModelImpl extends BaseModelImpl<CalendarResource>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userUuid;
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
@@ -1290,7 +1306,6 @@ public class CalendarResourceModelImpl extends BaseModelImpl<CalendarResource>
 	private String _originalCode;
 	private String _name;
 	private String _nameCurrentLanguageId;
-	private String _originalName;
 	private String _description;
 	private String _descriptionCurrentLanguageId;
 	private boolean _active;

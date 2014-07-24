@@ -35,13 +35,17 @@ AUI.add(
 					initializer: function(config) {
 						var instance = this;
 
-						instance._userThreadsContainer = instance.byId('userThreadsSearchContainer');
-
+						instance._deleteMessagesButton = instance.byId('deleteMessages');
+						instance._markMessagesAsReadButton = instance.byId('markMessagesAsRead');
+						instance._markMessagesAsUnreadButton = instance.byId('markMessagesAsUnread');
 						instance._privateMessagingContainer = instance.byId('privateMessagingContainer');
+						instance._userThreadsContainer = instance.byId('userThreadsSearchContainer');
 
 						instance._eventHandles = [];
 
 						instance._bindUI();
+
+						instance._namespace = config.namespace;
 					},
 
 					destructor: function() {
@@ -100,7 +104,7 @@ AUI.add(
 
 										Liferay.Util.checkAllBox(
 											instance._userThreadsContainer,
-											instance.get('namespace') + 'mbThreadCheckbox',
+											instance.get('namespace') + 'mbThread',
 											'.check-all'
 										);
 									},
@@ -138,8 +142,10 @@ AUI.add(
 								deleteMessageNode.on(
 									STR_CLICK,
 									function(event) {
-										if (!confirm(Liferay.Language.get('are-your-sure-you-want-to-delete-the-message'))) {
-											event.preventDefault();
+										if (confirm(Liferay.Language.get('are-your-sure-you-want-to-delete-the-message'))) {
+											var currentTarget = event.currentTarget;
+
+											instance._sendRequest(currentTarget.getAttribute('data-delete-message-url'));
 										}
 									},
 									instance
@@ -228,8 +234,10 @@ AUI.add(
 								markMessageUnread.on(
 									STR_CLICK,
 									function(event) {
-										if (!confirm(Liferay.Language.get('are-your-sure-you-want-to-mark-the-message-as-unread'))) {
-											event.preventDefault();
+										if (confirm(Liferay.Language.get('are-your-sure-you-want-to-mark-the-message-as-unread'))) {
+											var currentTarget = event.currentTarget;
+
+											instance._sendRequest(currentTarget.getAttribute('data-mark-as-unread-url'));
 										}
 									},
 									instance
@@ -264,6 +272,29 @@ AUI.add(
 						}
 					},
 
+					_bindToggleMessageButtons: function() {
+						var instance = this;
+
+						instance._privateMessagingContainer.delegate(
+							STR_CLICK,
+							function() {
+								var messageIds = instance._getSelectedMessageIds();
+
+								if (messageIds.length > 0 ) {
+									instance._deleteMessagesButton.show();
+									instance._markMessagesAsReadButton.show();
+									instance._markMessagesAsUnreadButton.show();
+								}
+								else {
+									instance._deleteMessagesButton.hide();
+									instance._markMessagesAsReadButton.hide();
+									instance._markMessagesAsUnreadButton.hide();
+								}
+							},
+							'input[type=checkbox]'
+						);
+					},
+
 					_bindUI: function() {
 						var instance = this;
 
@@ -283,6 +314,8 @@ AUI.add(
 							instance._bindMarkMessagesUnread();
 
 							instance._bindCheckAllMessages();
+
+							instance._bindToggleMessageButtons();
 						}
 					},
 
@@ -332,43 +365,44 @@ AUI.add(
 						var portletURL =  new Liferay.PortletURL.createURL(instance.get('baseRenderURL'));
 
 						portletURL.setPortletId(instance.get('portletId'));
-						portletURL.setWindowState('EXCLUSIVE');
+						portletURL.setWindowState('POP_UP');
 
 						portletURL.setParameter('mvcPath', '/new_message.jsp');
 						portletURL.setParameter('redirect', redirectURL.toString());
+						portletURL.setParameter('mbThreadId', mbThreadId);
 
-						var messageDialog = new A.Modal(
+						var messageDialog = Liferay.Util.openWindow(
 							{
-								centered: true,
-								constrain: true,
-								cssClass: 'private-messaging-portlet',
-								destroyOnHide: true,
-								headerContent: Liferay.Language.get('new-message'),
-								height: 600,
-								modal: true,
-								plugins: [Liferay.WidgetZIndex],
-								width: 600
-							}
-						).plug(
-							APluginIO,
-							{
-								data: {
-									mbThreadId: mbThreadId
+								dialog: {
+									after: {
+										destroy: function(event) {
+											document.location.href = redirectURL.toString();
+										}
+									},
+									centered: true,
+									constrain: true,
+									cssClass: 'private-messaging-portlet',
+									destroyOnHide: true,
+									height: 600,
+									modal: true,
+									plugins: [Liferay.WidgetZIndex],
+									width: 600
 								},
+								id: instance._namespace + 'Dialog',
+								title: Liferay.Language.get('new-message'),
 								uri: portletURL.toString()
 							}
-						).render();
+						);
 					},
 
 					_sendRequest: function(request, mbThreadIds) {
 						var instance = this;
 
+						var request = Liferay.Util.addParams(instance._namespace + 'mbThreadIds=' + mbThreadIds, request) || request;
+
 						A.io.request(
 							request,
 							{
-								data: {
-									mbThreadIds: mbThreadIds
-								},
 								on: {
 									success: function(event, id, obj) {
 										A.config.win.location = themeDisplay.getLayoutURL();

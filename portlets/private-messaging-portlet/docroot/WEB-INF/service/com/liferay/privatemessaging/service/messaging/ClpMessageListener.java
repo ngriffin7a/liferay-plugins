@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.messaging.Message;
 
 import com.liferay.privatemessaging.service.ClpSerializer;
 import com.liferay.privatemessaging.service.UserThreadLocalServiceUtil;
+import com.liferay.privatemessaging.service.UserThreadServiceUtil;
 
 /**
  * @author Brian Wing Shun Chan
@@ -36,6 +37,8 @@ public class ClpMessageListener extends BaseMessageListener {
 		if (command.equals("undeploy") &&
 				servletContextName.equals(getServletContextName())) {
 			UserThreadLocalServiceUtil.clearService();
+
+			UserThreadServiceUtil.clearService();
 		}
 	}
 }

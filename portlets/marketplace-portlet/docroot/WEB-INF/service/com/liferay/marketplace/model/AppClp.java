@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -18,12 +18,16 @@ import com.liferay.marketplace.service.AppLocalServiceUtil;
 import com.liferay.marketplace.service.ClpSerializer;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.lar.StagedModelType;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.BaseModel;
+import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.BaseModelImpl;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 
 import java.io.Serializable;
@@ -88,6 +92,9 @@ public class AppClp extends BaseModelImpl<App> implements App {
 		attributes.put("category", getCategory());
 		attributes.put("iconURL", getIconURL());
 		attributes.put("version", getVersion());
+
+		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
+		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -171,6 +178,9 @@ public class AppClp extends BaseModelImpl<App> implements App {
 		if (version != null) {
 			setVersion(version);
 		}
+
+		_entityCacheEnabled = GetterUtil.getBoolean("entityCacheEnabled");
+		_finderCacheEnabled = GetterUtil.getBoolean("finderCacheEnabled");
 	}
 
 	@Override
@@ -266,13 +276,19 @@ public class AppClp extends BaseModelImpl<App> implements App {
 	}
 
 	@Override
-	public String getUserUuid() throws SystemException {
-		return PortalUtil.getUserValue(getUserId(), "uuid", _userUuid);
+	public String getUserUuid() {
+		try {
+			User user = UserLocalServiceUtil.getUserById(getUserId());
+
+			return user.getUuid();
+		}
+		catch (PortalException pe) {
+			return StringPool.BLANK;
+		}
 	}
 
 	@Override
 	public void setUserUuid(String userUuid) {
-		_userUuid = userUuid;
 	}
 
 	@Override
@@ -483,25 +499,6 @@ public class AppClp extends BaseModelImpl<App> implements App {
 	}
 
 	@Override
-	public boolean isDownloaded() {
-		try {
-			String methodName = "isDownloaded";
-
-			Class<?>[] parameterTypes = new Class<?>[] {  };
-
-			Object[] parameterValues = new Object[] {  };
-
-			Boolean returnObj = (Boolean)invokeOnRemoteModel(methodName,
-					parameterTypes, parameterValues);
-
-			return returnObj;
-		}
-		catch (Exception e) {
-			throw new UnsupportedOperationException(e);
-		}
-	}
-
-	@Override
 	public java.lang.String getFileDir() {
 		try {
 			String methodName = "getFileDir";
@@ -540,9 +537,9 @@ public class AppClp extends BaseModelImpl<App> implements App {
 	}
 
 	@Override
-	public boolean isInstalled() {
+	public boolean isDownloaded() {
 		try {
-			String methodName = "isInstalled";
+			String methodName = "isDownloaded";
 
 			Class<?>[] parameterTypes = new Class<?>[] {  };
 
@@ -568,6 +565,25 @@ public class AppClp extends BaseModelImpl<App> implements App {
 			Object[] parameterValues = new Object[] { contextName };
 
 			java.lang.String[] returnObj = (java.lang.String[])invokeOnRemoteModel(methodName,
+					parameterTypes, parameterValues);
+
+			return returnObj;
+		}
+		catch (Exception e) {
+			throw new UnsupportedOperationException(e);
+		}
+	}
+
+	@Override
+	public boolean isInstalled() {
+		try {
+			String methodName = "isInstalled";
+
+			Class<?>[] parameterTypes = new Class<?>[] {  };
+
+			Object[] parameterValues = new Object[] {  };
+
+			Boolean returnObj = (Boolean)invokeOnRemoteModel(methodName,
 					parameterTypes, parameterValues);
 
 			return returnObj;
@@ -671,7 +687,7 @@ public class AppClp extends BaseModelImpl<App> implements App {
 	}
 
 	@Override
-	public void persist() throws SystemException {
+	public void persist() {
 		if (this.isNew()) {
 			AppLocalServiceUtil.addApp(this);
 		}
@@ -744,9 +760,23 @@ public class AppClp extends BaseModelImpl<App> implements App {
 		}
 	}
 
+	public Class<?> getClpSerializerClass() {
+		return _clpSerializerClass;
+	}
+
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	@Override
+	public boolean isEntityCacheEnabled() {
+		return _entityCacheEnabled;
+	}
+
+	@Override
+	public boolean isFinderCacheEnabled() {
+		return _finderCacheEnabled;
 	}
 
 	@Override
@@ -854,7 +884,6 @@ public class AppClp extends BaseModelImpl<App> implements App {
 	private long _appId;
 	private long _companyId;
 	private long _userId;
-	private String _userUuid;
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
@@ -865,4 +894,7 @@ public class AppClp extends BaseModelImpl<App> implements App {
 	private String _iconURL;
 	private String _version;
 	private BaseModel<?> _appRemoteModel;
+	private Class<?> _clpSerializerClass = com.liferay.marketplace.service.ClpSerializer.class;
+	private boolean _entityCacheEnabled;
+	private boolean _finderCacheEnabled;
 }

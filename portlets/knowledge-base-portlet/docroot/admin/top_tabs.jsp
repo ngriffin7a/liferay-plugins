@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -46,6 +46,16 @@ String mvcPath = ParamUtil.getString(request, "mvcPath");
 		urls.add(kbTemplatesURL.toString());
 		value = mvcPath.contains("template") ? names.get(names.size() - 1) : value;
 	}
+
+	if (AdminPermission.contains(permissionChecker, scopeGroupId, ActionKeys.VIEW_KB_FEEDBACK)) {
+		PortletURL kbFeedbackURL = renderResponse.createRenderURL();
+
+		kbFeedbackURL.setParameter("mvcPath", "/admin/view_feedback.jsp");
+
+		names.add("feedback");
+		urls.add(kbFeedbackURL.toString());
+		value = mvcPath.contains("feedback") ? names.get(names.size() - 1) : value;
+	}
 	%>
 
 	<liferay-ui:tabs
@@ -53,6 +63,7 @@ String mvcPath = ParamUtil.getString(request, "mvcPath");
 		param="topTabs"
 		url0="<%= (urls.size() > 0) ? urls.get(0) : null %>"
 		url1="<%= (urls.size() > 1) ? urls.get(1) : null %>"
+		url2="<%= (urls.size() > 2) ? urls.get(2) : null %>"
 		value="<%= value %>"
 	/>
 </c:if>

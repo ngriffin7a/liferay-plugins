@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -19,13 +19,22 @@
 
 <%@ include file="/init.jsp" %>
 
+<%
+boolean showManageEntries = GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.MANAGE_ANNOUNCEMENTS);
+
+if (group.isUser() && !showManageEntries) {
+	showManageEntries = SOAnnouncementsUtil.hasGroups(themeDisplay) || SOAnnouncementsUtil.hasOrganizations(themeDisplay) || SOAnnouncementsUtil.hasRoles(themeDisplay) || SOAnnouncementsUtil.hasUserGroups(themeDisplay);
+
+}
+%>
+
 <liferay-ui:success key="announcementAdded" message="the-announcement-was-successfully-added" />
 <liferay-ui:success key="announcementDeleted" message="the-announcement-was-successfully-deleted" />
 <liferay-ui:success key="announcementUpdated" message="the-announcement-was-successfully-updated" />
 
 <div id="<portlet:namespace />errorMessage"></div>
 
-<c:if test="<%= (permissionChecker.isGroupAdmin(layout.getGroupId()) || permissionChecker.isGroupOwner(layout.getGroupId())) && (!group.isUser() || permissionChecker.isOmniadmin()) %>">
+<c:if test="<%= showManageEntries %>">
 	<div class="admin-actions">
 		<aui:button onClick='<%= renderResponse.getNamespace() + "addEntry()" %>' value="add-entry" />
 
@@ -52,7 +61,7 @@
 		}
 	);
 
-	var announcementEntries = A.one('#p_p_id<portlet:namespace />');
+	var announcementEntries = A.one('#p_p_id<portlet:namespace /> .portlet-content-container');
 
 	announcementEntries.delegate(
 		'click',
@@ -67,14 +76,14 @@
 		function(event) {
 			event.preventDefault();
 
-			if (confirm('<%= UnicodeLanguageUtil.get(pageContext,"are-you-sure-you-want-to-delete-the-selected-entry") %>')) {
+			if (confirm('<%= UnicodeLanguageUtil.get(request,"are-you-sure-you-want-to-delete-the-selected-entry") %>')) {
 				var entry = event.currentTarget.ancestor('.entry');
 
 				var entryId = entry.attr('data-entryId');
 
 				var uri = '<liferay-portlet:actionURL name="deleteEntry"></liferay-portlet:actionURL>';
 
-				uri = Liferay.Util.addParams('entryId=' + entryId, uri)
+				uri = Liferay.Util.addParams('<portlet:namespace />entryId=' + entryId, uri)
 
 				A.io.request(
 					uri,
@@ -87,7 +96,7 @@
 									var message = A.one('#<portlet:namespace />errorMessage');
 
 									if (message) {
-										message.html('<span class="portlet-msg-error">' + responseData.message + '</span>');
+										message.html('<span class="alert alert-error">' + responseData.message + '</span>');
 									}
 								}
 								else {
@@ -104,7 +113,7 @@
 
 							}
 						},
-						dataType: 'json',
+						dataType: 'JSON'
 					}
 				);
 			}
@@ -120,11 +129,11 @@
 			<portlet:param name="redirect" value="<%= currentURL %>" />
 		</portlet:renderURL>
 
-		<portlet:namespace />openWindow('<%= addEntryURL %>', '<%= LanguageUtil.get(pageContext, "add-entry") %>', true, 800);
+		<portlet:namespace />openWindow('<%= addEntryURL %>', '<%= UnicodeLanguageUtil.get(request, "add-entry") %>', true, 800);
 	}
 
 	function <portlet:namespace />editEntry(uri) {
-		<portlet:namespace />openWindow(uri, '<%= LanguageUtil.get(pageContext, "edit-entry") %>', true, 800);
+		<portlet:namespace />openWindow(uri, '<%= UnicodeLanguageUtil.get(request, "edit-entry") %>', true, 800);
 	}
 
 	function <portlet:namespace />handleEntry(entryId) {
@@ -154,7 +163,7 @@
 	function <portlet:namespace />manageEntries() {
 		<portlet:renderURL var="manageEntriesURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="mvcPath" value="/manage_entries.jsp" /></portlet:renderURL>
 
-		<portlet:namespace />openWindow('<%= manageEntriesURL %>', '<%= LanguageUtil.get(pageContext, "manage-entries") %>', true, 800);
+		<portlet:namespace />openWindow('<%= manageEntriesURL %>', '<%= UnicodeLanguageUtil.get(request, "manage-entries") %>', true, 800);
 	}
 
 	function <portlet:namespace />markEntry(entryId) {
@@ -176,14 +185,16 @@
 			{
 				cache: false,
 				dialog: {
-					align: Liferay.Util.Window.ALIGN_CENTER,
-					modal: modal,
-					on: {
-						close: function() {
-							Liferay.Announcements.updateEntries(false, null);
-							Liferay.Announcements.updateEntries(true, null);
+					after: {
+						visibleChange: function(event) {
+							if (!event.currentTarget.get('visible')) {
+								Liferay.Announcements.updateEntries(false, null);
+								Liferay.Announcements.updateEntries(true, null);
+							}
 						}
 					},
+					align: Liferay.Util.Window.ALIGN_CENTER,
+					modal: modal,
 					width: width
 				},
 				id: '<portlet:namespace />Dialog',

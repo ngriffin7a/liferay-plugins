@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -18,16 +18,16 @@ import com.liferay.calendar.model.CalendarNotificationTemplate;
 import com.liferay.calendar.service.CalendarNotificationTemplateLocalServiceUtil;
 
 import com.liferay.portal.kernel.dao.orm.BaseActionableDynamicQuery;
-import com.liferay.portal.kernel.exception.SystemException;
 
 /**
  * @author Eduardo Lundgren
+ * @deprecated As of 7.0.0, replaced by {@link CalendarNotificationTemplateLocalServiceUtil#getActionableDynamicQuery()}
  * @generated
  */
+@Deprecated
 public abstract class CalendarNotificationTemplateActionableDynamicQuery
 	extends BaseActionableDynamicQuery {
-	public CalendarNotificationTemplateActionableDynamicQuery()
-		throws SystemException {
+	public CalendarNotificationTemplateActionableDynamicQuery() {
 		setBaseLocalService(CalendarNotificationTemplateLocalServiceUtil.getService());
 		setClass(CalendarNotificationTemplate.class);
 

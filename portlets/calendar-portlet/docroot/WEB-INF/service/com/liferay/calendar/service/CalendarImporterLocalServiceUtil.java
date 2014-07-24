@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -48,13 +48,15 @@ public class CalendarImporterLocalServiceUtil {
 		return getService().getBeanIdentifier();
 	}
 
-	/**
-	* Sets the Spring bean ID for this bean.
-	*
-	* @param beanIdentifier the Spring bean ID for this bean
-	*/
-	public static void setBeanIdentifier(java.lang.String beanIdentifier) {
-		getService().setBeanIdentifier(beanIdentifier);
+	public static void importCalEvent(
+		com.liferay.portlet.calendar.model.CalEvent calEvent)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService().importCalEvent(calEvent);
+	}
+
+	public static void importCalEvents()
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService().importCalEvents();
 	}
 
 	public static java.lang.Object invokeMethod(java.lang.String name,
@@ -63,17 +65,13 @@ public class CalendarImporterLocalServiceUtil {
 		return getService().invokeMethod(name, parameterTypes, arguments);
 	}
 
-	public static void importCalEvent(
-		com.liferay.portlet.calendar.model.CalEvent calEvent)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		getService().importCalEvent(calEvent);
-	}
-
-	public static void importCalEvents()
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		getService().importCalEvents();
+	/**
+	* Sets the Spring bean ID for this bean.
+	*
+	* @param beanIdentifier the Spring bean ID for this bean
+	*/
+	public static void setBeanIdentifier(java.lang.String beanIdentifier) {
+		getService().setBeanIdentifier(beanIdentifier);
 	}
 
 	public static void clearService() {
@@ -102,6 +100,7 @@ public class CalendarImporterLocalServiceUtil {
 	/**
 	 * @deprecated As of 6.2.0
 	 */
+	@Deprecated
 	public void setService(CalendarImporterLocalService service) {
 	}
 

@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -22,7 +22,7 @@
 <%
 boolean readEntries = ParamUtil.getBoolean(request, "readEntries", true);
 
-int flagValue = AnnouncementsFlagConstants.NOT_HIDDEN;;
+int flagValue = AnnouncementsFlagConstants.NOT_HIDDEN;
 
 if (readEntries) {
 	flagValue = AnnouncementsFlagConstants.HIDDEN;
@@ -64,28 +64,30 @@ int end = ParamUtil.getInteger(request, "end", start + pageDelta);
 
 int total = AnnouncementsEntryLocalServiceUtil.getEntriesCount(user.getUserId(), scopes, portletName.equals(PortletKeys.ALERTS), flagValue);
 
-if ((start >= total) && (start != 0)) {
-	start -= pageDelta;
+int[] startAndEnd = SearchPaginationUtil.calculateStartAndEnd(start, end, total);
 
-	end = start + pageDelta;
-}
-
-List<AnnouncementsEntry> results = AnnouncementsEntryLocalServiceUtil.getEntries(user.getUserId(), scopes, portletName.equals(PortletKeys.ALERTS), flagValue, start, end);
+List<AnnouncementsEntry> results = AnnouncementsEntryLocalServiceUtil.getEntries(user.getUserId(), scopes, portletName.equals(PortletKeys.ALERTS), flagValue, startAndEnd[0], startAndEnd[1]);
 %>
+
+<c:if test="<%= results.isEmpty() && !readEntries %>">
+	<div class="no-announcements">
+		<liferay-ui:message key="there-are-no-new-announcements" />
+	</div>
+</c:if>
 
 <div class="entries <%= readEntries ? "read-entries" : "unread-entries" %>" data-start="<%= start %>">
 	<c:choose>
 		<c:when test="<%= readEntries %>">
 			<c:if test="<%= themeDisplay.isSignedIn() && !results.isEmpty() %>">
 				<div class="header">
-					<span><%= LanguageUtil.get(pageContext, "read-entries") %></span>
+					<span><%= LanguageUtil.get(request, "read-entries") %></span>
 				</div>
 
 				<%
 				boolean expanded = ParamUtil.getBoolean(request, "expanded");
 				%>
 
-				<div class="content aui-toggler-content aui-toggler-content-<%= expanded ? "expanded" : "collapsed" %>">
+				<div class="content toggler-content toggler-content-<%= expanded ? "expanded" : "collapsed" %>">
 					<%@ include file="/entry_iterator.jspf" %>
 				</div>
 

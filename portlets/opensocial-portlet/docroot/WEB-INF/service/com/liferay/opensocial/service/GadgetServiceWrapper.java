@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -29,6 +29,22 @@ public class GadgetServiceWrapper implements GadgetService,
 		_gadgetService = gadgetService;
 	}
 
+	@Override
+	public com.liferay.opensocial.model.Gadget addGadget(long companyId,
+		java.lang.String url, java.lang.String portletCategoryNames,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _gadgetService.addGadget(companyId, url, portletCategoryNames,
+			serviceContext);
+	}
+
+	@Override
+	public void deleteGadget(long gadgetId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		_gadgetService.deleteGadget(gadgetId, serviceContext);
+	}
+
 	/**
 	* Returns the Spring bean ID for this bean.
 	*
@@ -37,6 +53,13 @@ public class GadgetServiceWrapper implements GadgetService,
 	@Override
 	public java.lang.String getBeanIdentifier() {
 		return _gadgetService.getBeanIdentifier();
+	}
+
+	@Override
+	public java.lang.Object invokeMethod(java.lang.String name,
+		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
+		throws java.lang.Throwable {
+		return _gadgetService.invokeMethod(name, parameterTypes, arguments);
 	}
 
 	/**
@@ -50,36 +73,10 @@ public class GadgetServiceWrapper implements GadgetService,
 	}
 
 	@Override
-	public java.lang.Object invokeMethod(java.lang.String name,
-		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
-		throws java.lang.Throwable {
-		return _gadgetService.invokeMethod(name, parameterTypes, arguments);
-	}
-
-	@Override
-	public com.liferay.opensocial.model.Gadget addGadget(long companyId,
-		java.lang.String url, java.lang.String portletCategoryNames,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return _gadgetService.addGadget(companyId, url, portletCategoryNames,
-			serviceContext);
-	}
-
-	@Override
-	public void deleteGadget(long gadgetId,
-		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		_gadgetService.deleteGadget(gadgetId, serviceContext);
-	}
-
-	@Override
 	public void updateGadget(long gadgetId,
 		java.lang.String portletCategoryNames,
 		com.liferay.portal.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		_gadgetService.updateGadget(gadgetId, portletCategoryNames,
 			serviceContext);
 	}
@@ -87,6 +84,7 @@ public class GadgetServiceWrapper implements GadgetService,
 	/**
 	 * @deprecated As of 6.1.0, replaced by {@link #getWrappedService}
 	 */
+	@Deprecated
 	public GadgetService getWrappedGadgetService() {
 		return _gadgetService;
 	}
@@ -94,6 +92,7 @@ public class GadgetServiceWrapper implements GadgetService,
 	/**
 	 * @deprecated As of 6.1.0, replaced by {@link #setWrappedService}
 	 */
+	@Deprecated
 	public void setWrappedGadgetService(GadgetService gadgetService) {
 		_gadgetService = gadgetService;
 	}

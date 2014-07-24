@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -24,16 +24,14 @@ import com.liferay.calendar.util.CalendarResourceUtil;
 import com.liferay.calendar.util.PortletKeys;
 import com.liferay.calendar.util.WebKeys;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portlet.PortletURLFactoryUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.asset.model.BaseAssetRendererFactory;
 
-import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 
 /**
@@ -45,9 +43,13 @@ public class CalendarBookingAssetRendererFactory
 
 	public static final String TYPE = "calendar";
 
+	public CalendarBookingAssetRendererFactory() {
+		setLinkable(true);
+	}
+
 	@Override
 	public AssetRenderer getAssetRenderer(long classPK, int type)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		CalendarBooking calendarBooking =
 			CalendarBookingLocalServiceUtil.getCalendarBooking(classPK);
@@ -66,6 +68,11 @@ public class CalendarBookingAssetRendererFactory
 	}
 
 	@Override
+	public String getIconCssClass() {
+		return "icon-calendar";
+	}
+
+	@Override
 	public String getType() {
 		return TYPE;
 	}
@@ -74,38 +81,55 @@ public class CalendarBookingAssetRendererFactory
 	public PortletURL getURLAdd(
 			LiferayPortletRequest liferayPortletRequest,
 			LiferayPortletResponse liferayPortletResponse)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		ThemeDisplay themeDisplay =
 			(ThemeDisplay)liferayPortletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
 		CalendarResource calendarResource =
-			CalendarResourceUtil.getGroupCalendarResource(
+			CalendarResourceUtil.getScopeGroupCalendarResource(
 				liferayPortletRequest, themeDisplay.getScopeGroupId());
 
 		if (calendarResource == null) {
 			return null;
 		}
 
-		Calendar calendar = calendarResource.getDefaultCalendar();
-
-		if (!CalendarPermission.contains(
-				themeDisplay.getPermissionChecker(), calendar.getCalendarId(),
-				ActionKeys.ADD_CALENDAR)) {
-
-			return null;
-		}
-
-		PortletURL portletURL = PortletURLFactoryUtil.create(
-			liferayPortletRequest, PortletKeys.CALENDAR,
-			getControlPanelPlid(themeDisplay), PortletRequest.RENDER_PHASE);
+		PortletURL portletURL = liferayPortletResponse.createRenderURL(
+			PortletKeys.CALENDAR);
 
 		portletURL.setParameter("mvcPath", "/edit_calendar_booking.jsp");
+
+		Calendar calendar = calendarResource.getDefaultCalendar();
+
 		portletURL.setParameter(
 			"calendarId", String.valueOf(calendar.getCalendarId()));
 
 		return portletURL;
+	}
+
+	@Override
+	public boolean hasAddPermission(
+			PermissionChecker permissionChecker, long groupId, long classTypeId)
+		throws Exception {
+
+		ServiceContext serviceContext = new ServiceContext();
+
+		serviceContext.setCompanyId(permissionChecker.getCompanyId());
+
+		CalendarResource calendarResource =
+			CalendarResourceUtil.getScopeGroupCalendarResource(
+				groupId, serviceContext);
+
+		if (calendarResource == null) {
+			return false;
+		}
+
+		Calendar calendar = calendarResource.getDefaultCalendar();
+
+		return CalendarPermission.contains(
+			permissionChecker, calendar.getCalendarId(),
+			ActionKeys.MANAGE_BOOKINGS);
 	}
 
 	@Override
@@ -127,15 +151,8 @@ public class CalendarBookingAssetRendererFactory
 	}
 
 	@Override
-	public boolean isLinkable() {
-		return _LINKABLE;
-	}
-
-	@Override
 	protected String getIconPath(ThemeDisplay themeDisplay) {
 		return themeDisplay.getPathThemeImages() + "/common/date.png";
 	}
-
-	private static final boolean _LINKABLE = true;
 
 }

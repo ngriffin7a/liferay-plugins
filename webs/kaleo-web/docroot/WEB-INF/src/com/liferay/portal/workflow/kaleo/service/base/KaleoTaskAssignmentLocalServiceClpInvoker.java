@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -88,67 +88,77 @@ public class KaleoTaskAssignmentLocalServiceClpInvoker {
 
 		_methodParameterTypes11 = new String[] { "long" };
 
-		_methodName12 = "getPersistedModel";
+		_methodName12 = "getActionableDynamicQuery";
 
-		_methodParameterTypes12 = new String[] { "java.io.Serializable" };
+		_methodParameterTypes12 = new String[] {  };
 
-		_methodName13 = "getKaleoTaskAssignments";
+		_methodName14 = "deletePersistedModel";
 
-		_methodParameterTypes13 = new String[] { "int", "int" };
+		_methodParameterTypes14 = new String[] {
+				"com.liferay.portal.model.PersistedModel"
+			};
 
-		_methodName14 = "getKaleoTaskAssignmentsCount";
+		_methodName15 = "getPersistedModel";
 
-		_methodParameterTypes14 = new String[] {  };
+		_methodParameterTypes15 = new String[] { "java.io.Serializable" };
 
-		_methodName15 = "updateKaleoTaskAssignment";
+		_methodName16 = "getKaleoTaskAssignments";
 
-		_methodParameterTypes15 = new String[] {
+		_methodParameterTypes16 = new String[] { "int", "int" };
+
+		_methodName17 = "getKaleoTaskAssignmentsCount";
+
+		_methodParameterTypes17 = new String[] {  };
+
+		_methodName18 = "updateKaleoTaskAssignment";
+
+		_methodParameterTypes18 = new String[] {
 				"com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignment"
 			};
 
-		_methodName102 = "getBeanIdentifier";
+		_methodName111 = "getBeanIdentifier";
 
-		_methodParameterTypes102 = new String[] {  };
+		_methodParameterTypes111 = new String[] {  };
 
-		_methodName103 = "setBeanIdentifier";
+		_methodName112 = "setBeanIdentifier";
 
-		_methodParameterTypes103 = new String[] { "java.lang.String" };
+		_methodParameterTypes112 = new String[] { "java.lang.String" };
 
-		_methodName108 = "addKaleoTaskAssignment";
+		_methodName117 = "addKaleoTaskAssignment";
 
-		_methodParameterTypes108 = new String[] {
+		_methodParameterTypes117 = new String[] {
 				"java.lang.String", "long", "long",
 				"com.liferay.portal.workflow.kaleo.definition.Assignment",
 				"com.liferay.portal.service.ServiceContext"
 			};
 
-		_methodName109 = "deleteCompanyKaleoTaskAssignments";
+		_methodName118 = "deleteCompanyKaleoTaskAssignments";
 
-		_methodParameterTypes109 = new String[] { "long" };
+		_methodParameterTypes118 = new String[] { "long" };
 
-		_methodName110 = "deleteKaleoDefinitionKaleoTaskAssignments";
+		_methodName119 = "deleteKaleoDefinitionKaleoTaskAssignments";
 
-		_methodParameterTypes110 = new String[] { "long" };
+		_methodParameterTypes119 = new String[] { "long" };
 
-		_methodName111 = "getKaleoTaskAssignments";
+		_methodName120 = "getKaleoTaskAssignments";
 
-		_methodParameterTypes111 = new String[] { "long" };
+		_methodParameterTypes120 = new String[] { "long" };
 
-		_methodName112 = "getKaleoTaskAssignments";
+		_methodName121 = "getKaleoTaskAssignments";
 
-		_methodParameterTypes112 = new String[] { "long", "java.lang.String" };
+		_methodParameterTypes121 = new String[] { "long", "java.lang.String" };
 
-		_methodName113 = "getKaleoTaskAssignments";
+		_methodName122 = "getKaleoTaskAssignments";
 
-		_methodParameterTypes113 = new String[] { "java.lang.String", "long" };
+		_methodParameterTypes122 = new String[] { "java.lang.String", "long" };
 
-		_methodName114 = "getKaleoTaskAssignmentsCount";
+		_methodName123 = "getKaleoTaskAssignmentsCount";
 
-		_methodParameterTypes114 = new String[] { "long" };
+		_methodParameterTypes123 = new String[] { "long" };
 
-		_methodName115 = "getKaleoTaskAssignmentsCount";
+		_methodName124 = "getKaleoTaskAssignmentsCount";
 
-		_methodParameterTypes115 = new String[] { "long", "java.lang.String" };
+		_methodParameterTypes124 = new String[] { "long", "java.lang.String" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -195,7 +205,7 @@ public class KaleoTaskAssignmentLocalServiceClpInvoker {
 			return KaleoTaskAssignmentLocalServiceUtil.dynamicQuery((com.liferay.portal.kernel.dao.orm.DynamicQuery)arguments[0],
 				((Integer)arguments[1]).intValue(),
 				((Integer)arguments[2]).intValue(),
-				(com.liferay.portal.kernel.util.OrderByComparator)arguments[3]);
+				(com.liferay.portal.kernel.util.OrderByComparator<?>)arguments[3]);
 		}
 
 		if (_methodName8.equals(name) &&
@@ -221,39 +231,49 @@ public class KaleoTaskAssignmentLocalServiceClpInvoker {
 
 		if (_methodName12.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes12, parameterTypes)) {
-			return KaleoTaskAssignmentLocalServiceUtil.getPersistedModel((java.io.Serializable)arguments[0]);
-		}
-
-		if (_methodName13.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes13, parameterTypes)) {
-			return KaleoTaskAssignmentLocalServiceUtil.getKaleoTaskAssignments(((Integer)arguments[0]).intValue(),
-				((Integer)arguments[1]).intValue());
+			return KaleoTaskAssignmentLocalServiceUtil.getActionableDynamicQuery();
 		}
 
 		if (_methodName14.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes14, parameterTypes)) {
-			return KaleoTaskAssignmentLocalServiceUtil.getKaleoTaskAssignmentsCount();
+			return KaleoTaskAssignmentLocalServiceUtil.deletePersistedModel((com.liferay.portal.model.PersistedModel)arguments[0]);
 		}
 
 		if (_methodName15.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes15, parameterTypes)) {
+			return KaleoTaskAssignmentLocalServiceUtil.getPersistedModel((java.io.Serializable)arguments[0]);
+		}
+
+		if (_methodName16.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes16, parameterTypes)) {
+			return KaleoTaskAssignmentLocalServiceUtil.getKaleoTaskAssignments(((Integer)arguments[0]).intValue(),
+				((Integer)arguments[1]).intValue());
+		}
+
+		if (_methodName17.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes17, parameterTypes)) {
+			return KaleoTaskAssignmentLocalServiceUtil.getKaleoTaskAssignmentsCount();
+		}
+
+		if (_methodName18.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes18, parameterTypes)) {
 			return KaleoTaskAssignmentLocalServiceUtil.updateKaleoTaskAssignment((com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignment)arguments[0]);
 		}
 
-		if (_methodName102.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes102, parameterTypes)) {
+		if (_methodName111.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes111, parameterTypes)) {
 			return KaleoTaskAssignmentLocalServiceUtil.getBeanIdentifier();
 		}
 
-		if (_methodName103.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes103, parameterTypes)) {
+		if (_methodName112.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes112, parameterTypes)) {
 			KaleoTaskAssignmentLocalServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
 
 			return null;
 		}
 
-		if (_methodName108.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes108, parameterTypes)) {
+		if (_methodName117.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes117, parameterTypes)) {
 			return KaleoTaskAssignmentLocalServiceUtil.addKaleoTaskAssignment((java.lang.String)arguments[0],
 				((Long)arguments[1]).longValue(),
 				((Long)arguments[2]).longValue(),
@@ -261,44 +281,44 @@ public class KaleoTaskAssignmentLocalServiceClpInvoker {
 				(com.liferay.portal.service.ServiceContext)arguments[4]);
 		}
 
-		if (_methodName109.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes109, parameterTypes)) {
+		if (_methodName118.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes118, parameterTypes)) {
 			KaleoTaskAssignmentLocalServiceUtil.deleteCompanyKaleoTaskAssignments(((Long)arguments[0]).longValue());
 
 			return null;
 		}
 
-		if (_methodName110.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes110, parameterTypes)) {
+		if (_methodName119.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes119, parameterTypes)) {
 			KaleoTaskAssignmentLocalServiceUtil.deleteKaleoDefinitionKaleoTaskAssignments(((Long)arguments[0]).longValue());
 
 			return null;
 		}
 
-		if (_methodName111.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes111, parameterTypes)) {
+		if (_methodName120.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes120, parameterTypes)) {
 			return KaleoTaskAssignmentLocalServiceUtil.getKaleoTaskAssignments(((Long)arguments[0]).longValue());
 		}
 
-		if (_methodName112.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes112, parameterTypes)) {
+		if (_methodName121.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes121, parameterTypes)) {
 			return KaleoTaskAssignmentLocalServiceUtil.getKaleoTaskAssignments(((Long)arguments[0]).longValue(),
 				(java.lang.String)arguments[1]);
 		}
 
-		if (_methodName113.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes113, parameterTypes)) {
+		if (_methodName122.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes122, parameterTypes)) {
 			return KaleoTaskAssignmentLocalServiceUtil.getKaleoTaskAssignments((java.lang.String)arguments[0],
 				((Long)arguments[1]).longValue());
 		}
 
-		if (_methodName114.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes114, parameterTypes)) {
+		if (_methodName123.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes123, parameterTypes)) {
 			return KaleoTaskAssignmentLocalServiceUtil.getKaleoTaskAssignmentsCount(((Long)arguments[0]).longValue());
 		}
 
-		if (_methodName115.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes115, parameterTypes)) {
+		if (_methodName124.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes124, parameterTypes)) {
 			return KaleoTaskAssignmentLocalServiceUtil.getKaleoTaskAssignmentsCount(((Long)arguments[0]).longValue(),
 				(java.lang.String)arguments[1]);
 		}
@@ -332,30 +352,34 @@ public class KaleoTaskAssignmentLocalServiceClpInvoker {
 	private String[] _methodParameterTypes11;
 	private String _methodName12;
 	private String[] _methodParameterTypes12;
-	private String _methodName13;
-	private String[] _methodParameterTypes13;
 	private String _methodName14;
 	private String[] _methodParameterTypes14;
 	private String _methodName15;
 	private String[] _methodParameterTypes15;
-	private String _methodName102;
-	private String[] _methodParameterTypes102;
-	private String _methodName103;
-	private String[] _methodParameterTypes103;
-	private String _methodName108;
-	private String[] _methodParameterTypes108;
-	private String _methodName109;
-	private String[] _methodParameterTypes109;
-	private String _methodName110;
-	private String[] _methodParameterTypes110;
+	private String _methodName16;
+	private String[] _methodParameterTypes16;
+	private String _methodName17;
+	private String[] _methodParameterTypes17;
+	private String _methodName18;
+	private String[] _methodParameterTypes18;
 	private String _methodName111;
 	private String[] _methodParameterTypes111;
 	private String _methodName112;
 	private String[] _methodParameterTypes112;
-	private String _methodName113;
-	private String[] _methodParameterTypes113;
-	private String _methodName114;
-	private String[] _methodParameterTypes114;
-	private String _methodName115;
-	private String[] _methodParameterTypes115;
+	private String _methodName117;
+	private String[] _methodParameterTypes117;
+	private String _methodName118;
+	private String[] _methodParameterTypes118;
+	private String _methodName119;
+	private String[] _methodParameterTypes119;
+	private String _methodName120;
+	private String[] _methodParameterTypes120;
+	private String _methodName121;
+	private String[] _methodParameterTypes121;
+	private String _methodName122;
+	private String[] _methodParameterTypes122;
+	private String _methodName123;
+	private String[] _methodParameterTypes123;
+	private String _methodName124;
+	private String[] _methodParameterTypes124;
 }

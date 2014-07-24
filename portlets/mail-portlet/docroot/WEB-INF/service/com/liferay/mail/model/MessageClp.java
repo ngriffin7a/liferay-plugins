@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -18,13 +18,16 @@ import com.liferay.mail.service.ClpSerializer;
 import com.liferay.mail.service.MessageLocalServiceUtil;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.DateUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.BaseModel;
+import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.BaseModelImpl;
-import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 
 import java.io.Serializable;
 
@@ -94,6 +97,9 @@ public class MessageClp extends BaseModelImpl<Message> implements Message {
 		attributes.put("flags", getFlags());
 		attributes.put("size", getSize());
 		attributes.put("remoteMessageId", getRemoteMessageId());
+
+		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
+		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -213,6 +219,9 @@ public class MessageClp extends BaseModelImpl<Message> implements Message {
 		if (remoteMessageId != null) {
 			setRemoteMessageId(remoteMessageId);
 		}
+
+		_entityCacheEnabled = GetterUtil.getBoolean("entityCacheEnabled");
+		_finderCacheEnabled = GetterUtil.getBoolean("finderCacheEnabled");
 	}
 
 	@Override
@@ -285,13 +294,19 @@ public class MessageClp extends BaseModelImpl<Message> implements Message {
 	}
 
 	@Override
-	public String getUserUuid() throws SystemException {
-		return PortalUtil.getUserValue(getUserId(), "uuid", _userUuid);
+	public String getUserUuid() {
+		try {
+			User user = UserLocalServiceUtil.getUserById(getUserId());
+
+			return user.getUuid();
+		}
+		catch (PortalException pe) {
+			return StringPool.BLANK;
+		}
 	}
 
 	@Override
 	public void setUserUuid(String userUuid) {
-		_userUuid = userUuid;
 	}
 
 	@Override
@@ -750,7 +765,7 @@ public class MessageClp extends BaseModelImpl<Message> implements Message {
 	}
 
 	@Override
-	public void persist() throws SystemException {
+	public void persist() {
 		if (this.isNew()) {
 			MessageLocalServiceUtil.addMessage(this);
 		}
@@ -827,9 +842,23 @@ public class MessageClp extends BaseModelImpl<Message> implements Message {
 		}
 	}
 
+	public Class<?> getClpSerializerClass() {
+		return _clpSerializerClass;
+	}
+
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	@Override
+	public boolean isEntityCacheEnabled() {
+		return _entityCacheEnabled;
+	}
+
+	@Override
+	public boolean isFinderCacheEnabled() {
+		return _finderCacheEnabled;
 	}
 
 	@Override
@@ -972,7 +1001,6 @@ public class MessageClp extends BaseModelImpl<Message> implements Message {
 	private long _messageId;
 	private long _companyId;
 	private long _userId;
-	private String _userUuid;
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
@@ -990,4 +1018,7 @@ public class MessageClp extends BaseModelImpl<Message> implements Message {
 	private long _size;
 	private long _remoteMessageId;
 	private BaseModel<?> _messageRemoteModel;
+	private Class<?> _clpSerializerClass = com.liferay.mail.service.ClpSerializer.class;
+	private boolean _entityCacheEnabled;
+	private boolean _finderCacheEnabled;
 }

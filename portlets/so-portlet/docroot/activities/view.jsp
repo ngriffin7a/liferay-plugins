@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -27,7 +27,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 portletURL.setParameter("tabs1", tabs1);
 %>
 
-<c:if test="<%= group.isUser() %>">
+<c:if test="<%= group.isUser() && layout.isPrivateLayout() %>">
 	<liferay-ui:tabs
 		names="all,connections,following,my-sites,me"
 		url="<%= portletURL.toString() %>"
@@ -39,7 +39,7 @@ portletURL.setParameter("tabs1", tabs1);
 
 <div class="loading-bar"></div>
 
-<aui:script use="aui-base,aui-io-request,aui-parse-content,liferay-so-scroll">
+<aui:script use="aui-base,aui-io-request-deprecated,aui-parse-content,liferay-so-scroll">
 	var activities = A.one('#p_p_id<portlet:namespace />');
 	var body = A.getBody();
 
@@ -68,13 +68,21 @@ portletURL.setParameter("tabs1", tabs1);
 		setTimeout(
 			function() {
 				<portlet:renderURL var="viewActivitySetsURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
-					<portlet:param name="mvcPath" value="/activities/view_activity_sets.jsp" />
+					<c:choose>
+						<c:when test="<%= GetterUtil.getBoolean(PropsUtil.get(PropsKeys.SOCIAL_ACTIVITY_SETS_ENABLED)) %>">
+							<portlet:param name="mvcPath" value="/activities/view_activity_sets.jsp" />
+						</c:when>
+						<c:otherwise>
+							<portlet:param name="mvcPath" value="/activities/view_activities.jsp" />
+						</c:otherwise>
+					</c:choose>
+
 					<portlet:param name="tabs1" value="<%= tabs1 %>" />
 				</portlet:renderURL>
 
 				var uri = '<%= viewActivitySetsURL %>';
 
-				uri = Liferay.Util.addParams('start=' + start, uri) || uri;
+				uri = Liferay.Util.addParams('<portlet:namespace />start=' + start, uri) || uri;
 
 				A.io.request(
 					uri,
@@ -91,8 +99,20 @@ portletURL.setParameter("tabs1", tabs1);
 
 								loading = false;
 
-								if ((body.height() < win.height()) && !activities.one('.no-activities')) {
-									loadNewContent();
+								if (!activities.one('.no-activities')) {
+									if (body.height() < win.height()) {
+										loadNewContent();
+									}
+									else if (win.width() < 768) {
+										loading = true;
+
+										var manualLoaderTemplate =
+											'<div class="manual-loader">' +
+												'<button href="javascript:;"><liferay-ui:message key="load-more-activities" /></button>' +
+											'</div>';
+
+										socialActivities.append(manualLoaderTemplate);
+									}
 								}
 							}
 						}
@@ -120,7 +140,19 @@ portletURL.setParameter("tabs1", tabs1);
 		}
 	);
 
-	activities.delegate(
+	socialActivities.delegate(
+		'click',
+		function(event) {
+			var manualLoader = socialActivities.one('.manual-loader');
+
+			manualLoader.remove(true);
+
+			loadNewContent();
+		},
+		'.manual-loader button'
+	)
+
+	socialActivities.delegate(
 		'click',
 		function(event) {
 			var currentTarget = event.currentTarget;
@@ -131,15 +163,13 @@ portletURL.setParameter("tabs1", tabs1);
 
 			var commentsList = commentsContainer.one('.comments-list');
 
-			var commentEntry = commentsList.one('.comment-entry');
-
-			if (commentEntry) {
+			if (commentsList.attr('loaded')) {
 				commentsList.toggle();
 			}
 			else {
 				var uri = '<liferay-portlet:resourceURL id="getComments"></liferay-portlet:resourceURL>';
 
-				uri = Liferay.Util.addParams('activitySetId=' + currentTarget.getAttribute('data-activitySetId'), uri) || uri;
+				uri = Liferay.Util.addParams('<portlet:namespace />activitySetId=' + currentTarget.getAttribute('data-activitySetId'), uri) || uri;
 
 				A.io.request(
 					uri,
@@ -149,27 +179,33 @@ portletURL.setParameter("tabs1", tabs1);
 								var responseData = this.get('responseData');
 
 								if (responseData) {
+									commentsList.empty();
+
 									A.Array.each(
 										responseData.comments,
-										function(item, index, collection) {
+										function(item, index) {
 											Liferay.SO.Activities.addNewComment(commentsList, item);
 										}
 									);
+
+									commentsList.attr('loaded', 'true');
 								}
 							}
 						},
-						dataType: 'json',
+						dataType: 'JSON'
 					}
 				);
 			}
+
+			commentsContainer.one('.comment-form').focus();
 		},
 		'.view-comments a'
 	);
 
-	activities.delegate(
+	socialActivities.delegate(
 		'click',
 		function(event) {
-			if (confirm('<%= UnicodeLanguageUtil.get(pageContext,"are-you-sure-you-want-to-delete-the-selected-entry") %>')) {
+			if (confirm('<%= UnicodeLanguageUtil.get(request,"are-you-sure-you-want-to-delete-the-selected-entry") %>')) {
 				var currentTarget = event.currentTarget;
 
 				var activityFooter = currentTarget.ancestor('.activity-footer');
@@ -211,17 +247,17 @@ portletURL.setParameter("tabs1", tabs1);
 									}
 
 									if (messagesCount > 1) {
-										commentText += ' <%= UnicodeLanguageUtil.get(pageContext, "comments") %>';
+										commentText += ' <%= UnicodeLanguageUtil.get(request, "comments") %>';
 									}
 									else {
-										commentText += ' <%= UnicodeLanguageUtil.get(pageContext, "comment") %>';
+										commentText += ' <%= UnicodeLanguageUtil.get(request, "comment") %>';
 									}
 
 									viewComments.html(commentText);
 								}
 							}
 						},
-						dataType: 'json',
+						dataType: 'JSON',
 						form: {
 							id: form
 						}
@@ -232,14 +268,16 @@ portletURL.setParameter("tabs1", tabs1);
 		'.comment-entry .delete-comment a'
 	);
 
-	activities.delegate(
+	socialActivities.delegate(
 		'click',
 		function(event) {
 			var currentTarget = event.currentTarget;
 
 			var mbMessageIdOrMicroblogsEntryId = currentTarget.getAttribute('data-mbMessageIdOrMicroblogsEntryId');
 
-			var editForm = A.one('#<portlet:namespace />fm1' + mbMessageIdOrMicroblogsEntryId);
+			var commentsContainer = currentTarget.ancestor('.comments-container');
+
+			var editForm = commentsContainer.one('#<portlet:namespace />fm1' + mbMessageIdOrMicroblogsEntryId);
 
 			var commentEntry = currentTarget.ancestor('.comment-entry');
 
@@ -251,8 +289,6 @@ portletURL.setParameter("tabs1", tabs1);
 				editForm.toggle();
 			}
 			else {
-				var commentsContainer = currentTarget.ancestor('.comments-container');
-
 				editForm = commentsContainer.one('form').cloneNode(true);
 
 				editForm.show();
@@ -263,6 +299,12 @@ portletURL.setParameter("tabs1", tabs1);
 						name: '<portlet:namespace />fm1' + mbMessageIdOrMicroblogsEntryId
 					}
 				);
+
+				var userPortrait = editForm.one('.user-portrait');
+
+				if (userPortrait) {
+					userPortrait.remove();
+				}
 
 				var cmdInput = editForm.one('#<portlet:namespace /><%= Constants.CMD %>');
 
@@ -300,7 +342,7 @@ portletURL.setParameter("tabs1", tabs1);
 										}
 									}
 								},
-								dataType: 'json',
+								dataType: 'JSON',
 								form: {
 									id: editForm
 								}
@@ -319,14 +361,14 @@ portletURL.setParameter("tabs1", tabs1);
 		'.comment-entry .edit-comment a'
 	);
 
-	activities.delegate(
+	socialActivities.delegate(
 		'click',
 		function(event) {
 			var currentTarget = event.currentTarget;
 
 			var uri = '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="mvcPath" value="/activities/repost_microblogs_entry.jsp" /><portlet:param name="mvcPath" value="/activities/repost_microblogs_entry.jsp" /><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:renderURL>';
 
-			uri = Liferay.Util.addParams('microblogsEntryId=' + currentTarget.getAttribute('data-microblogsEntryId'), uri) || uri;
+			uri = Liferay.Util.addParams('<portlet:namespace />microblogsEntryId=' + currentTarget.getAttribute('data-microblogsEntryId'), uri) || uri;
 
 			Liferay.Util.openWindow(
 				{
@@ -337,7 +379,7 @@ portletURL.setParameter("tabs1", tabs1);
 						width: 400
 					},
 					id: '<portlet:namespace />Dialog',
-					title: '<%= UnicodeLanguageUtil.get(pageContext, "repost") %>',
+					title: '<%= UnicodeLanguageUtil.get(request, "repost") %>',
 					uri: uri
 				}
 			);
@@ -345,11 +387,29 @@ portletURL.setParameter("tabs1", tabs1);
 		'.repost a'
 	);
 
-	activities.delegate(
+	socialActivities.delegate(
 		'click',
 		function(event) {
 			Liferay.SO.Activities.toggleEntry(event, '<portlet:namespace />');
 		},
 		'.toggle-entry'
+	);
+
+	Liferay.on(
+		'microblogPosted',
+		function(event) {
+			Liferay.Portlet.refresh('#p_p_id<portlet:namespace />');
+		}
+	);
+
+	Liferay.on(
+		'sessionExpired',
+		function(event) {
+			var reload = function() {
+				window.location.reload();
+			};
+
+			loadNewContent = reload;
+		}
 	);
 </aui:script>

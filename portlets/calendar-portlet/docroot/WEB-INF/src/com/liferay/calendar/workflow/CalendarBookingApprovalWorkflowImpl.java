@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -20,7 +20,6 @@ import com.liferay.calendar.service.CalendarBookingLocalServiceUtil;
 import com.liferay.calendar.service.permission.CalendarPermission;
 import com.liferay.calendar.util.ActionKeys;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
 
@@ -39,7 +38,7 @@ public class CalendarBookingApprovalWorkflowImpl
 	@Override
 	public Map<Long, List<String>> getActionNames(
 			PermissionChecker permissionChecker, long[] calendarBookingIds)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		Map<Long, List<String>> actionNames =
 			new LinkedHashMap<Long, List<String>>();
@@ -72,59 +71,37 @@ public class CalendarBookingApprovalWorkflowImpl
 
 	@Override
 	public void invokeTransition(
-			long userId, long calendarBookingId, int status,
+			long userId, CalendarBooking calendarBooking, int status,
 			ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		if (status == CalendarBookingWorkflowConstants.STATUS_PENDING) {
-			CalendarBooking calendarBooking =
-				CalendarBookingLocalServiceUtil.getCalendarBooking(
-					calendarBookingId);
-
 			if (isAutoApproveCalendarBooking(userId, calendarBooking)) {
-				CalendarBookingLocalServiceUtil.updateStatus(
-					userId, calendarBookingId,
-					CalendarBookingWorkflowConstants.STATUS_APPROVED,
-					serviceContext);
+				status = CalendarBookingWorkflowConstants.STATUS_APPROVED;
 			}
 			else {
-				CalendarBookingLocalServiceUtil.updateStatus(
-					userId, calendarBooking.getCalendarBookingId(),
-					CalendarBookingWorkflowConstants.STATUS_PENDING,
-					serviceContext);
+				status = CalendarBookingWorkflowConstants.STATUS_PENDING;
 			}
 		}
-		else {
-			CalendarBookingLocalServiceUtil.updateStatus(
-				userId, calendarBookingId, status, serviceContext);
-		}
-	}
 
-	@Override
-	public void invokeTransition(
-			long userId, long calendarBookingId, String transitionName,
-			ServiceContext serviceContext)
-		throws PortalException, SystemException {
-
-		int status = CalendarBookingWorkflowConstants.getLabelStatus(
-			transitionName);
-
-		invokeTransition(userId, calendarBookingId, status, serviceContext);
+		CalendarBookingLocalServiceUtil.updateStatus(
+			userId, calendarBooking, status, serviceContext);
 	}
 
 	@Override
 	public void startWorkflow(
-			long userId, long calendarBookingId, ServiceContext serviceContext)
-		throws PortalException, SystemException {
+			long userId, CalendarBooking calendarBooking,
+			ServiceContext serviceContext)
+		throws PortalException {
 
 		invokeTransition(
-			userId, calendarBookingId,
-			CalendarBookingWorkflowConstants.LABEL_PENDING, serviceContext);
+			userId, calendarBooking,
+			CalendarBookingWorkflowConstants.STATUS_PENDING, serviceContext);
 	}
 
 	protected boolean isAutoApproveCalendarBooking(
 			long userId, CalendarBooking calendarBooking)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		if (calendarBooking.getStatus() ==
 				CalendarBookingWorkflowConstants.STATUS_DENIED) {

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -21,22 +21,21 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
  * @author Ryan Park
  */
 public class TasksEntryFinderUtil {
-	public static int countByG_P_A_R_S_T_N(long groupId, int priority,
-		long assigneeUserId, long reporterUserId, int status,
-		long[] assetTagIds, long[] notAssetTagIds)
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public static int countByG_U_P_A_S_T_N(long groupId, long userId,
+		int priority, long assigneeUserId, int status, long[] assetTagIds,
+		long[] notAssetTagIds) {
 		return getFinder()
-				   .countByG_P_A_R_S_T_N(groupId, priority, assigneeUserId,
-			reporterUserId, status, assetTagIds, notAssetTagIds);
+				   .countByG_U_P_A_S_T_N(groupId, userId, priority,
+			assigneeUserId, status, assetTagIds, notAssetTagIds);
 	}
 
-	public static java.util.List<com.liferay.tasks.model.TasksEntry> findByG_P_A_R_S_T_N(
-		long groupId, int priority, long assigneeUserId, long reporterUserId,
+	public static java.util.List<com.liferay.tasks.model.TasksEntry> findByG_U_P_A_S_T_N(
+		long groupId, long userId, int priority, long assigneeUserId,
 		int status, long[] assetTagIds, long[] notAssetTagIds, int start,
-		int end) throws com.liferay.portal.kernel.exception.SystemException {
+		int end) {
 		return getFinder()
-				   .findByG_P_A_R_S_T_N(groupId, priority, assigneeUserId,
-			reporterUserId, status, assetTagIds, notAssetTagIds, start, end);
+				   .findByG_U_P_A_S_T_N(groupId, userId, priority,
+			assigneeUserId, status, assetTagIds, notAssetTagIds, start, end);
 	}
 
 	public static TasksEntryFinder getFinder() {

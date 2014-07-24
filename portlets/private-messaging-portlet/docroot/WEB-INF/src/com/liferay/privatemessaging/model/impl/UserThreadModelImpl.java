@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,29 +15,34 @@
 package com.liferay.privatemessaging.model.impl;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.CacheModel;
+import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.BaseModelImpl;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 
 import com.liferay.portlet.expando.model.ExpandoBridge;
 import com.liferay.portlet.expando.util.ExpandoBridgeFactoryUtil;
 
 import com.liferay.privatemessaging.model.UserThread;
 import com.liferay.privatemessaging.model.UserThreadModel;
+import com.liferay.privatemessaging.model.UserThreadSoap;
 
 import java.io.Serializable;
 
 import java.sql.Types;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -53,6 +58,7 @@ import java.util.Map;
  * @see com.liferay.privatemessaging.model.UserThreadModel
  * @generated
  */
+@JSON(strict = true)
 public class UserThreadModelImpl extends BaseModelImpl<UserThread>
 	implements UserThreadModel {
 	/*
@@ -94,6 +100,54 @@ public class UserThreadModelImpl extends BaseModelImpl<UserThread>
 	public static long READ_COLUMN_BITMASK = 4L;
 	public static long USERID_COLUMN_BITMASK = 8L;
 	public static long MODIFIEDDATE_COLUMN_BITMASK = 16L;
+
+	/**
+	 * Converts the soap model instance into a normal model instance.
+	 *
+	 * @param soapModel the soap model instance to convert
+	 * @return the normal model instance
+	 */
+	public static UserThread toModel(UserThreadSoap soapModel) {
+		if (soapModel == null) {
+			return null;
+		}
+
+		UserThread model = new UserThreadImpl();
+
+		model.setUserThreadId(soapModel.getUserThreadId());
+		model.setCompanyId(soapModel.getCompanyId());
+		model.setUserId(soapModel.getUserId());
+		model.setUserName(soapModel.getUserName());
+		model.setCreateDate(soapModel.getCreateDate());
+		model.setModifiedDate(soapModel.getModifiedDate());
+		model.setMbThreadId(soapModel.getMbThreadId());
+		model.setTopMBMessageId(soapModel.getTopMBMessageId());
+		model.setRead(soapModel.getRead());
+		model.setDeleted(soapModel.getDeleted());
+
+		return model;
+	}
+
+	/**
+	 * Converts the soap model instances into normal model instances.
+	 *
+	 * @param soapModels the soap model instances to convert
+	 * @return the normal model instances
+	 */
+	public static List<UserThread> toModels(UserThreadSoap[] soapModels) {
+		if (soapModels == null) {
+			return null;
+		}
+
+		List<UserThread> models = new ArrayList<UserThread>(soapModels.length);
+
+		for (UserThreadSoap soapModel : soapModels) {
+			models.add(toModel(soapModel));
+		}
+
+		return models;
+	}
+
 	public static final long LOCK_EXPIRATION_TIME = GetterUtil.getLong(com.liferay.util.service.ServiceProps.get(
 				"lock.expiration.time.com.liferay.privatemessaging.model.UserThread"));
 
@@ -144,6 +198,9 @@ public class UserThreadModelImpl extends BaseModelImpl<UserThread>
 		attributes.put("topMBMessageId", getTopMBMessageId());
 		attributes.put("read", getRead());
 		attributes.put("deleted", getDeleted());
+
+		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
+		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -211,6 +268,7 @@ public class UserThreadModelImpl extends BaseModelImpl<UserThread>
 		}
 	}
 
+	@JSON
 	@Override
 	public long getUserThreadId() {
 		return _userThreadId;
@@ -221,6 +279,7 @@ public class UserThreadModelImpl extends BaseModelImpl<UserThread>
 		_userThreadId = userThreadId;
 	}
 
+	@JSON
 	@Override
 	public long getCompanyId() {
 		return _companyId;
@@ -231,6 +290,7 @@ public class UserThreadModelImpl extends BaseModelImpl<UserThread>
 		_companyId = companyId;
 	}
 
+	@JSON
 	@Override
 	public long getUserId() {
 		return _userId;
@@ -250,19 +310,26 @@ public class UserThreadModelImpl extends BaseModelImpl<UserThread>
 	}
 
 	@Override
-	public String getUserUuid() throws SystemException {
-		return PortalUtil.getUserValue(getUserId(), "uuid", _userUuid);
+	public String getUserUuid() {
+		try {
+			User user = UserLocalServiceUtil.getUserById(getUserId());
+
+			return user.getUuid();
+		}
+		catch (PortalException pe) {
+			return StringPool.BLANK;
+		}
 	}
 
 	@Override
 	public void setUserUuid(String userUuid) {
-		_userUuid = userUuid;
 	}
 
 	public long getOriginalUserId() {
 		return _originalUserId;
 	}
 
+	@JSON
 	@Override
 	public String getUserName() {
 		if (_userName == null) {
@@ -278,6 +345,7 @@ public class UserThreadModelImpl extends BaseModelImpl<UserThread>
 		_userName = userName;
 	}
 
+	@JSON
 	@Override
 	public Date getCreateDate() {
 		return _createDate;
@@ -288,6 +356,7 @@ public class UserThreadModelImpl extends BaseModelImpl<UserThread>
 		_createDate = createDate;
 	}
 
+	@JSON
 	@Override
 	public Date getModifiedDate() {
 		return _modifiedDate;
@@ -300,6 +369,7 @@ public class UserThreadModelImpl extends BaseModelImpl<UserThread>
 		_modifiedDate = modifiedDate;
 	}
 
+	@JSON
 	@Override
 	public long getMbThreadId() {
 		return _mbThreadId;
@@ -322,6 +392,7 @@ public class UserThreadModelImpl extends BaseModelImpl<UserThread>
 		return _originalMbThreadId;
 	}
 
+	@JSON
 	@Override
 	public long getTopMBMessageId() {
 		return _topMBMessageId;
@@ -332,6 +403,7 @@ public class UserThreadModelImpl extends BaseModelImpl<UserThread>
 		_topMBMessageId = topMBMessageId;
 	}
 
+	@JSON
 	@Override
 	public boolean getRead() {
 		return _read;
@@ -359,6 +431,7 @@ public class UserThreadModelImpl extends BaseModelImpl<UserThread>
 		return _originalRead;
 	}
 
+	@JSON
 	@Override
 	public boolean getDeleted() {
 		return _deleted;
@@ -474,6 +547,16 @@ public class UserThreadModelImpl extends BaseModelImpl<UserThread>
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	@Override
+	public boolean isEntityCacheEnabled() {
+		return ENTITY_CACHE_ENABLED;
+	}
+
+	@Override
+	public boolean isFinderCacheEnabled() {
+		return FINDER_CACHE_ENABLED;
 	}
 
 	@Override
@@ -636,7 +719,6 @@ public class UserThreadModelImpl extends BaseModelImpl<UserThread>
 	private long _userThreadId;
 	private long _companyId;
 	private long _userId;
-	private String _userUuid;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
 	private String _userName;

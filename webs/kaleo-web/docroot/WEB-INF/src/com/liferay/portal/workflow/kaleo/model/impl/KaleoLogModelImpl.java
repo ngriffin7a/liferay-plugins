@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,15 +15,16 @@
 package com.liferay.portal.workflow.kaleo.model.impl;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.CacheModel;
+import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.BaseModelImpl;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.workflow.kaleo.model.KaleoLog;
 import com.liferay.portal.workflow.kaleo.model.KaleoLogModel;
 
@@ -85,13 +86,13 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 			{ "currentAssigneeClassName", Types.VARCHAR },
 			{ "currentAssigneeClassPK", Types.BIGINT },
 			{ "type_", Types.VARCHAR },
-			{ "comment_", Types.VARCHAR },
+			{ "comment_", Types.CLOB },
 			{ "startDate", Types.TIMESTAMP },
 			{ "endDate", Types.TIMESTAMP },
 			{ "duration", Types.BIGINT },
 			{ "workflowContext", Types.CLOB }
 		};
-	public static final String TABLE_SQL_CREATE = "create table KaleoLog (kaleoLogId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(200) null,createDate DATE null,modifiedDate DATE null,kaleoClassName VARCHAR(200) null,kaleoClassPK LONG,kaleoDefinitionId LONG,kaleoInstanceId LONG,kaleoInstanceTokenId LONG,kaleoTaskInstanceTokenId LONG,kaleoNodeName VARCHAR(200) null,terminalKaleoNode BOOLEAN,kaleoActionId LONG,kaleoActionName VARCHAR(200) null,kaleoActionDescription STRING null,previousKaleoNodeId LONG,previousKaleoNodeName VARCHAR(200) null,previousAssigneeClassName VARCHAR(200) null,previousAssigneeClassPK LONG,currentAssigneeClassName VARCHAR(200) null,currentAssigneeClassPK LONG,type_ VARCHAR(50) null,comment_ STRING null,startDate DATE null,endDate DATE null,duration LONG,workflowContext TEXT null)";
+	public static final String TABLE_SQL_CREATE = "create table KaleoLog (kaleoLogId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(200) null,createDate DATE null,modifiedDate DATE null,kaleoClassName VARCHAR(200) null,kaleoClassPK LONG,kaleoDefinitionId LONG,kaleoInstanceId LONG,kaleoInstanceTokenId LONG,kaleoTaskInstanceTokenId LONG,kaleoNodeName VARCHAR(200) null,terminalKaleoNode BOOLEAN,kaleoActionId LONG,kaleoActionName VARCHAR(200) null,kaleoActionDescription STRING null,previousKaleoNodeId LONG,previousKaleoNodeName VARCHAR(200) null,previousAssigneeClassName VARCHAR(200) null,previousAssigneeClassPK LONG,currentAssigneeClassName VARCHAR(200) null,currentAssigneeClassPK LONG,type_ VARCHAR(50) null,comment_ TEXT null,startDate DATE null,endDate DATE null,duration LONG,workflowContext TEXT null)";
 	public static final String TABLE_SQL_DROP = "drop table KaleoLog";
 	public static final String ORDER_BY_JPQL = " ORDER BY kaleoLog.kaleoLogId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY KaleoLog.kaleoLogId ASC";
@@ -187,6 +188,9 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 		attributes.put("endDate", getEndDate());
 		attributes.put("duration", getDuration());
 		attributes.put("workflowContext", getWorkflowContext());
+
+		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
+		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -436,13 +440,19 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 	}
 
 	@Override
-	public String getUserUuid() throws SystemException {
-		return PortalUtil.getUserValue(getUserId(), "uuid", _userUuid);
+	public String getUserUuid() {
+		try {
+			User user = UserLocalServiceUtil.getUserById(getUserId());
+
+			return user.getUuid();
+		}
+		catch (PortalException pe) {
+			return StringPool.BLANK;
+		}
 	}
 
 	@Override
 	public void setUserUuid(String userUuid) {
-		_userUuid = userUuid;
 	}
 
 	@Override
@@ -961,6 +971,16 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 	}
 
 	@Override
+	public boolean isEntityCacheEnabled() {
+		return ENTITY_CACHE_ENABLED;
+	}
+
+	@Override
+	public boolean isFinderCacheEnabled() {
+		return FINDER_CACHE_ENABLED;
+	}
+
+	@Override
 	public void resetOriginalValues() {
 		KaleoLogModelImpl kaleoLogModelImpl = this;
 
@@ -1373,7 +1393,6 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userUuid;
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -19,7 +19,6 @@ import com.liferay.opensocial.service.base.GadgetServiceBaseImpl;
 import com.liferay.opensocial.service.permission.GadgetPermission;
 import com.liferay.opensocial.util.ActionKeys;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.service.ServiceContext;
 
 /**
@@ -31,7 +30,7 @@ public class GadgetServiceImpl extends GadgetServiceBaseImpl {
 	public Gadget addGadget(
 			long companyId, String url, String portletCategoryNames,
 			ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		GadgetPermission.check(
 			getPermissionChecker(), serviceContext.getScopeGroupId(),
@@ -42,7 +41,7 @@ public class GadgetServiceImpl extends GadgetServiceBaseImpl {
 	}
 
 	public void deleteGadget(long gadgetId, ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		GadgetPermission.check(
 			getPermissionChecker(), serviceContext.getScopeGroupId(), gadgetId,
@@ -54,7 +53,7 @@ public class GadgetServiceImpl extends GadgetServiceBaseImpl {
 	public void updateGadget(
 			long gadgetId, String portletCategoryNames,
 			ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		GadgetPermission.check(
 			getPermissionChecker(), serviceContext.getScopeGroupId(), gadgetId,

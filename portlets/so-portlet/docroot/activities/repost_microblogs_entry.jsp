@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -37,7 +37,7 @@ MicroblogsEntry microblogsEntry = MicroblogsEntryLocalServiceUtil.fetchMicroblog
 	</c:when>
 	<c:otherwise>
 		<div class="so-portlet-activities">
-			<div class="activity-item microblogs-entry">
+			<div class="activity-item clearfix microblogs-entry">
 
 				<%
 				User receiverUser = UserLocalServiceUtil.getUserById(microblogsEntry.getUserId());
@@ -45,24 +45,22 @@ MicroblogsEntry microblogsEntry = MicroblogsEntryLocalServiceUtil.fetchMicroblog
 
 				<div class="user-portrait">
 					<span class="avatar">
-						<a href="<%= receiverUser.getDisplayURL(themeDisplay) %>"><img alt="<%= receiverUser.getFullName() %>" src="<%= receiverUser.getPortraitURL(themeDisplay) %>" /></a>
+						<a href="<%= receiverUser.getDisplayURL(themeDisplay) %>"><img alt="<%= HtmlUtil.escapeAttribute(receiverUser.getFullName()) %>" src="<%= receiverUser.getPortraitURL(themeDisplay) %>" /></a>
 					</span>
 				</div>
 
-				<div class="activity-data">
-					<div class="activity-header">
-						<div class="activity-time">
-							<%= Time.getRelativeTimeDescription(microblogsEntry.getModifiedDate(), themeDisplay.getLocale(), themeDisplay.getTimeZone()) %>
-						</div>
-
-						<div class="activity-user-name">
-							<%= receiverUser.getFullName() %>
-						</div>
+				<div class="activity-header">
+					<div class="activity-time">
+						<%= Time.getRelativeTimeDescription(microblogsEntry.getModifiedDate(), themeDisplay.getLocale(), themeDisplay.getTimeZone()) %>
 					</div>
 
-					<div class="activity-action">
-						<%= HtmlUtil.escape(microblogsEntry.getContent()) %>
+					<div class="activity-user-name">
+						<%= HtmlUtil.escape(receiverUser.getFullName()) %>
 					</div>
+				</div>
+
+				<div class="activity-action">
+					<%= HtmlUtil.escape(microblogsEntry.getContent()) %>
 				</div>
 			</div>
 		</div>
@@ -77,7 +75,7 @@ MicroblogsEntry microblogsEntry = MicroblogsEntryLocalServiceUtil.fetchMicroblog
 
 <aui:script>
 	function <portlet:namespace />closeEntry() {
-		Liferay.Util.getWindow('<portlet:namespace />Dialog').close();
+		Liferay.Util.getWindow('<portlet:namespace />Dialog').destroy();
 	}
 
 	function <portlet:namespace />saveEntry() {

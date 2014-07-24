@@ -2,7 +2,7 @@
 
 #set ($portlet_id = $htmlUtil.escapeAttribute($portlet_display.getId()))
 #set ($portlet_title = $portlet_display.getTitle())
-#set ($portlet_back_url = $htmlUtil.escapeAttribute($portlet_display.getURLBack()))
+#set ($portlet_back_url = $htmlUtil.escapeHREF($portlet_display.getURLBack()))
 
 <div class="portlet" id="portlet_$portlet_id">
 	<div class="portlet-topper">
@@ -15,9 +15,6 @@
 				<a class="portlet-icon-back" href="$portlet_back_url">#language ("return-to-full-page")</a>
 			#else
 				$theme.portletIconOptions()
-				$theme.portletIconMinimize()
-				$theme.portletIconMaximize()
-				$theme.portletIconClose()
 			#end
 		</menu>
 	</div>

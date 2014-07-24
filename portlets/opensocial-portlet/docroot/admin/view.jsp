@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -24,10 +24,10 @@ PortletURL portletURL = renderResponse.createRenderURL();
 	emptyResultsMessage="there-are-no-gadgets"
 	headerNames="name"
 	iteratorURL="<%= portletURL %>"
+	total="<%= GadgetLocalServiceUtil.getGadgetsCount(company.getCompanyId()) %>"
 >
 	<liferay-ui:search-container-results
 		results="<%= GadgetLocalServiceUtil.getGadgets(company.getCompanyId(), searchContainer.getStart(), searchContainer.getEnd()) %>"
-		total="<%= GadgetLocalServiceUtil.getGadgetsCount(company.getCompanyId()) %>"
 	/>
 
 	<liferay-ui:search-container-row
@@ -52,6 +52,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 
 		<liferay-ui:search-container-column-jsp
 			align="right"
+			cssClass="entry-action"
 			path="/admin/gadget_action.jsp"
 			valign="top"
 		/>

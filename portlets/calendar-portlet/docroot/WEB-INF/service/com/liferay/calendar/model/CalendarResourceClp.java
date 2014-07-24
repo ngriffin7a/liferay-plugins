@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -19,8 +19,9 @@ import com.liferay.calendar.service.ClpSerializer;
 
 import com.liferay.portal.LocaleException;
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.lar.StagedModelType;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
@@ -29,7 +30,9 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.BaseModel;
+import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.BaseModelImpl;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 
 import java.io.Serializable;
@@ -101,6 +104,9 @@ public class CalendarResourceClp extends BaseModelImpl<CalendarResource>
 		attributes.put("name", getName());
 		attributes.put("description", getDescription());
 		attributes.put("active", getActive());
+
+		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
+		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -202,6 +208,9 @@ public class CalendarResourceClp extends BaseModelImpl<CalendarResource>
 		if (active != null) {
 			setActive(active);
 		}
+
+		_entityCacheEnabled = GetterUtil.getBoolean("entityCacheEnabled");
+		_finderCacheEnabled = GetterUtil.getBoolean("finderCacheEnabled");
 	}
 
 	@Override
@@ -321,13 +330,19 @@ public class CalendarResourceClp extends BaseModelImpl<CalendarResource>
 	}
 
 	@Override
-	public String getUserUuid() throws SystemException {
-		return PortalUtil.getUserValue(getUserId(), "uuid", _userUuid);
+	public String getUserUuid() {
+		try {
+			User user = UserLocalServiceUtil.getUserById(getUserId());
+
+			return user.getUuid();
+		}
+		catch (PortalException pe) {
+			return StringPool.BLANK;
+		}
 	}
 
 	@Override
 	public void setUserUuid(String userUuid) {
-		_userUuid = userUuid;
 	}
 
 	@Override
@@ -849,15 +864,15 @@ public class CalendarResourceClp extends BaseModelImpl<CalendarResource>
 	}
 
 	@Override
-	public boolean isGroup() {
+	public long getDefaultCalendarId() {
 		try {
-			String methodName = "isGroup";
+			String methodName = "getDefaultCalendarId";
 
 			Class<?>[] parameterTypes = new Class<?>[] {  };
 
 			Object[] parameterValues = new Object[] {  };
 
-			Boolean returnObj = (Boolean)invokeOnRemoteModel(methodName,
+			Long returnObj = (Long)invokeOnRemoteModel(methodName,
 					parameterTypes, parameterValues);
 
 			return returnObj;
@@ -868,15 +883,15 @@ public class CalendarResourceClp extends BaseModelImpl<CalendarResource>
 	}
 
 	@Override
-	public long getDefaultCalendarId() {
+	public boolean isGroup() {
 		try {
-			String methodName = "getDefaultCalendarId";
+			String methodName = "isGroup";
 
 			Class<?>[] parameterTypes = new Class<?>[] {  };
 
 			Object[] parameterValues = new Object[] {  };
 
-			Long returnObj = (Long)invokeOnRemoteModel(methodName,
+			Boolean returnObj = (Boolean)invokeOnRemoteModel(methodName,
 					parameterTypes, parameterValues);
 
 			return returnObj;
@@ -962,7 +977,7 @@ public class CalendarResourceClp extends BaseModelImpl<CalendarResource>
 	}
 
 	@Override
-	public void persist() throws SystemException {
+	public void persist() {
 		if (this.isNew()) {
 			CalendarResourceLocalServiceUtil.addCalendarResource(this);
 		}
@@ -1008,7 +1023,9 @@ public class CalendarResourceClp extends BaseModelImpl<CalendarResource>
 			return StringPool.BLANK;
 		}
 
-		return LocalizationUtil.getDefaultLanguageId(xml);
+		Locale defaultLocale = LocaleUtil.getSiteDefault();
+
+		return LocalizationUtil.getDefaultLanguageId(xml, defaultLocale);
 	}
 
 	@Override
@@ -1020,7 +1037,7 @@ public class CalendarResourceClp extends BaseModelImpl<CalendarResource>
 	@SuppressWarnings("unused")
 	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale)
 		throws LocaleException {
-		Locale defaultLocale = LocaleUtil.getDefault();
+		Locale defaultLocale = LocaleUtil.getSiteDefault();
 
 		String modelDefaultLanguageId = getDefaultLanguageId();
 
@@ -1110,9 +1127,23 @@ public class CalendarResourceClp extends BaseModelImpl<CalendarResource>
 		}
 	}
 
+	public Class<?> getClpSerializerClass() {
+		return _clpSerializerClass;
+	}
+
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	@Override
+	public boolean isEntityCacheEnabled() {
+		return _entityCacheEnabled;
+	}
+
+	@Override
+	public boolean isFinderCacheEnabled() {
+		return _finderCacheEnabled;
 	}
 
 	@Override
@@ -1239,7 +1270,6 @@ public class CalendarResourceClp extends BaseModelImpl<CalendarResource>
 	private long _groupId;
 	private long _companyId;
 	private long _userId;
-	private String _userUuid;
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
@@ -1254,4 +1284,7 @@ public class CalendarResourceClp extends BaseModelImpl<CalendarResource>
 	private String _descriptionCurrentLanguageId;
 	private boolean _active;
 	private BaseModel<?> _calendarResourceRemoteModel;
+	private Class<?> _clpSerializerClass = com.liferay.calendar.service.ClpSerializer.class;
+	private boolean _entityCacheEnabled;
+	private boolean _finderCacheEnabled;
 }

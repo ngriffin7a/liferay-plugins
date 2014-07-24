@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -88,45 +88,55 @@ public class ModuleLocalServiceClpInvoker {
 
 		_methodParameterTypes11 = new String[] { "long" };
 
-		_methodName12 = "getPersistedModel";
+		_methodName12 = "getActionableDynamicQuery";
 
-		_methodParameterTypes12 = new String[] { "java.io.Serializable" };
+		_methodParameterTypes12 = new String[] {  };
 
-		_methodName13 = "getModules";
+		_methodName14 = "deletePersistedModel";
 
-		_methodParameterTypes13 = new String[] { "int", "int" };
+		_methodParameterTypes14 = new String[] {
+				"com.liferay.portal.model.PersistedModel"
+			};
 
-		_methodName14 = "getModulesCount";
+		_methodName15 = "getPersistedModel";
 
-		_methodParameterTypes14 = new String[] {  };
+		_methodParameterTypes15 = new String[] { "java.io.Serializable" };
 
-		_methodName15 = "updateModule";
+		_methodName16 = "getModules";
 
-		_methodParameterTypes15 = new String[] {
+		_methodParameterTypes16 = new String[] { "int", "int" };
+
+		_methodName17 = "getModulesCount";
+
+		_methodParameterTypes17 = new String[] {  };
+
+		_methodName18 = "updateModule";
+
+		_methodParameterTypes18 = new String[] {
 				"com.liferay.marketplace.model.Module"
 			};
 
-		_methodName38 = "getBeanIdentifier";
+		_methodName47 = "getBeanIdentifier";
 
-		_methodParameterTypes38 = new String[] {  };
+		_methodParameterTypes47 = new String[] {  };
 
-		_methodName39 = "setBeanIdentifier";
+		_methodName48 = "setBeanIdentifier";
 
-		_methodParameterTypes39 = new String[] { "java.lang.String" };
+		_methodParameterTypes48 = new String[] { "java.lang.String" };
 
-		_methodName44 = "addModule";
+		_methodName53 = "addModule";
 
-		_methodParameterTypes44 = new String[] {
+		_methodParameterTypes53 = new String[] {
 				"long", "long", "java.lang.String"
 			};
 
-		_methodName45 = "fetchModule";
+		_methodName54 = "fetchModule";
 
-		_methodParameterTypes45 = new String[] { "long", "java.lang.String" };
+		_methodParameterTypes54 = new String[] { "long", "java.lang.String" };
 
-		_methodName46 = "getModules";
+		_methodName55 = "getModules";
 
-		_methodParameterTypes46 = new String[] { "long" };
+		_methodParameterTypes55 = new String[] { "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -173,7 +183,7 @@ public class ModuleLocalServiceClpInvoker {
 			return ModuleLocalServiceUtil.dynamicQuery((com.liferay.portal.kernel.dao.orm.DynamicQuery)arguments[0],
 				((Integer)arguments[1]).intValue(),
 				((Integer)arguments[2]).intValue(),
-				(com.liferay.portal.kernel.util.OrderByComparator)arguments[3]);
+				(com.liferay.portal.kernel.util.OrderByComparator<?>)arguments[3]);
 		}
 
 		if (_methodName8.equals(name) &&
@@ -199,51 +209,61 @@ public class ModuleLocalServiceClpInvoker {
 
 		if (_methodName12.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes12, parameterTypes)) {
-			return ModuleLocalServiceUtil.getPersistedModel((java.io.Serializable)arguments[0]);
-		}
-
-		if (_methodName13.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes13, parameterTypes)) {
-			return ModuleLocalServiceUtil.getModules(((Integer)arguments[0]).intValue(),
-				((Integer)arguments[1]).intValue());
+			return ModuleLocalServiceUtil.getActionableDynamicQuery();
 		}
 
 		if (_methodName14.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes14, parameterTypes)) {
-			return ModuleLocalServiceUtil.getModulesCount();
+			return ModuleLocalServiceUtil.deletePersistedModel((com.liferay.portal.model.PersistedModel)arguments[0]);
 		}
 
 		if (_methodName15.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes15, parameterTypes)) {
+			return ModuleLocalServiceUtil.getPersistedModel((java.io.Serializable)arguments[0]);
+		}
+
+		if (_methodName16.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes16, parameterTypes)) {
+			return ModuleLocalServiceUtil.getModules(((Integer)arguments[0]).intValue(),
+				((Integer)arguments[1]).intValue());
+		}
+
+		if (_methodName17.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes17, parameterTypes)) {
+			return ModuleLocalServiceUtil.getModulesCount();
+		}
+
+		if (_methodName18.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes18, parameterTypes)) {
 			return ModuleLocalServiceUtil.updateModule((com.liferay.marketplace.model.Module)arguments[0]);
 		}
 
-		if (_methodName38.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes38, parameterTypes)) {
+		if (_methodName47.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes47, parameterTypes)) {
 			return ModuleLocalServiceUtil.getBeanIdentifier();
 		}
 
-		if (_methodName39.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes39, parameterTypes)) {
+		if (_methodName48.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes48, parameterTypes)) {
 			ModuleLocalServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
 
 			return null;
 		}
 
-		if (_methodName44.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes44, parameterTypes)) {
+		if (_methodName53.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes53, parameterTypes)) {
 			return ModuleLocalServiceUtil.addModule(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue(), (java.lang.String)arguments[2]);
 		}
 
-		if (_methodName45.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes45, parameterTypes)) {
+		if (_methodName54.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes54, parameterTypes)) {
 			return ModuleLocalServiceUtil.fetchModule(((Long)arguments[0]).longValue(),
 				(java.lang.String)arguments[1]);
 		}
 
-		if (_methodName46.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes46, parameterTypes)) {
+		if (_methodName55.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes55, parameterTypes)) {
 			return ModuleLocalServiceUtil.getModules(((Long)arguments[0]).longValue());
 		}
 
@@ -276,20 +296,24 @@ public class ModuleLocalServiceClpInvoker {
 	private String[] _methodParameterTypes11;
 	private String _methodName12;
 	private String[] _methodParameterTypes12;
-	private String _methodName13;
-	private String[] _methodParameterTypes13;
 	private String _methodName14;
 	private String[] _methodParameterTypes14;
 	private String _methodName15;
 	private String[] _methodParameterTypes15;
-	private String _methodName38;
-	private String[] _methodParameterTypes38;
-	private String _methodName39;
-	private String[] _methodParameterTypes39;
-	private String _methodName44;
-	private String[] _methodParameterTypes44;
-	private String _methodName45;
-	private String[] _methodParameterTypes45;
-	private String _methodName46;
-	private String[] _methodParameterTypes46;
+	private String _methodName16;
+	private String[] _methodParameterTypes16;
+	private String _methodName17;
+	private String[] _methodParameterTypes17;
+	private String _methodName18;
+	private String[] _methodParameterTypes18;
+	private String _methodName47;
+	private String[] _methodParameterTypes47;
+	private String _methodName48;
+	private String[] _methodParameterTypes48;
+	private String _methodName53;
+	private String[] _methodParameterTypes53;
+	private String _methodName54;
+	private String[] _methodParameterTypes54;
+	private String _methodName55;
+	private String[] _methodParameterTypes55;
 }

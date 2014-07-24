@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -247,9 +247,9 @@ public class AnnouncementsPortlet extends MVCPortlet {
 			AnnouncementsEntryServiceUtil.updateEntry(
 				entryId, title, content, url, type, displayDateMonth,
 				displayDateDay, displayDateYear, displayDateHour,
-				displayDateMinute, expirationDateMonth, expirationDateDay,
-				expirationDateYear, expirationDateHour, expirationDateMinute,
-				priority);
+				displayDateMinute, displayImmediately, expirationDateMonth,
+				expirationDateDay, expirationDateYear, expirationDateHour,
+				expirationDateMinute, priority);
 		}
 	}
 

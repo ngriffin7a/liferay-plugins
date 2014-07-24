@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -22,18 +22,23 @@ import com.liferay.microblogs.microblogs.social.MicroblogsActivityKeys;
 import com.liferay.microblogs.model.MicroblogsEntry;
 import com.liferay.microblogs.model.MicroblogsEntryConstants;
 import com.liferay.microblogs.service.base.MicroblogsEntryLocalServiceBaseImpl;
+import com.liferay.microblogs.util.PortletKeys;
+import com.liferay.microblogs.util.comparator.EntryCreateDateComparator;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.notifications.ChannelHubManagerUtil;
-import com.liferay.portal.kernel.notifications.NotificationEvent;
-import com.liferay.portal.kernel.notifications.NotificationEventFactoryUtil;
+import com.liferay.portal.kernel.notifications.UserNotificationManagerUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
+import com.liferay.portal.model.UserNotificationDeliveryConstants;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.UserNotificationEventLocalServiceUtil;
+import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
+import com.liferay.portlet.asset.model.AssetRenderer;
+import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
 
@@ -50,7 +55,7 @@ public class MicroblogsEntryLocalServiceImpl
 			long userId, String content, int type, long receiverUserId,
 			long receiverMicroblogsEntryId, int socialRelationType,
 			ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		// Microblogs entry
 
@@ -106,6 +111,8 @@ public class MicroblogsEntryLocalServiceImpl
 		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
 
 		extraDataJSONObject.put("content", microblogsEntry.getContent());
+		extraDataJSONObject.put(
+			"receiverMicroblogsEntryId", receiverMicroblogsEntryId);
 
 		SocialActivityLocalServiceUtil.addActivity(
 			userId, 0, MicroblogsEntry.class.getName(), microblogsEntryId,
@@ -114,7 +121,7 @@ public class MicroblogsEntryLocalServiceImpl
 		// Notification
 
 		if (type == MicroblogsEntryConstants.TYPE_REPLY) {
-			sendNotificationEvent(microblogsEntry);
+			sendNotificationEvent(microblogsEntry, serviceContext);
 		}
 
 		return microblogsEntry;
@@ -122,7 +129,7 @@ public class MicroblogsEntryLocalServiceImpl
 
 	@Override
 	public MicroblogsEntry deleteMicroblogsEntry(long microblogsEntryId)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		MicroblogsEntry microblogsEntry =
 			microblogsEntryPersistence.findByPrimaryKey(microblogsEntryId);
@@ -133,7 +140,7 @@ public class MicroblogsEntryLocalServiceImpl
 	@Override
 	public MicroblogsEntry deleteMicroblogsEntry(
 			MicroblogsEntry microblogsEntry)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		// Microblogs entry
 
@@ -155,7 +162,7 @@ public class MicroblogsEntryLocalServiceImpl
 	}
 
 	public void deleteUserMicroblogsEntries(long userId)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		List<MicroblogsEntry> microblogsEntries =
 			microblogsEntryPersistence.findByUserId(userId);
@@ -166,88 +173,83 @@ public class MicroblogsEntryLocalServiceImpl
 	}
 
 	public List<MicroblogsEntry> getCompanyMicroblogsEntries(
-			long companyId, int start, int end)
-		throws SystemException {
+		long companyId, int start, int end) {
 
 		return microblogsEntryPersistence.findByCompanyId(
 			companyId, start, end);
 	}
 
-	public int getCompanyMicroblogsEntriesCount(long companyId)
-		throws SystemException {
-
+	public int getCompanyMicroblogsEntriesCount(long companyId) {
 		return microblogsEntryPersistence.countByCompanyId(companyId);
 	}
 
 	@Override
 	public MicroblogsEntry getMicroblogsEntry(long microblogsEntryId)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		return microblogsEntryPersistence.findByPrimaryKey(microblogsEntryId);
 	}
 
 	public List<MicroblogsEntry> getReceiverMicroblogsEntryMicroblogsEntries(
-			int type, long receiverMicroblogsEntryId, int start, int end,
-			OrderByComparator orderByComparator)
-		throws SystemException {
+		int type, long receiverMicroblogsEntryId, int start, int end) {
+
+		return microblogsEntryPersistence.findByT_RMEI(
+			type, receiverMicroblogsEntryId, start, end,
+			new EntryCreateDateComparator(true));
+	}
+
+	public List<MicroblogsEntry> getReceiverMicroblogsEntryMicroblogsEntries(
+		int type, long receiverMicroblogsEntryId, int start, int end,
+		OrderByComparator<MicroblogsEntry> orderByComparator) {
 
 		return microblogsEntryPersistence.findByT_RMEI(
 			type, receiverMicroblogsEntryId, start, end, orderByComparator);
 	}
 
 	public int getReceiverMicroblogsEntryMicroblogsEntriesCount(
-			int type, long receiverMicroblogsEntryId)
-		throws SystemException {
+		int type, long receiverMicroblogsEntryId) {
 
 		return microblogsEntryPersistence.countByT_RMEI(
 			type, receiverMicroblogsEntryId);
 	}
 
 	public List<MicroblogsEntry> getReceiverUserMicroblogsEntries(
-			int type, long receiverUserId, int start, int end)
-		throws SystemException {
+		int type, long receiverUserId, int start, int end) {
 
 		return microblogsEntryPersistence.findByT_R(
 			type, receiverUserId, start, end);
 	}
 
 	public int getReceiverUserMicroblogsEntriesCount(
-			int type, long receiverUserId)
-		throws SystemException {
+		int type, long receiverUserId) {
 
 		return microblogsEntryPersistence.countByT_R(type, receiverUserId);
 	}
 
 	public List<MicroblogsEntry> getUserMicroblogsEntries(
-			long userId, int start, int end)
-		throws SystemException {
+		long userId, int start, int end) {
 
 		return microblogsEntryPersistence.findByUserId(userId, start, end);
 	}
 
 	public List<MicroblogsEntry> getUserMicroblogsEntries(
-			long userId, int type, int start, int end)
-		throws SystemException {
+		long userId, int type, int start, int end) {
 
 		return microblogsEntryPersistence.findByU_T(userId, type, start, end);
 	}
 
-	public int getUserMicroblogsEntriesCount(long userId)
-		throws SystemException {
-
+	public int getUserMicroblogsEntriesCount(long userId) {
 		return microblogsEntryPersistence.countByUserId(userId);
 	}
 
-	public int getUserMicroblogsEntriesCount(long userId, int type)
-		throws SystemException {
-
+	public int getUserMicroblogsEntriesCount(long userId, int type) {
 		return microblogsEntryPersistence.countByU_T(userId, type);
 	}
 
 	public void updateAsset(
 			MicroblogsEntry microblogsEntry, long[] assetCategoryIds,
 			String[] assetTagNames)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		Group group = GroupLocalServiceUtil.getCompanyGroup(
 			microblogsEntry.getCompanyId());
@@ -262,7 +264,7 @@ public class MicroblogsEntryLocalServiceImpl
 	public MicroblogsEntry updateMicroblogsEntry(
 			long microblogsEntryId, String content, int socialRelationType,
 			ServiceContext serviceContext)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		// Microblogs entry
 
@@ -284,36 +286,67 @@ public class MicroblogsEntryLocalServiceImpl
 		return microblogsEntry;
 	}
 
-	protected void sendNotificationEvent(MicroblogsEntry microblogsEntry)
-		throws PortalException, SystemException {
+	protected void sendNotificationEvent(
+			MicroblogsEntry microblogsEntry, ServiceContext serviceContext)
+		throws PortalException {
 
 		JSONObject notificationEventJSONObject =
 			JSONFactoryUtil.createJSONObject();
 
-		notificationEventJSONObject.put("body", microblogsEntry.getContent());
 		notificationEventJSONObject.put(
-			"entryId", microblogsEntry.getMicroblogsEntryId());
+			"className", MicroblogsEntry.class.getName());
 		notificationEventJSONObject.put(
-			"entryKeyName", "receiverMicroblogsEntryId");
-		notificationEventJSONObject.put("mvcPath", "/microblogs/view.jsp");
-		notificationEventJSONObject.put("portletId", "1_WAR_microblogsportlet");
-		notificationEventJSONObject.put("title", "x-commented-on-your-post");
+			"classPK", microblogsEntry.getMicroblogsEntryId());
+		notificationEventJSONObject.put(
+			"entryTitle", microblogsEntry.getContent());
+
+		AssetRendererFactory assetRendererFactory =
+			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
+				MicroblogsEntry.class.getName());
+
+		AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(
+			microblogsEntry.getMicroblogsEntryId());
+
+		String entryURL = StringPool.BLANK;
+
+		try {
+			entryURL = assetRenderer.getURLViewInContext(
+				serviceContext.getLiferayPortletRequest(),
+				serviceContext.getLiferayPortletResponse(), null);
+		}
+		catch (Exception e) {
+		}
+
+		notificationEventJSONObject.put("entryURL", entryURL);
+		notificationEventJSONObject.put(
+			"notificationType", microblogsEntry.getType());
 		notificationEventJSONObject.put("userId", microblogsEntry.getUserId());
 
-		NotificationEvent notificationEvent =
-			NotificationEventFactoryUtil.createNotificationEvent(
-				System.currentTimeMillis(), "6_WAR_soportlet",
+		if (UserNotificationManagerUtil.isDeliver(
+				microblogsEntry.getUserId(), PortletKeys.MICROBLOGS, 0,
+			MicroblogsEntryConstants.TYPE_REPLY,
+			UserNotificationDeliveryConstants.TYPE_PUSH)) {
+
+			UserNotificationEventLocalServiceUtil.sendUserNotificationEvents(
+				microblogsEntry.getUserId(), PortletKeys.MICROBLOGS,
+				UserNotificationDeliveryConstants.TYPE_PUSH,
 				notificationEventJSONObject);
+		}
 
-		notificationEvent.setDeliveryRequired(0);
+		if (UserNotificationManagerUtil.isDeliver(
+				microblogsEntry.getUserId(), PortletKeys.MICROBLOGS, 0,
+			MicroblogsEntryConstants.TYPE_REPLY,
+			UserNotificationDeliveryConstants.TYPE_WEBSITE)) {
 
-		ChannelHubManagerUtil.sendNotificationEvent(
-			microblogsEntry.getCompanyId(), microblogsEntry.getReceiverUserId(),
-			notificationEvent);
+			UserNotificationEventLocalServiceUtil.sendUserNotificationEvents(
+				microblogsEntry.getUserId(), PortletKeys.MICROBLOGS,
+				UserNotificationDeliveryConstants.TYPE_WEBSITE,
+				notificationEventJSONObject);
+		}
 	}
 
 	protected void validate(int type, long receiverMicroblogsEntryId)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		if (receiverMicroblogsEntryId == 0) {
 			return;

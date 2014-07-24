@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -79,18 +79,10 @@ if (Validator.isNotNull(editorGadgetURL)) {
 	<aui:fieldset>
 		<c:choose>
 			<c:when test="<%= editorGadget %>">
-				<aui:input name="url" type="hidden" value="<%= editorGadgetURL %>" />
-
-				<aui:field-wrapper label="url">
-					<aui:a href="<%= editorGadgetURL %>" label="<%= editorGadgetURL %>" />
-				</aui:field-wrapper>
+				<aui:input name="url" type="resource" value="<%= editorGadgetURL %>" />
 			</c:when>
 			<c:when test="<%= gadget != null %>">
-				<aui:input name="url" type="hidden" />
-
-				<aui:field-wrapper label="url">
-					<aui:a href="<%= gadget.getUrl() %>" label="<%= gadget.getUrl() %>" />
-				</aui:field-wrapper>
+				<aui:input name="url" type="resource" value="<%= gadget.getUrl() %>" />
 			</c:when>
 			<c:otherwise>
 				<aui:input name="url" />
@@ -191,7 +183,7 @@ if (Validator.isNotNull(editorGadgetURL)) {
 				checked: checked,
 				category: category,
 				id: '<%= treeNodeView.getId() %>',
-				label: '<%= UnicodeFormatter.toString(LanguageUtil.get(user.getLocale(), treeNodeView.getName())) %>',
+				label: '<%= UnicodeFormatter.toString(LanguageUtil.get(request, treeNodeView.getName())) %>',
 				leaf: false
 			}
 		);
@@ -209,9 +201,9 @@ if (Validator.isNotNull(editorGadgetURL)) {
 
 <%
 if (gadget == null) {
-	PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "publish-gadget"), currentURL);
+	PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "publish-gadget"), currentURL);
 }
 else {
-	PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(pageContext, "edit"), currentURL);
+	PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "edit"), currentURL);
 }
 %>

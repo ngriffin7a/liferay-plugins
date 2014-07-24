@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -19,7 +19,7 @@
 <%@ page import="java.util.Enumeration" %>
 <%@ page import="java.util.Properties" %>
 
-<span class="portlet-msg-error">
+<span class="alert alert-error">
 An unexpected error occurred.
 </span>
 

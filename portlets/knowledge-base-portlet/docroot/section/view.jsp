@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -24,10 +24,10 @@
 
 		<liferay-ui:search-container
 			searchContainer="<%= new KBArticleSearch(renderRequest, iteratorURL) %>"
+			total="<%= KBArticleServiceUtil.getSectionsKBArticlesCount(scopeGroupId, kbArticlesSections, WorkflowConstants.STATUS_APPROVED) %>"
 		>
 			<liferay-ui:search-container-results
 				results="<%= KBArticleServiceUtil.getSectionsKBArticles(scopeGroupId, kbArticlesSections, WorkflowConstants.STATUS_APPROVED, searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator()) %>"
-				total="<%= KBArticleServiceUtil.getSectionsKBArticlesCount(scopeGroupId, kbArticlesSections, WorkflowConstants.STATUS_APPROVED) %>"
 			/>
 
 			<c:if test="<%= showKBArticlesSectionsTitle %>">
@@ -36,7 +36,7 @@
 				List<String> titles = new ArrayList<String>();
 
 				for (String kbArticlesSection : kbArticlesSections) {
-					titles.add(LanguageUtil.get(pageContext, kbArticlesSection));
+					titles.add(LanguageUtil.get(request, kbArticlesSection));
 				}
 
 				Collections.sort(titles);
@@ -47,7 +47,7 @@
 				</div>
 			</c:if>
 
-			<c:if test="<%= total == 0 %>">
+			<c:if test="<%= searchContainer.getTotal() == 0 %>">
 				<liferay-ui:message key="<%= searchContainer.getEmptyResultsMessage() %>" />
 			</c:if>
 
@@ -65,10 +65,9 @@
 						</portlet:renderURL>
 
 						<liferay-ui:icon
-							image="../trees/page"
+							iconCssClass="icon-file-alt"
 							label="<%= true %>"
 							message="<%= kbArticle.getTitle() %>"
-							method="get"
 							url="<%= viewKBArticleURL %>"
 						/>
 					</div>
@@ -106,7 +105,7 @@
 		%>
 
 		<div class="alert alert-info">
-			<%= LanguageUtil.format(pageContext, "please-input-a-list-of-comma-delimited-words-for-portlet-property-x-to-enable-this-portlet", "admin.kb.article.sections", false) %>
+			<%= LanguageUtil.format(request, "please-input-a-list-of-comma-delimited-words-for-portlet-property-x-to-enable-this-portlet", "admin.kb.article.sections", false) %>
 		</div>
 	</c:otherwise>
 </c:choose>

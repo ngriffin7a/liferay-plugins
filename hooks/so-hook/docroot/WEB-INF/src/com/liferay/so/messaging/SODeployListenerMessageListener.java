@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This file is part of Liferay Social Office. Liferay Social Office is free
  * software: you can redistribute it and/or modify it under the terms of the GNU
@@ -20,7 +20,6 @@ package com.liferay.so.messaging;
 import com.liferay.deploylistener.messaging.BaseDeployListenerMessageListener;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
@@ -155,16 +154,12 @@ public class SODeployListenerMessageListener
 		}
 	}
 
-	protected void updateGroups(long companyId)
-		throws PortalException, SystemException {
-
+	protected void updateGroups(long companyId) throws PortalException {
 		ActionableDynamicQuery actionableDynamicQuery =
 			new GroupActionableDynamicQuery() {
 
 			@Override
-			protected void performAction(Object object)
-				throws PortalException, SystemException {
-
+			protected void performAction(Object object) throws PortalException {
 				Group group = (Group)object;
 
 				if (!group.isRegularSite()) {
@@ -202,7 +197,7 @@ public class SODeployListenerMessageListener
 	}
 
 	protected void updateLayoutSetPrototype(long groupId, boolean privateLayout)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		// Layout
 

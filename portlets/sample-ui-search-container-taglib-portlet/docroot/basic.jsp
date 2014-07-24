@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -25,18 +25,11 @@ portletURL.setParameter("mvcPath", "/basic.jsp");
 <liferay-ui:search-container
 	headerNames="email-address,screen-name"
 	iteratorURL="<%= portletURL %>"
+	total="<%= UserLocalServiceUtil.getUsersCount() %>"
 >
-	<liferay-ui:search-container-results>
-
-		<%
-		results = UserLocalServiceUtil.getUsers(searchContainer.getStart(), searchContainer.getEnd());
-		total = UserLocalServiceUtil.getUsersCount();
-
-		pageContext.setAttribute("results", results);
-		pageContext.setAttribute("total", total);
-		%>
-
-	</liferay-ui:search-container-results>
+	<liferay-ui:search-container-results
+		results="<%= UserLocalServiceUtil.getUsers(searchContainer.getStart(), searchContainer.getEnd()) %>"
+	/>
 
 	<liferay-ui:search-container-row
 		className="com.liferay.portal.model.User"

@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -24,7 +24,7 @@ ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_
 KBTemplate kbTemplate = (KBTemplate)row.getObject();
 %>
 
-<liferay-ui:icon-menu cssClass="kb-template-action">
+<liferay-ui:icon-menu cssClass="kb-template-action" icon="<%= StringPool.BLANK %>" message="<%= StringPool.BLANK %>">
 	<c:if test="<%= KBTemplatePermission.contains(permissionChecker, kbTemplate, ActionKeys.VIEW) %>">
 		<liferay-portlet:renderURL var="viewURL">
 			<portlet:param name="mvcPath" value='<%= templatePath + "view_template.jsp" %>' />
@@ -32,8 +32,8 @@ KBTemplate kbTemplate = (KBTemplate)row.getObject();
 		</liferay-portlet:renderURL>
 
 		<liferay-ui:icon
-			image="view"
-			method="get"
+			iconCssClass="icon-search"
+			message="view"
 			url="<%= viewURL %>"
 		/>
 	</c:if>
@@ -46,8 +46,8 @@ KBTemplate kbTemplate = (KBTemplate)row.getObject();
 		</liferay-portlet:renderURL>
 
 		<liferay-ui:icon
-			image="edit"
-			method="get"
+			iconCssClass="icon-edit"
+			message="edit"
 			url="<%= editURL %>"
 		/>
 	</c:if>
@@ -58,12 +58,14 @@ KBTemplate kbTemplate = (KBTemplate)row.getObject();
 			modelResourceDescription="<%= kbTemplate.getTitle() %>"
 			resourcePrimKey="<%= String.valueOf(kbTemplate.getKbTemplateId()) %>"
 			var="permissionsURL"
+			windowState="<%= LiferayWindowState.POP_UP.toString() %>"
 		/>
 
 		<liferay-ui:icon
-			image="permissions"
-			method="get"
+			iconCssClass="icon-lock"
+			message="permissions"
 			url="<%= permissionsURL %>"
+			useDialog="<%= true %>"
 		/>
 	</c:if>
 

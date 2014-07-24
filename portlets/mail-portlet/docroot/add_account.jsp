@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -155,7 +155,7 @@ for (int i = 0; i < accountsJSONArray.length(); i++) {
 
 </liferay-ui:tabs>
 
-<aui:script use="aui-io">
+<aui:script use="aui-io-deprecated">
 	A.all('.mail-dialog form.account-form').on(
 		'submit',
 		function(event) {
@@ -168,9 +168,9 @@ for (int i = 0; i < accountsJSONArray.length(); i++) {
 			A.io.request(
 				themeDisplay.getLayoutURL() + '/-/mail/update_account',
 				{
-					dataType: 'json',
+					dataType: 'JSON',
 					form: {
-						id: form.getDOM()
+						id: form.getDOMNode()
 					},
 					method: 'POST',
 					on: {
@@ -185,8 +185,6 @@ for (int i = 0; i < accountsJSONArray.length(); i++) {
 
 							if (responseData.status == 'success') {
 								Liferay.Mail.loadAccounts(Liferay.Mail.accountId);
-
-								A.DialogManager.closeByChild(form);
 							}
 						}
 					}

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -16,8 +16,6 @@ package com.liferay.calendar.model.impl;
 
 import com.liferay.calendar.model.CalendarNotificationTemplate;
 import com.liferay.calendar.service.CalendarNotificationTemplateLocalServiceUtil;
-
-import com.liferay.portal.kernel.exception.SystemException;
 
 /**
  * The extended model base implementation for the CalendarNotificationTemplate service. Represents a row in the &quot;CalendarNotificationTemplate&quot; database table, with each column mapped to a property of this class.
@@ -40,7 +38,7 @@ public abstract class CalendarNotificationTemplateBaseImpl
 	 * Never modify or reference this class directly. All methods that expect a calendar notification template model instance should use the {@link CalendarNotificationTemplate} interface instead.
 	 */
 	@Override
-	public void persist() throws SystemException {
+	public void persist() {
 		if (this.isNew()) {
 			CalendarNotificationTemplateLocalServiceUtil.addCalendarNotificationTemplate(this);
 		}

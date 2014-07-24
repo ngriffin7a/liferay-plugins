@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -24,10 +24,11 @@ import com.liferay.calendar.service.CalendarBookingLocalServiceUtil;
 import com.liferay.calendar.service.CalendarLocalServiceUtil;
 import com.liferay.calendar.service.CalendarResourceLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * @author Eduardo Lundgren
@@ -38,22 +39,18 @@ public class CalendarBookingImpl extends CalendarBookingBaseImpl {
 	}
 
 	@Override
-	public Calendar getCalendar() throws PortalException, SystemException {
+	public Calendar getCalendar() throws PortalException {
 		return CalendarLocalServiceUtil.getCalendar(getCalendarId());
 	}
 
 	@Override
-	public CalendarResource getCalendarResource()
-		throws PortalException, SystemException {
-
+	public CalendarResource getCalendarResource() throws PortalException {
 		return CalendarResourceLocalServiceUtil.getCalendarResource(
 			getCalendarResourceId());
 	}
 
 	@Override
-	public List<CalendarBooking> getChildCalendarBookings()
-		throws SystemException {
-
+	public List<CalendarBooking> getChildCalendarBookings() {
 		return CalendarBookingLocalServiceUtil.getChildCalendarBookings(
 			getCalendarBookingId());
 	}
@@ -68,10 +65,14 @@ public class CalendarBookingImpl extends CalendarBookingBaseImpl {
 		return NotificationType.parse(getFirstReminderType());
 	}
 
+	@JSON
 	@Override
-	public CalendarBooking getParentCalendarBooking()
-		throws PortalException, SystemException {
+	public int getInstanceIndex() {
+		return _instanceIndex;
+	}
 
+	@Override
+	public CalendarBooking getParentCalendarBooking() throws PortalException {
 		return CalendarBookingLocalServiceUtil.getCalendarBooking(
 			getParentCalendarBookingId());
 	}
@@ -88,6 +89,15 @@ public class CalendarBookingImpl extends CalendarBookingBaseImpl {
 	@Override
 	public NotificationType getSecondReminderNotificationType() {
 		return NotificationType.parse(getSecondReminderType());
+	}
+
+	@Override
+	public TimeZone getTimeZone() throws PortalException {
+		CalendarBooking parentCalendarBooking = getParentCalendarBooking();
+
+		Calendar calendar = parentCalendarBooking.getCalendar();
+
+		return calendar.getTimeZone();
 	}
 
 	@Override
@@ -108,6 +118,13 @@ public class CalendarBookingImpl extends CalendarBookingBaseImpl {
 		return false;
 	}
 
+	@JSON
+	@Override
+	public void setInstanceIndex(int instanceIndex) {
+		_instanceIndex = instanceIndex;
+	}
+
+	private int _instanceIndex;
 	private Recurrence _recurrenceObj;
 
 }

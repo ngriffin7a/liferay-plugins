@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -20,7 +20,7 @@ import com.liferay.calendar.model.CalendarSoap;
 
 import com.liferay.portal.LocaleException;
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.lar.StagedModelType;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -31,8 +31,10 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CacheModel;
+import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.BaseModelImpl;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 
 import com.liferay.portlet.expando.model.ExpandoBridge;
@@ -224,6 +226,9 @@ public class CalendarModelImpl extends BaseModelImpl<Calendar>
 		attributes.put("defaultCalendar", getDefaultCalendar());
 		attributes.put("enableComments", getEnableComments());
 		attributes.put("enableRatings", getEnableRatings());
+
+		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
+		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -420,13 +425,19 @@ public class CalendarModelImpl extends BaseModelImpl<Calendar>
 	}
 
 	@Override
-	public String getUserUuid() throws SystemException {
-		return PortalUtil.getUserValue(getUserId(), "uuid", _userUuid);
+	public String getUserUuid() {
+		try {
+			User user = UserLocalServiceUtil.getUserById(getUserId());
+
+			return user.getUuid();
+		}
+		catch (PortalException pe) {
+			return StringPool.BLANK;
+		}
 	}
 
 	@Override
 	public void setUserUuid(String userUuid) {
-		_userUuid = userUuid;
 	}
 
 	@JSON
@@ -848,19 +859,28 @@ public class CalendarModelImpl extends BaseModelImpl<Calendar>
 			return StringPool.BLANK;
 		}
 
-		return LocalizationUtil.getDefaultLanguageId(xml);
+		Locale defaultLocale = LocaleUtil.getSiteDefault();
+
+		return LocalizationUtil.getDefaultLanguageId(xml, defaultLocale);
 	}
 
 	@Override
 	public void prepareLocalizedFieldsForImport() throws LocaleException {
-		prepareLocalizedFieldsForImport(null);
+		Locale defaultLocale = LocaleUtil.fromLanguageId(getDefaultLanguageId());
+
+		Locale[] availableLocales = LocaleUtil.fromLanguageIds(getAvailableLanguageIds());
+
+		Locale defaultImportLocale = LocalizationUtil.getDefaultImportLocale(Calendar.class.getName(),
+				getPrimaryKey(), defaultLocale, availableLocales);
+
+		prepareLocalizedFieldsForImport(defaultImportLocale);
 	}
 
 	@Override
 	@SuppressWarnings("unused")
 	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale)
 		throws LocaleException {
-		Locale defaultLocale = LocaleUtil.getDefault();
+		Locale defaultLocale = LocaleUtil.getSiteDefault();
 
 		String modelDefaultLanguageId = getDefaultLanguageId();
 
@@ -958,6 +978,16 @@ public class CalendarModelImpl extends BaseModelImpl<Calendar>
 	@Override
 	public int hashCode() {
 		return (int)getPrimaryKey();
+	}
+
+	@Override
+	public boolean isEntityCacheEnabled() {
+		return ENTITY_CACHE_ENABLED;
+	}
+
+	@Override
+	public boolean isFinderCacheEnabled() {
+		return FINDER_CACHE_ENABLED;
 	}
 
 	@Override
@@ -1199,7 +1229,6 @@ public class CalendarModelImpl extends BaseModelImpl<Calendar>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userUuid;
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;

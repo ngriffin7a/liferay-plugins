@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -23,7 +23,6 @@ import com.liferay.knowledgebase.util.ActionKeys;
 import com.liferay.knowledgebase.util.PortletKeys;
 import com.liferay.knowledgebase.util.WebKeys;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -43,9 +42,13 @@ public class KBArticleAssetRendererFactory extends BaseAssetRendererFactory {
 
 	public static final String TYPE = "article";
 
+	public KBArticleAssetRendererFactory() {
+		setLinkable(true);
+	}
+
 	@Override
 	public AssetRenderer getAssetRenderer(long classPK, int type)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		KBArticle kbArticle = null;
 
@@ -77,6 +80,11 @@ public class KBArticleAssetRendererFactory extends BaseAssetRendererFactory {
 	}
 
 	@Override
+	public String getIconCssClass() {
+		return "icon-file";
+	}
+
+	@Override
 	public String getPortletId() {
 		return PortletKeys.KNOWLEDGE_BASE_DISPLAY;
 	}
@@ -90,18 +98,11 @@ public class KBArticleAssetRendererFactory extends BaseAssetRendererFactory {
 	public PortletURL getURLAdd(
 			LiferayPortletRequest liferayPortletRequest,
 			LiferayPortletResponse liferayPortletResponse)
-		throws PortalException, SystemException {
+		throws PortalException {
 
 		ThemeDisplay themeDisplay =
 			(ThemeDisplay)liferayPortletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
-
-		if (!AdminPermission.contains(
-				themeDisplay.getPermissionChecker(),
-				themeDisplay.getScopeGroupId(), ActionKeys.ADD_KB_ARTICLE)) {
-
-			return null;
-		}
 
 		PortletURL portletURL = PortletURLFactoryUtil.create(
 			liferayPortletRequest, PortletKeys.KNOWLEDGE_BASE_ADMIN,
@@ -110,6 +111,15 @@ public class KBArticleAssetRendererFactory extends BaseAssetRendererFactory {
 		portletURL.setParameter("mvcPath", "/admin/edit_article.jsp");
 
 		return portletURL;
+	}
+
+	@Override
+	public boolean hasAddPermission(
+			PermissionChecker permissionChecker, long groupId, long classTypeId)
+		throws Exception {
+
+		return AdminPermission.contains(
+			permissionChecker, groupId, ActionKeys.ADD_KB_ARTICLE);
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -21,13 +21,17 @@ String backURL = ParamUtil.getString(request, "backURL");
 
 CalendarBooking calendarBooking = (CalendarBooking)request.getAttribute(WebKeys.CALENDAR_BOOKING);
 
+int instanceIndex = BeanParamUtil.getInteger(calendarBooking, request, "instanceIndex");
+
+calendarBooking = RecurrenceUtil.getCalendarBookingInstance(calendarBooking, instanceIndex);
+
 Calendar calendar = calendarBooking.getCalendar();
 
-long startTime = BeanParamUtil.getLong(calendarBooking, request, "startTime");
+long startTime = calendarBooking.getStartTime();
 
 java.util.Calendar startTimeJCalendar = JCalendarUtil.getJCalendar(startTime, userTimeZone);
 
-long endTime = BeanParamUtil.getLong(calendarBooking, request, "endTime");
+long endTime = calendarBooking.getEndTime();
 
 java.util.Calendar endTimeJCalendar = JCalendarUtil.getJCalendar(endTime, userTimeZone);
 
@@ -76,7 +80,7 @@ AssetEntry layoutAssetEntry = AssetEntryLocalServiceUtil.getEntry(CalendarBookin
 				}
 				%>
 
-				<%= StringUtil.merge(calendarResourcesNames, ", ") %>
+				<%= HtmlUtil.escape(StringUtil.merge(calendarResourcesNames, ", ")) %>
 			</dd>
 		</c:if>
 		<c:if test="<%= Validator.isNotNull(calendarBooking.getLocation()) %>">

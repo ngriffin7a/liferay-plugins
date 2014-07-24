@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -32,10 +32,8 @@ public interface KaleoTransition extends KaleoTransitionModel, PersistedModel {
 	 * Never modify this interface directly. Add methods to {@link com.liferay.portal.workflow.kaleo.model.impl.KaleoTransitionImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
 	public com.liferay.portal.workflow.kaleo.model.KaleoNode getSourceKaleoNode()
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException;
+		throws com.liferay.portal.kernel.exception.PortalException;
 
 	public com.liferay.portal.workflow.kaleo.model.KaleoNode getTargetKaleoNode()
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException;
+		throws com.liferay.portal.kernel.exception.PortalException;
 }

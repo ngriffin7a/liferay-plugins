@@ -1,6 +1,6 @@
 <%--
 /**
- * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -80,7 +80,7 @@ if (recurrence != null) {
 						for (Frequency curFrequency : Frequency.values()) {
 						%>
 
-							<aui:option selected="<%= (frequency == curFrequency) %>" value="<%= curFrequency.getValue() %>"><%= LanguageUtil.get(locale, curFrequency.getValue().toLowerCase()) %></aui:option>
+							<aui:option selected="<%= (frequency == curFrequency) %>" value="<%= curFrequency.getValue() %>"><%= LanguageUtil.get(locale, StringUtil.toLowerCase(curFrequency.getValue())) %></aui:option>
 
 						<%
 						}
@@ -119,14 +119,14 @@ if (recurrence != null) {
 				<th class="calendar-portlet-recurrence-title">
 					<liferay-ui:message key="repeat-on" />:
 				</th>
-				<td class="calendar-portlet-recurrence-content">
+				<td class="calendar-portlet-recurrence-content calendar-recurrence-weekday-checkbox">
 					<aui:field-wrapper inlineField="<%= true %>" label="">
 
 						<%
 						for (Weekday weekday : Weekday.values()) {
 						%>
 
-							<aui:input checked="<%= weekdays.contains(weekday) %>" data-weekday='<%= LanguageUtil.get(pageContext, "weekday." + weekday.getValue()) %>' label="<%= weekday.getValue() %>" name="<%= weekday.getValue() %>" type="checkbox" />
+							<aui:input checked="<%= weekdays.contains(weekday) %>" data-weekday='<%= LanguageUtil.get(request, "weekday." + weekday.getValue()) %>' label="<%= weekday.getValue() %>" name="<%= weekday.getValue() %>" type="checkbox" />
 
 						<%
 						}
@@ -142,20 +142,28 @@ if (recurrence != null) {
 					<liferay-ui:message key="ends" />:
 				</th>
 				<td class="calendar-portlet-recurrence-content">
-					<aui:input checked="<%= !afterChecked && !onChecked %>" label="never" name="ends" type="radio" value="never" />
+					<aui:field-wrapper cssClass="calendar-portlet-recurrence-limit" label="">
+						<aui:input checked="<%= !afterChecked && !onChecked %>" label="<%= StringPool.BLANK %>" name="ends" type="radio" value="never" />
 
-					<aui:field-wrapper inlineField="<%= true %>" label="">
-						<aui:input checked="<%= afterChecked %>" label="after" name="ends" type="radio" value="after" />
-
-						<aui:input disabled="<%= !afterChecked %>" label="" name="count" size="5" type="text" value="<%= afterChecked ? count : StringPool.BLANK %>" />
-
-						<liferay-ui:message key="occurrences" />
+						<label><liferay-ui:message key="never" /></label>
 					</aui:field-wrapper>
 
-					<aui:field-wrapper cssClass="calendar-portlet-field-date" label="">
-						<aui:input checked="<%= onChecked %>" inlineField="<%= true %>" label="on" name="ends" type="radio" value="on" />
+					<aui:field-wrapper cssClass="calendar-portlet-recurrence-limit" label="">
+						<aui:input checked="<%= afterChecked %>" label="<%= StringPool.BLANK %>" name="ends" type="radio" value="after" />
+
+						<label><liferay-ui:message key="after" /></label>
+
+						<aui:input disabled="<%= !afterChecked %>" label="<%= StringPool.BLANK %>"  name="count" size="5" type="text" value="<%= afterChecked ? count : StringPool.BLANK %>" />
+
+						<label><liferay-ui:message key="occurrences" /></label>
+					</aui:field-wrapper>
+
+					<aui:field-wrapper cssClass="calendar-portlet-field-date calendar-portlet-recurrence-limit" label="">
+						<aui:input checked="<%= onChecked %>" label="<%= StringPool.BLANK %>" name="ends" type="radio" value="on" />
 
 						<div class="calendar-portlet-field-datepicker clearfix">
+							<label><liferay-ui:message key="on" /></label>
+
 							<liferay-ui:input-date
 								dayParam="untilDateDay"
 								dayValue="<%= untilJCalendar.get(java.util.Calendar.DATE) %>"
@@ -191,10 +199,10 @@ if (recurrence != null) {
 	var endsRadioNodes = A.all('[name=<portlet:namespace />ends]');
 	var frequencyNode = A.one('#<portlet:namespace />frequency');
 	var recurrenceContainerNode = A.one('#<portlet:namespace />recurrenceContainer');
-	var repeatCheckboxNode = A.one('#<portlet:namespace />repeatCheckbox');
+	var repeatCheckboxNode = A.one('#<portlet:namespace />repeat');
 	var summaryNode = A.one('#<portlet:namespace />summary');
 
-	var untilDateDatePicker = Liferay.component('<portlet:namespace />untilDateDatePicker');
+	var untilDateDatePicker = Liferay.component('<%= renderResponse.getNamespace() + HtmlUtil.getAUICompatibleId("untilDateDatePicker") %>');
 
 	window.<portlet:namespace />recurrenceDialog;
 
@@ -210,12 +218,12 @@ if (recurrence != null) {
 								recurrenceContainerNode.show();
 							}
 
-							window.<portlet:namespace />updateSummary(summaryNode);
-							window.<portlet:namespace />updateSummary('#<portlet:namespace />summaryPreview');
+							window.<portlet:namespace />updateSummaries();
 						}
 					},
 					bodyContent: recurrenceContainerNode,
 					centered: true,
+					height: 600,
 					id: '<portlet:namespace />recurrenceDialog',
 					modal: true,
 					render: '#<portlet:namespace />fm',
@@ -224,14 +232,14 @@ if (recurrence != null) {
 							{
 								on: {
 									click: function() {
-										this.hide();
+										window.<portlet:namespace />recurrenceDialog.hide();
 									}
 								},
 								label: '<liferay-ui:message key="done" />'
 							}
 						]
 					},
-					visible: true,
+					visible: visible,
 					width: 600
 				},
 				title: '<liferay-ui:message key="repeat" />'
@@ -239,37 +247,36 @@ if (recurrence != null) {
 		);
 	};
 
-	recurrenceContainerNode.delegate(
-		'change',
-		function(event) {
-			var target = event.target;
+	var onInputChange = function(event) {
+		var target = event.target;
 
-			if (target.test('#<portlet:namespace />frequency')) {
-				window.<portlet:namespace />toggleView('<%= Frequency.WEEKLY %>', (target.val() == '<%= Frequency.WEEKLY %>'));
-			}
+		if (target.test('#<portlet:namespace />frequency')) {
+			window.<portlet:namespace />toggleView('<%= Frequency.WEEKLY %>', (target.val() == '<%= Frequency.WEEKLY %>'));
+		}
 
-			var endValue = endsRadioNodes.filter(':checked').val()[0];
+		var endValue = endsRadioNodes.filter(':checked').val()[0];
 
-			if ((endValue == 'never') || (endValue == 'on')) {
-				countNode.set('disabled', true);
-			}
-			else {
-				countNode.set('disabled', false);
-			}
+		if ((endValue == 'never') || (endValue == 'on')) {
+			countNode.set('disabled', true);
+		}
+		else {
+			countNode.set('disabled', false);
+		}
 
-			countNode.selectText();
+		countNode.selectText();
 
-			if ((endValue == 'never') || (endValue == 'after')) {
-				untilDateDatePicker.set('disabled', true);
-			}
-			else {
-				untilDateDatePicker.set('disabled', false);
-			}
+		if ((endValue == 'never') || (endValue == 'after')) {
+			untilDateDatePicker.set('disabled', true);
+		}
+		else {
+			untilDateDatePicker.set('disabled', false);
+		}
 
-			window.<portlet:namespace />updateSummary('#<portlet:namespace />summaryPreview');
-		},
-		'select,input'
-	);
+		window.<portlet:namespace />updateSummaries();
+	};
+
+	recurrenceContainerNode.delegate('change', onInputChange, 'select,input');
+	recurrenceContainerNode.delegate('keypress', onInputChange, 'select');
 
 	repeatCheckboxNode.on(
 		'change',
@@ -293,6 +300,13 @@ if (recurrence != null) {
 		}
 	);
 
+	untilDateDatePicker.after(
+		'selectionChange',
+		function(event) {
+			window.<portlet:namespace />updateSummaries();
+		}
+	);
+
 	window.<portlet:namespace />getSummary = function() {
 		var intervalNode = A.one('#<portlet:namespace />interval');
 		var weekdays = A.all('#<portlet:namespace />view<%= Frequency.WEEKLY %> input:checked');
@@ -310,7 +324,7 @@ if (recurrence != null) {
 			endValue: endValue,
 			frequency: frequencyNode.val(),
 			interval: intervalNode.val(),
-			untilDate: untilDateDatePicker.calendar.get('selectedDates.0'),
+			untilDate: untilDateDatePicker.getDate(),
 			weekdays: selectedWeekdays
 		}
 
@@ -333,7 +347,12 @@ if (recurrence != null) {
 		}
 	};
 
-	<c:if test="<%= recurring %>">
+	window.<portlet:namespace />updateSummaries = function() {
 		window.<portlet:namespace />updateSummary(summaryNode);
+		window.<portlet:namespace />updateSummary('#<portlet:namespace />summaryPreview');
+	}
+
+	<c:if test="<%= recurring %>">
+		window.<portlet:namespace />updateSummaries();
 	</c:if>
 </aui:script>
