@@ -87,7 +87,9 @@ public class CDIPortletSessionContext implements Context, Serializable {
         return ATTRIBUTE_PREFIX + "$" + beanClassName;
     }
     
-    private static class CDIPortletSessionBean<T> {
+    private static class CDIPortletSessionBean<T> implements Serializable {
+        private static final long serialVersionUID = 1L;
+
         public final Contextual<T> bean;
         public final CreationalContext<T> creationalContext;
         public final T instance;
