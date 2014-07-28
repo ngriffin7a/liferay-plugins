@@ -2,13 +2,13 @@ package com.liferay.cdi.portlet.bridge;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.util.Map.Entry;
 
 import javax.enterprise.context.spi.Context;
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.portlet.PortletSession;
+import javax.servlet.http.HttpSessionBindingEvent;
 
 import com.liferay.cdi.portlet.bridge.context.PortletSessionScoped;
 
@@ -71,14 +71,11 @@ public class CDIPortletSessionContext implements Context, Serializable {
         return PortletRequestContainer.getCurrentPortletRequest() != null;
     }
     
-    static void destroyPortletSessionBeans(PortletSession portletSession) {
-        for(Entry<String, Object> entry : portletSession.getAttributeMap().entrySet()) {
-            String attributeName = entry.getKey();
-            if(attributeName != null && attributeName.startsWith(ATTRIBUTE_PREFIX)) {
-                CDIPortletSessionBean<?> beanEntry = (CDIPortletSessionBean<?>) entry.getValue();
-                
-                beanEntry.destroyBean();
-            }
+    static void handleCDIPortletSessionBeanRemoved(HttpSessionBindingEvent event) {
+        Object eventValue = event.getValue();
+        
+        if(eventValue instanceof CDIPortletSessionBean<?>) {
+            ((CDIPortletSessionBean<?>)eventValue).destroyBean();
         }
     }
 
