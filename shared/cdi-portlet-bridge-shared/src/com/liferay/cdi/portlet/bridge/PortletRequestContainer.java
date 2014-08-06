@@ -11,7 +11,7 @@ class PortletRequestContainer {
     }
     
     static void unregisterPortletRequest() {
-        currentPortletRequest.set(null);
+        currentPortletRequest.remove();
     }
     
     static PortletRequest getCurrentPortletRequest() {
